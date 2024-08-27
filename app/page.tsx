@@ -1,24 +1,34 @@
-import Pricing from '@/components/ui/Pricing/Pricing';
-import { createClient } from '@/utils/supabase/server';
-import {
-  getProducts,
-  getSubscription,
-  getUser
-} from '@/utils/supabase/queries';
+import { unstable_noStore as noStore } from 'next/cache';
+import { Suspense } from 'react';
 
-export default async function PricingPage() {
-  const supabase = createClient();
-  const [user, products, subscription] = await Promise.all([
-    getUser(supabase),
-    getProducts(supabase),
-    getSubscription(supabase)
-  ]);
+import useSupabase from '@/utils/hook/useSupabase';
+
+import HomeClient from './home-client';
+
+import { City } from '@/types/place';
+
+async function getCities(): Promise<City[]> {
+  // This line opts out of caching for this data fetch
+  noStore();
+
+  const supabase = useSupabase();
+
+  const { data, error } = await supabase.from('cities').select('*').limit(24);
+
+  if (error) {
+    console.error('Error fetching cities:', error);
+    return [];
+  }
+
+  return data || [];
+}
+
+export default async function Home() {
+  const cities = await getCities();
 
   return (
-    <Pricing
-      user={user}
-      products={products ?? []}
-      subscription={subscription}
-    />
+    <Suspense fallback={<div>Loading...</div>}>
+      <HomeClient initialCities={cities} />
+    </Suspense>
   );
 }

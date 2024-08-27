@@ -28,7 +28,7 @@ export default function NameForm({ userName }: { userName: string }) {
       title="Your Name"
       description="Please enter your full name, or a display name you are comfortable with."
       footer={
-        <div className="flex flex-col items-start justify-between sm:flex-row sm:items-center">
+        <div className="flex flex-col items-start justify-between sm:flex-row sm:items-center text-background">
           <p className="pb-4 sm:pb-0">64 characters maximum</p>
           <Button
             variant="slim"
@@ -46,7 +46,7 @@ export default function NameForm({ userName }: { userName: string }) {
           <input
             type="text"
             name="fullName"
-            className="w-1/2 p-3 rounded-md bg-zinc-800"
+            className="w-1/2 p-3 rounded-md bg-background border-2 border-muted-foreground"
             defaultValue={userName}
             placeholder="Your name"
             maxLength={64}

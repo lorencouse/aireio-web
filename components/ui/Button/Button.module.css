@@ -1,9 +1,9 @@
 .root {
-  @apply bg-white text-zinc-800 cursor-pointer inline-flex px-10 rounded-sm leading-6  transition ease-in-out duration-150 shadow-sm font-semibold text-center justify-center uppercase py-4 border border-transparent items-center;
+  @apply bg-background text-foreground border-2 border-foreground cursor-pointer inline-flex px-10 leading-6 rounded-none transition ease-in-out duration-150 shadow-sm font-semibold text-center justify-center uppercase py-4 items-center;
 }
 
 .root:hover {
-  @apply bg-zinc-800 text-white border border-white;
+  @apply bg-foreground text-background ;
 }
 
 .root:focus {
@@ -11,11 +11,11 @@
 }
 
 .root[data-active] {
-  @apply bg-zinc-600;
+  @apply bg-muted-foreground;
 }
 
 .loading {
-  @apply bg-zinc-700 text-zinc-500 border-zinc-600 cursor-not-allowed;
+  @apply bg-muted-foreground text-zinc-500 border-zinc-600 cursor-not-allowed;
 }
 
 .slim {
@@ -24,7 +24,7 @@
 
 .disabled,
 .disabled:hover {
-  @apply text-zinc-400 border-zinc-600 bg-zinc-700 cursor-not-allowed;
+  @apply text-zinc-400 border-zinc-600 bg-muted-foreground cursor-not-allowed;
   filter: grayscale(1);
   -webkit-transform: translateZ(0);
   -webkit-perspective: 1000;

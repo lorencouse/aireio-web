@@ -34,3 +34,42 @@ export async function GET(request: NextRequest) {
     )
   );
 }
+
+export async function POST(request: NextRequest) {
+  const supabase = createClient();
+  const requestUrl = new URL(request.url);
+
+  // Get the new password from the request body
+  const { password } = await request.json();
+
+  if (!password) {
+    return NextResponse.redirect(
+      getErrorRedirect(
+        `${requestUrl.origin}/signin/update_password`,
+        'MissingPassword',
+        'Please provide a new password.'
+      )
+    );
+  }
+
+  // Update the user's password
+  const { error } = await supabase.auth.updateUser({ password });
+
+  if (error) {
+    return NextResponse.redirect(
+      getErrorRedirect(
+        `${requestUrl.origin}/signin/update_password`,
+        error.name,
+        'Failed to update password. Please try again.'
+      )
+    );
+  }
+
+  // Redirect to a success page or dashboard
+  return NextResponse.redirect(
+    getStatusRedirect(
+      `${requestUrl.origin}/account`,
+      'Password updated successfully',
+      'Your password has been updated. You can now use your new password to log in.'
+    )
+  );

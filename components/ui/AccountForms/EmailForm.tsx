@@ -32,7 +32,7 @@ export default function EmailForm({
       title="Your Email"
       description="Please enter the email address you want to use to login."
       footer={
-        <div className="flex flex-col items-start justify-between sm:flex-row sm:items-center">
+        <div className="flex flex-col items-start justify-between sm:flex-row sm:items-center text-background">
           <p className="pb-4 sm:pb-0">
             We will email you to verify the change.
           </p>
@@ -52,7 +52,7 @@ export default function EmailForm({
           <input
             type="text"
             name="newEmail"
-            className="w-1/2 p-3 rounded-md bg-zinc-800"
+            className="w-1/2 p-3 rounded-md bg-background border-2 border-muted-foreground"
             defaultValue={userEmail ?? ''}
             placeholder="Your email"
             maxLength={64}
