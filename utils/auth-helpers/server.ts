@@ -15,15 +15,15 @@ export async function redirectToPath(path: string) {
   return redirect(path);
 }
 
-export async function SignOut(formData: FormData) {
-  const pathName = String(formData.get('pathName')).trim();
+export async function SignOut() {
+  // const pathName = String(formData.get('pathName')).trim();
 
   const supabase = createClient();
   const { error } = await supabase.auth.signOut();
 
   if (error) {
     return getErrorRedirect(
-      pathName,
+      '/',
       'Hmm... Something went wrong.',
       'You could not be signed out.'
     );
@@ -194,7 +194,7 @@ export async function signUp(formData: FormData) {
       error.message
     );
   } else if (data.session) {
-    redirectPath = getStatusRedirect('/', 'Success!', 'You are now signed in.');
+    redirectPath = getStatusRedirect('/profile', 'Success!', 'You are now signed in.');
   } else if (
     data.user &&
     data.user.identities &&
@@ -207,13 +207,13 @@ export async function signUp(formData: FormData) {
     );
   } else if (data.user) {
     redirectPath = getStatusRedirect(
-      '/',
+      '/profile',
       'Success!',
       'Please check your email for a confirmation link. You may now close this tab.'
     );
   } else {
     redirectPath = getErrorRedirect(
-      '/signin/signup',
+      '/signin',
       'Hmm... Something went wrong.',
       'You could not be signed up.'
     );
@@ -249,7 +249,7 @@ export async function updatePassword(formData: FormData) {
     );
   } else if (data.user) {
     redirectPath = getStatusRedirect(
-      '/',
+      '/profile',
       'Success!',
       'Your password has been updated.'
     );
@@ -271,7 +271,7 @@ export async function updateEmail(formData: FormData) {
   // Check that the email is valid
   if (!isValidEmail(newEmail)) {
     return getErrorRedirect(
-      '/account',
+      '/profile',
       'Your email could not be updated.',
       'Invalid email address.'
     );
@@ -280,7 +280,7 @@ export async function updateEmail(formData: FormData) {
   const supabase = createClient();
 
   const callbackUrl = getURL(
-    getStatusRedirect('/account', 'Success!', `Your email has been updated.`)
+    getStatusRedirect('/profile', 'Success!', `Your email has been updated.`)
   );
 
   const { error } = await supabase.auth.updateUser(
@@ -292,13 +292,13 @@ export async function updateEmail(formData: FormData) {
 
   if (error) {
     return getErrorRedirect(
-      '/account',
+      '/profile',
       'Your email could not be updated.',
       error.message
     );
   } else {
     return getStatusRedirect(
-      '/account',
+      '/profile',
       'Confirmation emails sent.',
       `You will need to confirm the update by clicking the links sent to both the old and new email addresses.`
     );
@@ -316,19 +316,19 @@ export async function updateName(formData: FormData) {
 
   if (error) {
     return getErrorRedirect(
-      '/account',
+      '/profile',
       'Your name could not be updated.',
       error.message
     );
   } else if (data.user) {
     return getStatusRedirect(
-      '/account',
+      '/profile',
       'Success!',
       'Your name has been updated.'
     );
   } else {
     return getErrorRedirect(
-      '/account',
+      '/profile',
       'Hmm... Something went wrong.',
       'Your name could not be updated.'
     );

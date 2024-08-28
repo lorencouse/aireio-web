@@ -1,60 +1,56 @@
-import { Metadata } from "next"
-import Image from "next/image"
+import { Metadata } from 'next';
+import Image from 'next/image';
+import useSupabase from '@/utils/hook/useSupabase';
+import { getUserDetails, getUser } from '@/utils/supabase/queries';
 
-import { Separator } from "@/components/ui/separator"
-import { SidebarNav } from "./components/sidebar-nav"
+import { Separator } from '@/components/ui/separator';
+import { SidebarNav } from './components/sidebar-nav';
 
 export const metadata: Metadata = {
-  title: "Settings",
-  description: "User profile settings.",
-}
+  title: 'Settings',
+  description: 'User profile settings.'
+};
 
 const sidebarNavItems = [
   {
-    title: "Profile",
-    href: "/profile",
+    title: 'Contact',
+    href: '/profile'
   },
   {
-    title: "Account",
-    href: "/profile/account",
+    title: 'Account',
+    href: '/profile/account'
   },
   {
-    title: "Appearance",
-    href: "/profile/appearance",
+    title: 'Appearance',
+    href: '/profile/appearance'
   },
   {
-    title: "Notifications",
-    href: "/profile/notifications",
+    title: 'Notifications',
+    href: '/profile/notifications'
   },
   {
-    title: "Display",
-    href: "/profile/display",
-  },
-]
+    title: 'Display',
+    href: '/profile/display'
+  }
+];
 
 interface SettingsLayoutProps {
-  children: React.ReactNode
+  children: React.ReactNode;
 }
 
 export default function SettingsLayout({ children }: SettingsLayoutProps) {
+  const supabase = useSupabase();
+  const [user, userDetails] = await Promise.all([
+    getUser(supabase),
+    getUserDetails(supabase)
+  ]);
+
+  if (!user) {
+    return redirect('/signin');
+  }
+
   return (
     <>
-      {/* <div className="flex flex-row">
-        <Image
-          src="/examples/forms-light.png"
-          width={1280}
-          height={791}
-          alt="Forms"
-          className=" "
-        />
-        <Image
-          src="/examples/forms-dark.png"
-          width={1280}
-          height={791}
-          alt="Forms"
-          className=" "
-        />
-      </div> */}
       <div className=" space-y-6 p-10 pb-16 md:block">
         <div className="space-y-0.5">
           <h2 className="text-2xl font-bold tracking-tight">Settings</h2>
@@ -71,5 +67,5 @@ export default function SettingsLayout({ children }: SettingsLayoutProps) {
         </div>
       </div>
     </>
-  )
+  );
 }

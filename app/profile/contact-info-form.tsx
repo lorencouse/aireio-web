@@ -26,6 +26,7 @@ import {
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from '@/components/ui/use-toast';
+import { PhoneInput } from '@/components/input/phone-input';
 
 const profileFormSchema = z.object({
   username: z
@@ -62,7 +63,7 @@ const defaultValues: Partial<ProfileFormValues> = {
   ]
 };
 
-export function ProfileForm() {
+export function ContactInfoForm() {
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
     defaultValues,
@@ -111,26 +112,35 @@ export function ProfileForm() {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Email</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a verified email to display" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="m@example.com">m@example.com</SelectItem>
-                  <SelectItem value="m@google.com">m@google.com</SelectItem>
-                  <SelectItem value="m@support.com">m@support.com</SelectItem>
-                </SelectContent>
-              </Select>
+              <FormControl>
+                <Input placeholder="user@example.com" {...field} />
+              </FormControl>
               <FormDescription>
-                You can manage verified email addresses in your{' '}
-                <Link href="/examples/forms">email settings</Link>.
+                This is you contact email. You can only change this once every
+                30 days.
               </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
+        <FormField
+          control={form.control}
+          name="phone"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Phone</FormLabel>
+              <FormControl>
+                <Input placeholder="+0-123-456-7890" {...field} />
+              </FormControl>
+              <FormDescription>
+                This is you contact phone number. You can only change this once
+                every 30 days.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <PhoneInput value={form.watch('phone')} onChange={form.setValue} />
         <FormField
           control={form.control}
           name="bio"
@@ -184,7 +194,7 @@ export function ProfileForm() {
             Add URL
           </Button>
         </div>
-        <Button type="submit">Update profile</Button>
+        <Button type="submit">Update</Button>
       </form>
     </Form>
   );

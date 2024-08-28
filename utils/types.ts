@@ -16,13 +16,14 @@ export interface City {
   photo_ref?: string;
 }
 
-export interface AireioUser {
+export interface UserProfile {
   id: number;
   created_at: Date;
-  name?: string;
+  full_name?: string;
   username?: string;
   language?: string;
   email?: string;
+  phone?: string;
   bio?: string;
   websites?: string[];
   dob?: Date;

@@ -2,14 +2,11 @@ import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 
 import { userUpdateProps } from '@/utils/types';
+import { UserProfile } from '@/utils/types';
 
 export const userUpdate = async ({
-  email,
-  first_name,
-  last_name,
-  profile_image_url,
-  user_id,
-}: userUpdateProps) => {
+user
+}: UserProfile) => {
   const cookieStore = cookies();
 
   const supabase = createServerClient(
@@ -26,17 +23,23 @@ export const userUpdate = async ({
 
   try {
     const { data, error } = await supabase
-      .from('User')
+      .from('user_profiles')
       .update([
         {
-          email,
-          first_name,
-          last_name,
-          profile_image_url,
-          user_id,
-        },
+          user.name,
+          user.username,
+          user.language,
+          user.email,
+          user.bio,
+          user.websites,
+          user.dob,
+          user.theme,
+          user.favorites,
+          user.current_city_id,
+          user.avatar_url
+        }
       ])
-      .eq('email', email)
+      .eq('id', user.id)
       .select();
 
     if (data) return data;
