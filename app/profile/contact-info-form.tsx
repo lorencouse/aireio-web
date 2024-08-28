@@ -1,11 +1,12 @@
+// app/profile/contact-info-form.tsx
+
 'use client';
 
-import Link from 'next/link';
+import { useCallback, useEffect, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useFieldArray, useForm } from 'react-hook-form';
+import { useForm, useFieldArray } from 'react-hook-form';
 import * as z from 'zod';
 
-import { cn } from '@/utils/cn';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -17,33 +18,17 @@ import {
   FormMessage
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from '@/components/ui/use-toast';
-import { PhoneInput } from '@/components/input/phone-input';
+import { UserProfile } from '@/components/user-profile';
+import { cn } from '@/utils/cn';
 
 const profileFormSchema = z.object({
-  username: z
-    .string()
-    .min(2, {
-      message: 'Username must be at least 2 characters.'
-    })
-    .max(30, {
-      message: 'Username must not be longer than 30 characters.'
-    }),
-  email: z
-    .string({
-      required_error: 'Please select an email to display.'
-    })
-    .email(),
-  bio: z.string().max(160).min(4),
-  urls: z
+  username: z.string().min(2).max(30),
+  email: z.string().email(),
+  full_name: z.string().min(2).max(50),
+  bio: z.string().max(160).optional(),
+  websites: z
     .array(
       z.object({
         value: z.string().url({ message: 'Please enter a valid URL.' })
@@ -54,19 +39,22 @@ const profileFormSchema = z.object({
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
 
-// This can come from your database or API.
-const defaultValues: Partial<ProfileFormValues> = {
-  bio: 'I own a computer.',
-  urls: [
-    { value: 'https://shadcn.com' },
-    { value: 'http://twitter.com/shadcn' }
-  ]
-};
+export function ContactInfoForm({
+  userProfile
+}: {
+  userProfile: UserProfile | null;
+}) {
+  const [loading, setLoading] = useState(true);
 
-export function ContactInfoForm() {
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
-    defaultValues,
+    defaultValues: {
+      username: userProfile?.username || '',
+      email: userProfile?.email || '',
+      full_name: userProfile?.full_name || '',
+      bio: userProfile?.bio || '',
+      websites: userProfile?.websites || []
+    },
     mode: 'onChange'
   });
 
@@ -75,20 +63,11 @@ export function ContactInfoForm() {
     control: form.control
   });
 
-  function onSubmit(data: ProfileFormValues) {
-    toast({
-      title: 'You submitted the following values:',
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      )
-    });
-  }
+  console.log({ userProfile });
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form className="space-y-8">
         <FormField
           control={form.control}
           name="username"
@@ -96,11 +75,11 @@ export function ContactInfoForm() {
             <FormItem>
               <FormLabel>Username</FormLabel>
               <FormControl>
-                <Input placeholder="shadcn" {...field} />
+                <Input placeholder="username" {...field} />
               </FormControl>
               <FormDescription>
                 This is your public display name. It can be your real name or a
-                pseudonym. You can only change this once every 30 days.
+                pseudonym.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -113,34 +92,26 @@ export function ContactInfoForm() {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder="user@example.com" {...field} />
+                <Input {...field} disabled />
               </FormControl>
-              <FormDescription>
-                This is you contact email. You can only change this once every
-                30 days.
-              </FormDescription>
+              <FormDescription>Your primary email address.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
         <FormField
           control={form.control}
-          name="phone"
+          name="full_name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Phone</FormLabel>
+              <FormLabel>Full Name</FormLabel>
               <FormControl>
-                <Input placeholder="+0-123-456-7890" {...field} />
+                <Input placeholder="John Doe" {...field} />
               </FormControl>
-              <FormDescription>
-                This is you contact phone number. You can only change this once
-                every 30 days.
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-        <PhoneInput value={form.watch('phone')} onChange={form.setValue} />
         <FormField
           control={form.control}
           name="bio"
@@ -154,10 +125,6 @@ export function ContactInfoForm() {
                   {...field}
                 />
               </FormControl>
-              <FormDescription>
-                You can <span>@mention</span> other users and organizations to
-                link to them.
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -194,7 +161,9 @@ export function ContactInfoForm() {
             Add URL
           </Button>
         </div>
-        <Button type="submit">Update</Button>
+        <Button type="submit" disabled={loading}>
+          {loading ? 'Updating...' : 'Update Profile'}
+        </Button>
       </form>
     </Form>
   );

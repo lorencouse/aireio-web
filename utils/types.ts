@@ -17,7 +17,7 @@ export interface City {
 }
 
 export interface UserProfile {
-  id: number;
+  id: string;
   created_at: Date;
   full_name?: string;
   username?: string;

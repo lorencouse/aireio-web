@@ -1,7 +1,5 @@
 import { Metadata } from 'next';
 import Image from 'next/image';
-import useSupabase from '@/utils/hook/useSupabase';
-import { getUserDetails, getUser } from '@/utils/supabase/queries';
 
 import { Separator } from '@/components/ui/separator';
 import { SidebarNav } from './components/sidebar-nav';
@@ -39,15 +37,6 @@ interface SettingsLayoutProps {
 }
 
 export default function SettingsLayout({ children }: SettingsLayoutProps) {
-  const supabase = useSupabase();
-  const [user, userDetails] = await Promise.all([
-    getUser(supabase),
-    getUserDetails(supabase)
-  ]);
-
-  if (!user) {
-    return redirect('/signin');
-  }
 
   return (
     <>

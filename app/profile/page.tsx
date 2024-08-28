@@ -1,7 +1,12 @@
+// app/profile/page.tsx
+
 import { Separator } from '@/components/ui/separator';
 import { ContactInfoForm } from './contact-info-form';
+import { getUser, getUserProfile } from '@/utils/supabase/queries';
 
-export default function SettingsProfilePage() {
+export default async function ContactInfoPage() {
+  const userProfile = await getUserProfile();
+
   return (
     <div className="space-y-6">
       <div>
@@ -11,7 +16,7 @@ export default function SettingsProfilePage() {
         </p>
       </div>
       <Separator />
-      <ContactInfoForm />
+      <ContactInfoForm userProfile={userProfile} />
     </div>
   );
 }

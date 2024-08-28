@@ -9,9 +9,6 @@ const fetchOSMDetails = async (longitude: number, latitude: number) => {
         node(around:1000, ${latitude}, ${longitude})["amenity"="cafe"];
         node(around:1000, ${latitude}, ${longitude})["amenity"="library"];
         node(around:1000, ${latitude}, ${longitude})["amenity"="coworking_space"];
-        node(around:1000, ${latitude}, ${longitude})["office"="coworking"];
-        way(around:1000, ${latitude}, ${longitude})["amenity"="coworking_space"];
-        way(around:1000, ${latitude}, ${longitude})["office"="coworking"];
       );
       out body;
       >;
