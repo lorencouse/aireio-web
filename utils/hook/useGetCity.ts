@@ -1,55 +1,69 @@
-// import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import { useState } from 'react';
+'use client';
 
-import createNewCity from '@/utils/functions/places/createNewCity';
-
-// import { Database } from '@/types/supabase';
-import useSupabase from './useSupabase';
+import { useRouter } from 'next/navigation';
+import { PlaceResult } from '@/utils/types';
 
 const useGetCity = () => {
-  const [selectedCityId, setSelectedCityId] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const supabase = useSupabase();
+  const router = useRouter();
 
-  const handleCitySelected = async (city: PlaceResult) => {
-    setIsLoading(true);
-    console.log('City selected: ', city);
-
+  const onPlaceSelected = async (city: PlaceResult) => {
     try {
-      const { data: existingCity, error } = await supabase
-        .from('cities')
-        .select('google_id')
-        .eq('google_id', city.place_id)
-        .maybeSingle();
+      // First, check if the city exists
+      const checkResponse = await fetch('/api/cities/check', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ google_id: city.place_id })
+      });
 
-      if (error) throw error;
-
-      let cityId: string;
-
-      if (!existingCity) {
-        const result = await createNewCity(city);
-        if ('error' in result) {
-          throw result.error;
-        }
-        cityId = result.cityId;
-      } else {
-        cityId = existingCity.id;
+      if (!checkResponse.ok) {
+        throw new Error('Failed to check city existence');
       }
 
-      setSelectedCityId(cityId);
+      const { exists, cityId } = await checkResponse.json();
+
+      if (exists) {
+        router.push(`/places?city_id=${cityId}`);
+        return;
+      }
+
+      // If the city doesn't exist, create it
+      const createResponse = await fetch('/api/cities', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(city)
+      });
+
+      if (!createResponse.ok) {
+        const errorData = await createResponse.json();
+        console.error('Error response from server:', errorData);
+        throw new Error(
+          `Failed to create city: ${errorData.details || 'Unknown error'}`
+        );
+      }
+
+      const photoUrl = city.photos[0].getUrl();
+      console.log('Photo URL:', photoUrl);
+
+      const imageResponse = await fetch('/api/cities/google-city-photo', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      const { cityId: newCityId } = await createResponse.json();
+      router.push(`/places?city_id=${newCityId}`);
     } catch (error) {
-      console.error('Error checking/creating city:', error);
-      alert('An error occurred while processing the city. Please try again.');
-    } finally {
-      setIsLoading(false);
+      console.error('Detailed error in onPlaceSelected:', error);
+      alert(`An error occurred while processing the city: ${error.message}`);
     }
   };
 
-  return {
-    selectedCityId,
-    isLoading,
-    handleCitySelected
-  };
+  return { onPlaceSelected };
 };
 
 export default useGetCity;

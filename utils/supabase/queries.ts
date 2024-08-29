@@ -1,9 +1,12 @@
 import { SupabaseClient } from '@supabase/supabase-js';
 import { UserProfile } from '../types';
+import { createClient } from '@supabase/supabase-js';
 
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import { cache } from 'react';
+import { User } from '@supabase/supabase-js';
+import useSupabase from '../hook/useSupabase';
 
 export const getUser = cache(async () => {
   const supabase = createServerComponentClient({ cookies });
@@ -19,9 +22,12 @@ export const getUser = cache(async () => {
   return user;
 });
 
-export const getUserProfile = cache(async () => {
-  const supabase = createServerComponentClient({ cookies });
-  const user = await getUser();
+export const getUserProfile = async () => {
+  const supabase = createClient<Database>(
+    process.env.NEXT_PUBLIC_SUPABASE_URL || '',
+    process.env.SUPABASE_SERVICE_ROLE_KEY || ''
+  );
+  const user: User = await getUser();
 
   if (!user) return null;
 
@@ -29,15 +35,18 @@ export const getUserProfile = cache(async () => {
     .from('user_profiles')
     .select('*')
     .eq('id', user.id)
-    .maybeSingle();
+    .single();
 
   if (error || !userProfile) {
-    console.log(`Could not get user profile for user id: ${user.id}`, error);
+    console.log(`Could not get user profile for user id: ${user.id}`, {
+      error,
+      userProfile
+    });
     return null;
   }
 
   return userProfile;
-});
+};
 
 export const getSubscription = cache(async (supabase: SupabaseClient) => {
   const { data: subscription, error } = await supabase

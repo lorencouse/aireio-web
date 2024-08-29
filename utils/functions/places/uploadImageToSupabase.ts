@@ -1,23 +1,42 @@
-const uploadImageToSupabase = async (imageUrl: string, imgName: string) => {
-  try {
-    const response = await fetch('/api/supabase/upload-image', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ imageUrl, imgName }),
-    });
+import { createClient } from '@supabase/supabase-js';
 
-    if (!response.ok) {
-      throw new Error('Failed to upload image');
+const uploadImageToSupabase = async (
+  imageUrl: string,
+  imgName: string,
+  dir: string
+) => {
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL as string,
+    process.env.SUPABASE_SERVICE_ROLE_KEY as string
+  );
+
+  try {
+    const response = await fetch(imageUrl);
+
+    if (
+      !response.ok ||
+      !response.headers.get('content-type')?.includes('image')
+    ) {
+      throw new Error(
+        'Failed to fetch image from the URL or invalid content type'
+      );
     }
 
-    const result = await response.json();
-    console.log('Image upload result:', result);
+    const arrayBuffer = await response.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
 
-    return result.success; 
+    const filePath = `${dir}/${imgName}`;
+    const { data, error } = await supabase.storage
+      .from('images')
+      .upload(filePath, buffer, { upsert: true });
+
+    if (error) {
+      throw error;
+    }
+
+    return true;
   } catch (error) {
-    console.log('Error in uploadImageToSupabase:', error);
+    console.error('Error in uploadImageToSupabase:', error);
     return false;
   }
 };

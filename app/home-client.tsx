@@ -1,13 +1,9 @@
-'use client';
+// 'use client';
 
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
 
 import LoadingGrid from '@/components/general/loading-grid';
 import CityList from '@/components/homepage/city-list';
 import GooglePlacesAutocomplete from '@/components/homepage/google-places-search-autocomplete';
-
-import useGetCity from '@/utils/hook/useGetCity';
 
 import { City } from '@/types/place';
 
@@ -16,14 +12,7 @@ interface HomeClientProps {
 }
 
 export default function HomeClient({ initialCities }: HomeClientProps) {
-  const router = useRouter();
-  const { selectedCityId, handleCitySelected } = useGetCity();
 
-  useEffect(() => {
-    if (selectedCityId) {
-      router.push(`/places?city_id=${selectedCityId}`);
-    }
-  }, [selectedCityId, router]);
 
   return (
     <div className='flex flex-col justify-center items-center w-full mt-[1rem] p-3 '>
@@ -32,7 +21,7 @@ export default function HomeClient({ initialCities }: HomeClientProps) {
       </h1>
 
       <div className='flex flex-row'>
-        <GooglePlacesAutocomplete onPlaceSelected={handleCitySelected} />
+        <GooglePlacesAutocomplete />
       </div>
 
       <div className='mt-4'>

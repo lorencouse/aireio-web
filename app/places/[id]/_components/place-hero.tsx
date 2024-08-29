@@ -1,5 +1,3 @@
-'use client';
-
 import Image from 'next/image';
 import React from 'react';
 
@@ -26,7 +24,7 @@ const PlaceHero: React.FC<PlaceHeroProps> = ({ place, photoUrl }) => {
         />
       ) : (
         <Avatar className='w-24 h-24'>
-          <AvatarFallback>{place.name[0]}</AvatarFallback>
+          <AvatarFallback>{place?.name[0] ?? '?'}</AvatarFallback>
         </Avatar>
       )}
 

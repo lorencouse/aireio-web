@@ -8,18 +8,23 @@ import {
   DialogDescription,
   DialogFooter,
   DialogHeader,
-  DialogTitle,
+  DialogTitle
 } from '@/components/ui/dialog';
 
 const PopupPlaceDeleted = ({
   showModal,
   setShowModal,
-  handleCloseModal,
+  cityId
 }: {
   showModal: boolean;
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
-  handleCloseModal: () => void;
+  cityId: string;
 }) => {
+  const handleCloseModal = () => {
+    setShowModal(false);
+    router.push(`/places?city_id=${cityId}`);
+  };
+
   return (
     <div>
       <Dialog open={showModal} onOpenChange={setShowModal}>
@@ -31,11 +36,11 @@ const PopupPlaceDeleted = ({
               automatically removed from the database.
             </DialogDescription>
           </DialogHeader>
-          <DialogFooter className='sm:justify-start'>
+          <DialogFooter className="sm:justify-start">
             <DialogClose asChild>
               <Button
-                type='button'
-                variant='secondary'
+                type="button"
+                variant="secondary"
                 onClick={handleCloseModal}
               >
                 Close

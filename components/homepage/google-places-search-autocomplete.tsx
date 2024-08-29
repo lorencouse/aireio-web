@@ -1,23 +1,20 @@
+'use client';
+
 import { Autocomplete, useLoadScript } from '@react-google-maps/api';
 import React, { useState } from 'react';
-
 import { Input } from '@/components/ui/input';
+import useGetCity from '@/utils/hook/useGetCity';
 
 const libraries: 'places'[] = ['places'];
 
-interface GooglePlacesAutocompleteProps {
-  onPlaceSelected: (place: google.maps.places.PlaceResult) => void;
-}
-
-const GooglePlacesAutocomplete: React.FC<GooglePlacesAutocompleteProps> = ({
-  onPlaceSelected,
-}) => {
+const GooglePlacesAutocomplete = () => {
   const [autocomplete, setAutocomplete] =
     useState<google.maps.places.Autocomplete | null>(null);
+  const { onPlaceSelected } = useGetCity();
 
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY as string,
-    libraries,
+    libraries
   });
 
   const onLoad = (autoC: google.maps.places.Autocomplete) => {
@@ -28,13 +25,11 @@ const GooglePlacesAutocomplete: React.FC<GooglePlacesAutocompleteProps> = ({
     if (autocomplete !== null) {
       const place = autocomplete.getPlace();
       onPlaceSelected(place);
-      console.log(place);
     }
   };
 
-  // Autocomplete options to restrict results to cities
   const autocompleteOptions: google.maps.places.AutocompleteOptions = {
-    types: ['(cities)'],
+    types: ['(cities)']
   };
 
   if (loadError) return <div>Error loading maps</div>;
@@ -46,7 +41,7 @@ const GooglePlacesAutocomplete: React.FC<GooglePlacesAutocompleteProps> = ({
       onPlaceChanged={onPlaceChanged}
       options={autocompleteOptions}
     >
-      <Input type='text' placeholder='Search for a city ...' className='w-72' />
+      <Input type="text" placeholder="Search for a city ..." className="w-72" />
     </Autocomplete>
   );
 };

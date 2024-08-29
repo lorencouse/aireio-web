@@ -1,12 +1,33 @@
+import { NextResponse } from 'next/server';
+import { createClient } from '@supabase/supabase-js';
+import { City, PlaceResult } from '@/utils/types';
 import uploadImageToSupabase from '@/utils/functions/places/uploadImageToSupabase';
-import { City } from '@/utils/types';
 
-import useSupabase from '@/utils/hook/useSupabase';
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL as string,
+  process.env.SUPABASE_SERVICE_ROLE_KEY as string
+);
 
-const createNewCity = async (city: City) => {
+export async function POST(request: Request) {
   try {
-    const supabase = useSupabase();
+    const city: PlaceResult = await request.json();
+    console.log('Received city data:', city);
 
+    const newCity = await createNewCity(city);
+    console.log('New city created:', newCity);
+
+    return NextResponse.json({ cityId: newCity.id }, { status: 201 });
+  } catch (error) {
+    console.error('Detailed error in API route:', error);
+    return NextResponse.json(
+      { error: 'Internal server error', details: error.message },
+      { status: 500 }
+    );
+  }
+}
+
+async function createNewCity(city: PlaceResult): Promise<City> {
+  try {
     const fullName = city.address_components
       ? city.address_components
           .map((component) => component.long_name)
@@ -26,8 +47,8 @@ const createNewCity = async (city: City) => {
       osm_id: '',
       name: cityName,
       full_name: fullName,
-      lat: city.geometry?.location?.lat() || 0,
-      lng: city.geometry?.location?.lng() || 0,
+      lat: city.geometry?.location?.lat || 0,
+      lng: city.geometry?.location?.lng || 0,
       state: city.address_components
         ? city.address_components[city.address_components.length - 2]
             ?.long_name || ''
@@ -49,18 +70,20 @@ const createNewCity = async (city: City) => {
       photo_ref: ''
     };
 
+    console.log('City details before insertion:', cityDetails);
+
     const { data: newCity, error: insertError } = await supabase
       .from('cities')
       .insert(cityDetails)
-      .select('id')
+      .select('*')
       .single();
 
     if (insertError) {
       console.error('Error inserting city:', insertError);
-      return { error: insertError };
+      throw insertError;
     }
 
-    const cityId = newCity.id;
+    console.log('New city after insertion:', newCity);
 
     if (city.photos && city.photos.length > 0) {
       const googlePhotoUrl = city.photos[0].getUrl({ maxWidth: 800 });
@@ -75,22 +98,18 @@ const createNewCity = async (city: City) => {
           const { error: updateError } = await supabase
             .from('cities')
             .update({ photo_ref: imgName })
-            .eq('id', cityId);
+            .eq('id', newCity.id);
 
           if (updateError) throw updateError;
-
-          console.log('Photo updated in Supabase');
         }
       } catch (error) {
         console.error('Error uploading image to Supabase:', error);
       }
     }
 
-    return { cityId };
+    return newCity;
   } catch (error) {
-    console.error('Unexpected error in createNewCity:', error);
-    return { error };
+    console.error('Error in createNewCity:', error);
+    throw error;
   }
-};
-
-export default createNewCity;
+}

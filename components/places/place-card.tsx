@@ -1,8 +1,7 @@
-'use client';
-
 import Image from 'next/image';
-import { useRouter } from 'next/navigation'; // Updated import
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import axios from 'axios';
 
 import {
   Card,
@@ -10,51 +9,75 @@ import {
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
+  CardTitle
 } from '@/components/ui/card';
 
-const PlaceCard = ({ place, distance }: { place: Place; distance: number }) => {
+interface PlaceCardProps {
+  place: Place;
+  distance: number;
+}
+
+const PlaceCard = ({ place, distance }: PlaceCardProps) => {
   const router = useRouter();
+  const [photoDataUrl, setPhotoDataUrl] = useState('/images/logo.png');
 
-  if (!place) {
-    return null; // or render a fallback UI
-  }
+  useEffect(() => {
+    const fetchPhoto = async () => {
+      if (place.photos && place.photos.length > 0) {
+        try {
+          const response = await axios.get(
+            `/api/cities/place-photo?photoReference=${place.photos[0].ref}&maxWidth=400`,
+            {
+              responseType: 'arraybuffer'
+            }
+          );
 
-  const photoUrl =
-    place.photos && place.photos.length > 0
-      ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${place.photos[0].ref}&key=${process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY}`
-      : '/images/logo.png';
+          const contentType = response.headers['content-type'];
+          const base64String = Buffer.from(response.data, 'binary').toString(
+            'base64'
+          );
+          const dataUrl = `data:${contentType};base64,${base64String}`;
+
+          setPhotoDataUrl(dataUrl);
+        } catch (error) {
+          console.error('Error fetching photo:', error);
+        }
+      }
+    };
+
+    fetchPhoto();
+  }, [place.photos]);
 
   return (
     <Card
-      className='w-96 hover:scale-105 transition-transform duration-200 m-4 cursor-pointer'
+      className="w-96 hover:scale-105 transition-transform duration-200 m-4 cursor-pointer"
       onClick={() => router.push(`/places/${place.id}`)}
     >
-      <div className='relative w-full h-52'>
+      <div className="relative w-full h-52">
         <Image
-          src={photoUrl}
+          src={photoDataUrl}
           alt={place.name}
           fill
-          sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           style={{ objectFit: 'cover', objectPosition: 'center' }}
-          className='rounded-t-md'
+          className="rounded-t-md"
         />
       </div>
       <CardHeader>
-        <CardTitle className='text-xl'>{place.name}</CardTitle>
-        <CardDescription className='flex items-center'>
+        <CardTitle className="text-xl">{place.name}</CardTitle>
+        <CardDescription className="flex items-center">
           {place.address.add_1}
         </CardDescription>
       </CardHeader>
       <CardContent>
         <p>
-          Type: <span className='font-bold capitalize'>{place.type}</span>
+          Type: <span className="font-bold capitalize">{place.type}</span>
         </p>
       </CardContent>
-      <CardFooter className='flex justify-between items-end'>
+      <CardFooter className="flex justify-between items-end">
         {place.type === 'cafe' && (
           <div>
-            <span className='font-bold'>Price: </span>
+            <span className="font-bold">Price: </span>
             {place.tags.cost ? (
               Array.from({ length: place.tags.cost }, (_, i) => (
                 <span key={i}>$</span>
@@ -64,15 +87,14 @@ const PlaceCard = ({ place, distance }: { place: Place; distance: number }) => {
             )}
           </div>
         )}
-
         {place.google_rating.score ? (
-          <div className='text-sm'>
+          <div className="text-sm">
             {place.google_rating.score} ⭐ ({place.google_rating.count})
           </div>
         ) : (
-          <div className='text-sm'></div>
+          <div className="text-sm"></div>
         )}
-        <div className='text-sm'>{distance.toFixed(1)} km</div>
+        <div className="text-sm">{distance.toFixed(1)} km</div>
       </CardFooter>
     </Card>
   );
