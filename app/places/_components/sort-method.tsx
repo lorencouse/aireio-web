@@ -1,6 +1,3 @@
-'use client';
-
-import { Dispatch, SetStateAction } from 'react';
 import React from 'react';
 
 import { Button } from '@/components/ui/button';
@@ -11,39 +8,45 @@ import {
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuSeparator,
-  DropdownMenuTrigger
+  DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import Link from 'next/link';
-import updateUrlQuery from '@/utils/updateUrlQuery';
+import updateUrlQuery  from '@/utils/updateUrlQuery';
 
-interface SortOrderPickerProps {
+interface SortMethodProps {
+  // sortMethod: string;
   searchParams: { [key: string]: string | string[] | undefined };
 }
 
-const SortOrderPicker: React.FC<SortOrderPickerProps> = ({ searchParams }) => {
-  const sortOrders = ['asc', 'des'];
-  const sortOrder = (searchParams.sort_order as string) || 'asc';
+const SortMethod: React.FC<SortMethodProps> = ({
+  // sortMethod,
+  searchParams
+}) => {
+  const sortMethods = ['distance', 'rating', 'rating-count', 'price'];
+  const sortMethod = searchParams.sort_method || 'distance';
+
+
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" className="capitalize">
-          {`Order: ${sortOrder}`}
+          {`Sort by: ${sortMethod}`}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
-        <DropdownMenuLabel>Sort Order</DropdownMenuLabel>
+        <DropdownMenuLabel>Sort By</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuRadioGroup value={sortOrder}>
-          {sortOrders.map((order) => (
+        <DropdownMenuRadioGroup value={sortMethod}>
+          {sortMethods.map((option) => (
             <Link
-              key={order}
-              href={`?${updateUrlQuery('sort_order', order, searchParams)}`}
+              key={option}
+              href={`?${updateUrlQuery('sort_method', option, searchParams)}`}
               passHref
               replace
             >
-              <DropdownMenuRadioItem value={order} className="capitalize">
-                {order}
+              <DropdownMenuRadioItem value={option} className="capitalize">
+                {option}
               </DropdownMenuRadioItem>
             </Link>
           ))}
@@ -53,4 +56,4 @@ const SortOrderPicker: React.FC<SortOrderPickerProps> = ({ searchParams }) => {
   );
 };
 
-export default SortOrderPicker;
+export default SortMethod;

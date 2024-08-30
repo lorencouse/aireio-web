@@ -17,7 +17,9 @@ const CityCard: React.FC<CityCardProps> = ({ city }) => {
   const { imageUrl } = useGetCityPhoto(city);
 
   return (
-    <Link href={`/places?city_id=${city.id}`}>
+    <Link
+      href={`/places?city_id=${city.id}&place_type=cafe&lat=${city.lat}&lng=${city.lng}&radius=1000&sort_method=distance&sort_order=asc`}
+    >
       <div className="relative w-96 h-64 cursor-pointer rounded-lg overflow-hidden shadow-md m-4 hover:scale-105 duration-200 ">
         {city.photo_ref ? (
           <Image

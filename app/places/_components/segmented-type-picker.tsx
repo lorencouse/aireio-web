@@ -3,38 +3,45 @@ import React from 'react';
 
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
+import Link from 'next/link';
+import updateUrlQuery  from '@/utils/updateUrlQuery';
+
+
 interface SegmentedTypePickerProps {
-  placeType: string;
-  setPlaceType: (placeType: string) => void;
+  searchParams: { [key: string]: string | string[] | undefined };
+
 }
 
 export default function SegmentedTypePicker({
-  placeType,
-  setPlaceType,
+  searchParams
+
 }: SegmentedTypePickerProps) {
-  const types = [
+  const placeTypes = [
     { value: 'cafe', icon: Coffee, label: 'Cafe' },
     { value: 'library', icon: Library, label: 'Library' },
     { value: 'coworking', icon: Briefcase, label: 'Coworking' },
   ];
+  const placeType = (searchParams.place_type as string) || 'cafe';
+
 
   return (
-    <Tabs
-      value={placeType}
-      defaultValue={types[0].value}
-      onValueChange={setPlaceType}
-      className='w-full my-6'
-    >
-      <TabsList className='grid w-full grid-cols-3'>
-        {types.map(({ value, icon: Icon, label }) => (
-          <TabsTrigger
+    <Tabs value={placeType} className="w-full my-6">
+      <TabsList className="grid w-full grid-cols-3">
+        {placeTypes.map(({ value, icon: Icon, label }) => (
+          <Link
             key={value}
-            value={value}
-            className='flex items-center justify-center'
+            href={`?${updateUrlQuery('place_type', value, searchParams)}`}
+            passHref
+            replace
           >
-            <Icon className='mr-2 h-4 w-4' />
-            {label}
-          </TabsTrigger>
+            <TabsTrigger
+              value={value}
+              className="flex items-center justify-center"
+            >
+              <Icon className="mr-2 h-4 w-4" />
+              {label}
+            </TabsTrigger>
+          </Link>
         ))}
       </TabsList>
     </Tabs>
