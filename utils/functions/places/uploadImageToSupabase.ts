@@ -1,14 +1,13 @@
-import { createClient } from '@supabase/supabase-js';
+'use server';
+
+import { createClient } from '@/utils/supabase/server';
 
 const uploadImageToSupabase = async (
   imageUrl: string,
   imgName: string,
   dir: string
 ) => {
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL as string,
-    process.env.SUPABASE_SERVICE_ROLE_KEY as string
-  );
+  const supabase = createClient();
 
   try {
     const response = await fetch(imageUrl);
@@ -33,6 +32,8 @@ const uploadImageToSupabase = async (
     if (error) {
       throw error;
     }
+
+    return true;
 
     return true;
   } catch (error) {

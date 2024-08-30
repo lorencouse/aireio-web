@@ -1,46 +1,25 @@
+'use server';
+
 import uploadImageToSupabase from '@/utils/functions/places/uploadImageToSupabase';
-import { City } from '@/utils/types';
+import { Autocomplete } from '@react-google-maps/api';
 
 import useSupabase from '@/utils/hook/useSupabase';
 
-const createNewCity = async (city: City) => {
+const createNewCity = async (cityData: any) => {
   try {
     const supabase = useSupabase();
 
-    const fullName = city.address_components
-      ? city.address_components
-          .map((component) => component.long_name)
-          .join(', ')
-      : '';
-    const cityName = city.address_components
-      ? city.address_components[0].long_name
-      : '';
-    const countryCode = city.address_components
-      ? city.address_components[city.address_components.length - 1]
-          ?.short_name || ''
-      : '';
-    const imgName = `${countryCode}_${cityName}_${city.place_id}.jpg`;
-
     const cityDetails: Omit<City, 'id'> = {
-      google_id: city.place_id || '',
+      google_id: cityData.google_id || '',
       osm_id: '',
-      name: cityName,
-      full_name: fullName,
-      lat: city.geometry?.location?.lat() || 0,
-      lng: city.geometry?.location?.lng() || 0,
-      state: city.address_components
-        ? city.address_components[city.address_components.length - 2]
-            ?.long_name || ''
-        : '',
-      state_code: city.address_components
-        ? city.address_components[city.address_components.length - 2]
-            ?.short_name || ''
-        : '',
-      country: city.address_components
-        ? city.address_components[city.address_components.length - 1]
-            ?.long_name || ''
-        : '',
-      country_code: countryCode,
+      name: cityData.name,
+      full_name: cityData.full_name,
+      lat: cityData.lat || 0,
+      lng: cityData.lng || 0,
+      state: cityData.state || '',
+      state_code: cityData.state_code || '',
+      country: cityData.country || '',
+      country_code: cityData.country_code || '',
       cafe_ids: [],
       library_ids: [],
       coworking_ids: [],
@@ -57,13 +36,15 @@ const createNewCity = async (city: City) => {
 
     if (insertError) {
       console.error('Error inserting city:', insertError);
-      return { error: insertError };
+      return { error: insertError.message };
     }
 
     const cityId = newCity.id;
 
-    if (city.photos && city.photos.length > 0) {
-      const googlePhotoUrl = city.photos[0].getUrl({ maxWidth: 800 });
+    if (cityData.photos && cityData.photos.length > 0) {
+      const googlePhotoUrl = cityData.photos[0];
+      const imgName = `${cityData.country_code}_${cityData.name}_${cityId}.jpg`;
+
       try {
         const success = await uploadImageToSupabase(
           googlePhotoUrl,
@@ -86,10 +67,10 @@ const createNewCity = async (city: City) => {
       }
     }
 
-    return { cityId };
+    return { id: cityId, ...cityDetails };
   } catch (error) {
     console.error('Unexpected error in createNewCity:', error);
-    return { error };
+    return { error: error.message };
   }
 };
 

@@ -1,27 +1,20 @@
-'use client';
-
+// No 'use server' directive here because this component is a client component.
 import Image from 'next/image';
-import React from 'react';
-
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'; // Adjust this import based on your project structure
-
-import useGetCityPhoto from '@/utils/hook/useGetCityPhoto';
-import { City } from '@/utils/types';
 import Link from 'next/link';
 
 interface CityCardProps {
   city: City;
+  imageUrl: string | null;
 }
 
-const CityCard: React.FC<CityCardProps> = ({ city }) => {
-  const { imageUrl } = useGetCityPhoto(city);
-
+const CityCard: React.FC<CityCardProps> = ({ city, imageUrl }) => {
   return (
     <Link
-      href={`/places?city_id=${city.id}&place_type=cafe&lat=${city.lat}&lng=${city.lng}&radius=1000&sort_method=distance&sort_order=asc`}
+      href={`/cities/${city.country_code}/${city.state}/${city.name}?place_type=cafe&radius=1000&sort_method=distance&sort_order=asc&lat=${city.lat}&lng=${city.lng}&city_id=${city.id}`}
     >
-      <div className="relative w-96 h-64 cursor-pointer rounded-lg overflow-hidden shadow-md m-4 hover:scale-105 duration-200 ">
-        {city.photo_ref ? (
+      <div className="relative w-96 h-64 cursor-pointer rounded-lg overflow-hidden shadow-md m-4 hover:scale-105 duration-200">
+        {imageUrl ? (
           <Image
             src={imageUrl || '/images/logo.png'}
             alt={`${city.name}`}

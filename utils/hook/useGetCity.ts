@@ -1,12 +1,12 @@
-'use client';
-
 import { useRouter } from 'next/navigation';
 import { PlaceResult } from '@/utils/types';
+import createNewCity from '../functions/places/createNewCity';
+import { Autocomplete } from '@react-google-maps/api';
 
 const useGetCity = () => {
   const router = useRouter();
 
-  const onPlaceSelected = async (city: PlaceResult) => {
+  const onPlaceSelected = async (city: google.maps.places.Autocomplete) => {
     try {
       // First, check if the city exists
       const checkResponse = await fetch('/api/cities/check', {
@@ -21,42 +21,52 @@ const useGetCity = () => {
         throw new Error('Failed to check city existence');
       }
 
-      const { exists, cityId } = await checkResponse.json();
+      const { exists, id, lat, lng, name, country_code, state } = await checkResponse.json();
 
       if (exists) {
-        router.push(`/places?city_id=${cityId}`);
+        console.log('City already exists:', id, lat, lng);
+        router.push(
+          `/cities/${country_code}/${state}/${name}?place_type=cafe&radius=1000&sort_method=distance&sort_order=asc&lat=${lat}&lng=${lng}&city_id=${id}`
+        );
         return;
       }
 
+      // Extract the necessary data from the Autocomplete object
+      const cityData = {
+        google_id: city.place_id,
+        name: city.address_components
+          ? city.address_components[0].long_name
+          : '',
+        full_name: city.address_components
+          ? city.address_components.map((comp) => comp.long_name).join(', ')
+          : '',
+        lat: city.geometry?.location?.lat() || 0,
+        lng: city.geometry?.location?.lng() || 0,
+        state: city.address_components
+          ? city.address_components[city.address_components.length - 2]
+              ?.long_name || ''
+          : '',
+        state_code: city.address_components
+          ? city.address_components[city.address_components.length - 2]
+              ?.short_name || ''
+          : '',
+        country: city.address_components
+          ? city.address_components[city.address_components.length - 1]
+              ?.long_name || ''
+          : '',
+        country_code: city.address_components
+          ? city.address_components[city.address_components.length - 1]
+              ?.short_name || ''
+          : '',
+        photos: city.photos?.map((photo) => photo.getUrl({ maxWidth: 800 }))
+      };
+
       // If the city doesn't exist, create it
-      const createResponse = await fetch('/api/cities', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(city)
-      });
+      const newCity = await createNewCity(cityData);
 
-      if (!createResponse.ok) {
-        const errorData = await createResponse.json();
-        console.error('Error response from server:', errorData);
-        throw new Error(
-          `Failed to create city: ${errorData.details || 'Unknown error'}`
-        );
-      }
-
-      const photoUrl = city.photos[0].getUrl();
-      console.log('Photo URL:', photoUrl);
-
-      const imageResponse = await fetch('/api/cities/google-city-photo', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-
-      const { cityId: newCityId } = await createResponse.json();
-      router.push(`/places?city_id=${newCityId}`);
+      router.push(
+        `/cities/${newCity.country_code}/${newCity.state}/${newCity.name}?place_type=cafe&radius=1000&sort_method=distance&sort_order=asc&lat=${newCity.lat}&lng=${newCity.lng}&city_id=${newCity.id}`
+      );
     } catch (error) {
       console.error('Detailed error in onPlaceSelected:', error);
       alert(`An error occurred while processing the city: ${error.message}`);

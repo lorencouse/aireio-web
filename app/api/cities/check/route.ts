@@ -12,18 +12,28 @@ export async function POST(request: Request) {
 
     const { data: existingCity, error } = await supabase
       .from('cities')
-      .select('id')
+      .select('id, lat, lng, country_code, state, name')
       .eq('google_id', google_id)
-      .maybeSingle();
+      .single();
 
     if (error) {
+      if (error.code === 'PGRST116') {
+        // No matching row found
+        return NextResponse.json({ exists: false });
+      }
       throw error;
     }
 
     if (existingCity) {
-      return NextResponse.json({ exists: true, cityId: existingCity.id });
-    } else {
-      return NextResponse.json({ exists: false });
+      return NextResponse.json({
+        exists: true,
+        id: existingCity.id,
+        lat: existingCity.lat,
+        lng: existingCity.lng,
+        name: existingCity.name,
+        country_code: existingCity.country_code,
+        state: existingCity.state
+      });
     }
   } catch (error) {
     console.error('Error checking city existence:', error);
