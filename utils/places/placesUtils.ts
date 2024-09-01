@@ -24,9 +24,9 @@ export const fetchCity = async (cityId: string): Promise<City> => {
 export const fetchPlacesFromGoogle = async (
   city: City,
   type: 'cafe' | 'library' | 'coworking',
-  radius: number,
-  lat: number,
-  lng: number
+  radius: string,
+  lat: string,
+  lng: string
 ): Promise<GooglePlace[]> => {
   const allPlaces: GooglePlace[] = [];
   let pageToken: string | null = null;
@@ -34,9 +34,9 @@ export const fetchPlacesFromGoogle = async (
   do {
     const params = new URLSearchParams({
       type,
-      lat: lat.toString(),
-      lng: lng.toString(),
-      radius: radius.toString(),
+      lat,
+      lng,
+      radius,
       ...(pageToken && { pagetoken: pageToken })
     });
     console.log('Fetching places with params:', params.toString());

@@ -1,64 +1,57 @@
 // app/cities/[country]/[state]/[city]/page.tsx
 
-import React from 'react';
-import { Briefcase, Coffee, Library } from 'lucide-react';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Button } from '@/components/ui/button';
-import Link from 'next/link';
-import SegmentedTypePicker from './_components/segmented-type-picker';
-import RadiusSlider from './_components/radius-slider';
-import updateUrlQuery from '@/utils/updateUrlQuery';
-import SortMethod from './_components/sort-method';
-import SortOrderPicker from './_components/sort-order-picker';
-import GoogleMap from './_components/google-map';
-import CityHero from './_components/city-hero';
+'use server';
 
-const placeTypes = [
-  { value: 'cafe', icon: Coffee, label: 'Cafe' },
-  { value: 'library', icon: Library, label: 'Library' },
-  { value: 'coworking', icon: Briefcase, label: 'Coworking' }
-];
-const sortMethods = ['distance', 'price', 'rating', 'rating-count'];
-const sortOrders = ['asc', 'desc'];
+import { createClient } from '@/utils/supabase/server';
+import PlacesPageLayout from './places-page-layout';
+import { Suspense } from 'react';
 
-const Places = ({
-  searchParams
+const Places = async ({
+  params
 }: {
-  searchParams: { [key: string]: string | string[] | undefined };
+  params: { country: string; state: string; city: string };
 }) => {
-  const cityId = (searchParams.city_id as string) || '';
-  const lat = (searchParams.lat as string) || '';
-  const lng = (searchParams.lng as string) || '';
-  const radius = (searchParams.radius as string) || '1000';
-  // const sortMethod = (searchParams.sort_method as string) || 'distance';
+  const cityName = params.city;
+  const supabase = createClient();
 
-  return (
-    <div className="flex flex-col justify-center items-center w-full mt-[1rem] p-3">
-      {/* <CityHero searchParams={searchParams} /> */}
-      <div className="grid lg:grid-cols-2 w-full">
-        <div className="city-map lg:mx-0 sm:mx-12">
-          <div>
-            <GoogleMap searchParams={searchParams} />
-            {/* <div style={{ height: '400px', width: '100%' }} />
-            <RadiusSlider initialRadius={radius} searchParams={searchParams} /> */}
-          </div>
-        </div>
-        <div className="city-filters flex flex-col p-10">
-          <span className="text-lg font-bold">Filter by:</span>
+  try {
+    const { data: city, error } = await supabase
+      .from('cities')
+      .select('*')
+      .eq('name', cityName)
+      .single();
 
-          <SegmentedTypePicker searchParams={searchParams} />
+    if (error) {
+      throw error;
+    }
 
-          <div className="flex flex-row gap-4 mb-6 justify-between flex-wrap">
-            <SortMethod searchParams={searchParams} />
-            <SortOrderPicker searchParams={searchParams} />
-          </div>
-        </div>
+    if (!city) {
+      throw new Error('City not found');
+    }
+
+    console.log('city:', city);
+
+    return (
+      <div className="flex flex-col justify-center items-center w-full mt-[1rem] p-3">
+        <Suspense fallback={<div>Loading...</div>}>
+          <PlacesPageLayout city={city} />
+        </Suspense>
       </div>
-      <h1 className="text-4xl font-bold my-8 select-none">
-        Workspaces in {cityId}
-      </h1>
-    </div>
-  );
+    );
+  } catch (error) {
+    console.log('Error fetching city:', error, 'cityName:', cityName);
+    return (
+      <div>
+        Error loading city{' '}
+        {/* <span
+          className="text-blue-500 underline cursor-pointer hover:text-blue-800"
+          onClick={() => window.history.back()}
+        >
+          ← Go Back
+        </span> */}
+      </div>
+    );
+  }
 };
 
 export default Places;

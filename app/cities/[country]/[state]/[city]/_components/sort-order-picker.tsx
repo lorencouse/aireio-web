@@ -1,6 +1,5 @@
-
 import { Dispatch, SetStateAction } from 'react';
-import React from 'react';
+import React, { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -13,7 +12,7 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import Link from 'next/link';
-import updateUrlQuery from '@/utils/updateUrlQuery';
+import useUpdateUrlQuery from '@/utils/hook/useUpdateUrlQuery';
 
 interface SortOrderPickerProps {
   searchParams: { [key: string]: string | string[] | undefined };
@@ -21,7 +20,14 @@ interface SortOrderPickerProps {
 
 const SortOrderPicker: React.FC<SortOrderPickerProps> = ({ searchParams }) => {
   const sortOrders = ['asc', 'des'];
-  const sortOrder = (searchParams.sort_order as string) || 'asc';
+  const sortOrderParams = (searchParams.sort_order as string) || 'asc';
+  const [sortOrder, setSortOrder] = useState(sortOrderParams);
+  const { updateUrlQuery } = useUpdateUrlQuery();
+
+  const handleSortOrderChange = (value: string) => {
+    updateUrlQuery('sort_order', value, searchParams);
+    setSortOrder(value);
+  };
 
   return (
     <DropdownMenu>
@@ -35,17 +41,22 @@ const SortOrderPicker: React.FC<SortOrderPickerProps> = ({ searchParams }) => {
         <DropdownMenuSeparator />
         <DropdownMenuRadioGroup value={sortOrder}>
           {sortOrders.map((order) => (
-            <Link
+            // <Link
+            //   key={order}
+            //   href={`?${updateUrlQuery('sort_order', order, searchParams)}`}
+            //   passHref
+            //   replace
+            //   scroll={false}
+            // >
+            <DropdownMenuRadioItem
+              value={order}
+              className="capitalize"
               key={order}
-              href={`?${updateUrlQuery('sort_order', order, searchParams)}`}
-              passHref
-              replace
-              scroll={false}
+              onClick={() => handleSortOrderChange(order)}
             >
-              <DropdownMenuRadioItem value={order} className="capitalize">
-                {order}
-              </DropdownMenuRadioItem>
-            </Link>
+              {order}
+            </DropdownMenuRadioItem>
+            // </Link>
           ))}
         </DropdownMenuRadioGroup>
       </DropdownMenuContent>

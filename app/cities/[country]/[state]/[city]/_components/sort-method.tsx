@@ -1,3 +1,6 @@
+'use client';
+
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -6,10 +9,10 @@ import {
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuSeparator,
-  DropdownMenuTrigger,
+  DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import Link from 'next/link';
-import updateUrlQuery  from '@/utils/updateUrlQuery';
+import useUpdateUrlQuery from '@/utils/hook/useUpdateUrlQuery';
 
 interface SortMethodProps {
   // sortMethod: string;
@@ -21,9 +24,16 @@ const SortMethod: React.FC<SortMethodProps> = ({
   searchParams
 }) => {
   const sortMethods = ['distance', 'rating', 'rating-count', 'price'];
-  const sortMethod = searchParams.sort_method || 'distance';
+  const sortMethodParams = searchParams.sort_method || 'distance';
 
+  const [sortMethod, setSortMethod] = useState(sortMethodParams);
 
+  const { updateUrlQuery } = useUpdateUrlQuery();
+
+  const handleSortMethodChange = (value: string) => {
+    updateUrlQuery('sort_method', value, searchParams);
+    setSortMethod(value);
+  };
 
   return (
     <DropdownMenu>
@@ -37,17 +47,14 @@ const SortMethod: React.FC<SortMethodProps> = ({
         <DropdownMenuSeparator />
         <DropdownMenuRadioGroup value={sortMethod}>
           {sortMethods.map((option) => (
-            <Link
+            <DropdownMenuRadioItem
+              value={option}
+              className="capitalize"
               key={option}
-              href={`?${updateUrlQuery('sort_method', option, searchParams)}`}
-              passHref
-              replace
-              scroll={false}
+              onClick={() => handleSortMethodChange(option)}
             >
-              <DropdownMenuRadioItem value={option} className="capitalize">
-                {option}
-              </DropdownMenuRadioItem>
-            </Link>
+              {option}
+            </DropdownMenuRadioItem>
           ))}
         </DropdownMenuRadioGroup>
       </DropdownMenuContent>

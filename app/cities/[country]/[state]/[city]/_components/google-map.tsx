@@ -1,28 +1,31 @@
-'use client';
-
-import React, { useCallback, useEffect, useRef } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import useUpdateUrlQuery from '@/utils/hook/useUpdateUrlQuery';
 import RadiusSlider from './radius-slider';
-import updateUrlQuery from '@/utils/updateUrlQuery';
 
 interface MapWithDraggableMarkerProps {
   searchParams: { [key: string]: string | string[] | undefined };
+  city: City;
 }
 
-const GoogleMap: React.FC<MapWithDraggableMarkerProps> = ({ searchParams }) => {
-  const router = useRouter();
+const GoogleMap: React.FC<MapWithDraggableMarkerProps> = ({
+  searchParams,
+  city
+}) => {
+  const { updateUrlQueries } = useUpdateUrlQuery();
   const mapRef = useRef<HTMLDivElement | null>(null);
   const mapInstanceRef = useRef<google.maps.Map | null>(null);
   const markerRef = useRef<google.maps.marker.AdvancedMarkerElement | null>(
     null
   );
   const circleRef = useRef<google.maps.Circle | null>(null);
+  const initialLat = parseFloat(searchParams.lat || city.lat || '0');
+  const initialLng = parseFloat(searchParams.lng || city.lng || '0');
+  const initialRadius = parseFloat(searchParams?.radius || '1000');
+  const [center, setCenter] = useState({ lat: initialLat, lng: initialLng });
 
-  const lat = parseFloat((searchParams.lat as string) || '0');
-  const lng = parseFloat((searchParams.lng as string) || '0');
-  const radius = parseFloat((searchParams.radius as string) || '1000');
-
-  const initialCenter = useRef({ lat, lng });
+  const [zoom, setZoom] = useState(14);
+  const [radius, setRadius] = useState(initialRadius);
+  const initialCenter = useRef({ lat: initialLat, lng: initialLng });
 
   const calculateZoom = useCallback((radius: number) => {
     return Math.round(14 - Math.log(radius / 1000) / Math.log(2));
@@ -32,16 +35,16 @@ const GoogleMap: React.FC<MapWithDraggableMarkerProps> = ({ searchParams }) => {
     (position: google.maps.LatLngLiteral) => {
       const R = 6371; // Earth's radius in km
       const lat1 = (initialCenter.current.lat * Math.PI) / 180;
-      const lng1 = (initialCenter.current.lng * Math.PI) / 180;
+      const lon1 = (initialCenter.current.lng * Math.PI) / 180;
       const lat2 = (position.lat * Math.PI) / 180;
-      const lng2 = (position.lng * Math.PI) / 180;
+      const lon2 = (position.lng * Math.PI) / 180;
 
       const dlat = lat2 - lat1;
-      const dlng = lng2 - lng1;
+      const dlon = lon2 - lon1;
 
       const a =
         Math.sin(dlat / 2) ** 2 +
-        Math.cos(lat1) * Math.cos(lat2) * Math.sin(dlng / 2) ** 2;
+        Math.cos(lat1) * Math.cos(lat2) * Math.sin(dlon / 2) ** 2;
       const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
       const distance = R * c;
 
@@ -63,29 +66,18 @@ const GoogleMap: React.FC<MapWithDraggableMarkerProps> = ({ searchParams }) => {
 
   const updateMapElements = useCallback(() => {
     if (mapInstanceRef.current && markerRef.current && circleRef.current) {
-      const center = { lat, lng };
       const newZoom = calculateZoom(radius);
       mapInstanceRef.current.panTo(center);
       mapInstanceRef.current.setZoom(newZoom);
       markerRef.current.position = center;
       circleRef.current.setCenter(center);
       circleRef.current.setRadius(radius);
+      setZoom(newZoom);
+      setCenter(center);
     }
-  }, [lat, lng, radius, calculateZoom]);
+  }, [center, radius, calculateZoom, setCenter]);
 
-  const updateUrlWithNewPosition = useCallback(
-    (newLat: number, newLng: number) => {
-      let newUrl = updateUrlQuery('lat', newLat.toString(), searchParams);
-      newUrl = updateUrlQuery('lng', newLng.toString(), {
-        ...searchParams,
-        lat: newLat.toString()
-      });
-      router.replace(`?${newUrl}`, { scroll: false });
-    },
-    [router, searchParams]
-  );
-
-  const loadGoogleMapsAPI = useCallback(() => {
+  const loadGoogleMapsAPI = () => {
     return new Promise<void>((resolve) => {
       if (typeof window.google === 'undefined') {
         const script = document.createElement('script');
@@ -98,7 +90,7 @@ const GoogleMap: React.FC<MapWithDraggableMarkerProps> = ({ searchParams }) => {
         resolve();
       }
     });
-  }, []);
+  };
 
   useEffect(() => {
     const initMap = async () => {
@@ -112,10 +104,9 @@ const GoogleMap: React.FC<MapWithDraggableMarkerProps> = ({ searchParams }) => {
       )) as google.maps.MarkerLibrary;
 
       if (!mapInstanceRef.current && mapRef.current) {
-        const center = { lat, lng };
         mapInstanceRef.current = new Map(mapRef.current, {
           center,
-          zoom: calculateZoom(radius),
+          zoom: zoom,
           mapId: process.env.NEXT_PUBLIC_GOOGLE_PLACES_MAP_ID as string,
           gestureHandling: 'greedy',
           zoomControl: false
@@ -142,14 +133,24 @@ const GoogleMap: React.FC<MapWithDraggableMarkerProps> = ({ searchParams }) => {
         markerRef.current.addListener('dragend', () => {
           const position = markerRef.current!.position as google.maps.LatLng;
           const constrainedPosition = constrainPosition(position.toJSON());
-          updateUrlWithNewPosition(
-            constrainedPosition.lat,
-            constrainedPosition.lng
-          );
+          setCenter(constrainedPosition);
+          markerRef.current!.position = constrainedPosition;
+          setCenter(constrainedPosition);
         });
       }
 
       updateMapElements();
+      updateUrlQueries(
+        [
+          { name: 'lat', value: center.lat.toString() },
+          { name: 'lng', value: center.lng.toString() },
+          { name: 'radius', value: radius.toString() }
+        ],
+        searchParams
+      );
+      // updateUrlQuery('lat', center.lat, searchParams);
+      // updateUrlQuery('lng', center.lng, searchParams);
+      // updateUrlQuery('radius', radius, searchParams);
     };
 
     initMap();
@@ -159,24 +160,35 @@ const GoogleMap: React.FC<MapWithDraggableMarkerProps> = ({ searchParams }) => {
         google.maps.event.clearInstanceListeners(mapInstanceRef.current);
       }
     };
-  }, [
-    lat,
-    lng,
-    radius,
-    calculateZoom,
-    constrainPosition,
-    updateMapElements,
-    updateUrlWithNewPosition,
-    loadGoogleMapsAPI
-  ]);
+  }, [updateMapElements, zoom, constrainPosition, setCenter, center, radius]);
+
+  const handleRadiusChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newRadius = parseInt(event.target.value, 10);
+    setRadius(newRadius);
+    // updateUrlQuery('radius', newRadius, searchParams);
+    updateMapElements();
+  };
 
   return (
     <div>
       <div ref={mapRef} style={{ height: '400px', width: '100%' }} />
-      <RadiusSlider
-        initialRadius={radius.toString()}
-        searchParams={searchParams}
-      />
+      {/* radius slider */}
+      <div className="flex items-center mt-4 mx-4">
+        <label htmlFor="radius" className="mr-2">
+          Radius:
+        </label>
+        <input
+          type="range"
+          id="radius"
+          min="500"
+          max="4000"
+          step="500"
+          value={radius}
+          onChange={handleRadiusChange}
+          className="w-full"
+        />
+        <span className="ml-2">{parseInt(radius) / 1000} km</span>
+      </div>
     </div>
   );
 };

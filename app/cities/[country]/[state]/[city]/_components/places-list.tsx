@@ -1,30 +1,59 @@
-import React from 'react';
+'use client';
+
+import React, { useState, useEffect } from 'react';
 
 import PlaceCard from '@/components/places/place-card';
 
 import calcDistance from '@/utils/places/calcDistance';
-import { Place } from '@/utils/types';
+import { City, Place } from '@/utils/types';
+import useGetPlaces from '@/utils/hook/useGetPlaces';
+import { filterAndSortPlaces } from '@/utils/places/sortPlacesUtils';
 
 const PlacesList = ({
-  places,
-  coordinates,
+  city,
+  searchParams
 }: {
-  places: Place[];
-  coordinates: { lat: number; lng: number };
+  city: City;
+  searchParams: { [key: string]: string | string[] | undefined };
 }) => {
+  const { allPlaces, isLoading } = useGetPlaces(city, searchParams);
+  const [filteredPlaces, setFilteredPlaces] = useState<Place[]>(allPlaces);
+
+  useEffect(() => {
+    // Filter places based on search params
+    const {
+      radius,
+      lat,
+      lng,
+      place_type,
+      sort_method: sortMethod,
+      sort_order: sortOrder
+    } = searchParams;
+
+    const filteredPlaces = filterAndSortPlaces(
+      allPlaces,
+      sortMethod,
+      { lat, lng },
+      radius,
+      sortOrder
+    );
+
+    setFilteredPlaces(filteredPlaces);
+  }, [searchParams, allPlaces]);
+
   return (
-    <div className='flex flex-col items-end'>
-      <span className='text-lg font-bold pr-4 '>
-        Showing {places ? places.length : 0} places
+    <div className="flex flex-col items-end">
+      <span className="text-lg font-bold pr-4 ">
+        Showing {allPlaces ? allPlaces.length : 0} Places
       </span>
-      <div className='grid xl:grid-cols-3 lg:grid-cols-2 gap-4'>
-        {places && places.length > 0 ? (
-          places.map((place) => (
+      <div className="grid xl:grid-cols-3 lg:grid-cols-2 gap-4">
+        {allPlaces && allPlaces.length > 0 ? (
+          allPlaces.map((place) => (
             <PlaceCard
               place={place}
               distance={calcDistance(coordinates, {
                 lat: place.lat,
-                lng: place.lng,
+                lng: place.lng
               })}
               key={place.id}
             />

@@ -10,9 +10,7 @@ interface CityCardProps {
 
 const CityCard: React.FC<CityCardProps> = ({ city, imageUrl }) => {
   return (
-    <Link
-      href={`/cities/${city.country_code}/${city.state}/${city.name}?place_type=cafe&radius=1000&sort_method=distance&sort_order=asc&lat=${city.lat}&lng=${city.lng}&city_id=${city.id}`}
-    >
+    <Link href={`/cities/${city.country_code}/${city.state}/${city.name}`}>
       <div className="relative w-96 h-64 cursor-pointer rounded-lg overflow-hidden shadow-md m-4 hover:scale-105 duration-200">
         {imageUrl ? (
           <Image
