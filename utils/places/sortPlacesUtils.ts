@@ -4,12 +4,17 @@ import { Place } from '@/utils/types';
 export const filterAndSortPlaces = (
   places: Place[],
   sortMethod: string,
-  coordinates: { lat: number; lng: number } | null,
-  radius: number,
-  descending: boolean,
+  lat: string, 
+  lng: string,
+  radius: string,
+  sortOrder: 'asc' | 'desc',
 ) => {
+  const descending = sortOrder === 'desc';
+  const coordinates = { lat: parseFloat(lat), lng: parseFloat(lng) };
+
+
   return sortPlaces(
-    filterByRadius(places, coordinates, radius),
+    filterByRadius(places, coordinates, parseInt(radius)),
     sortMethod,
     coordinates,
     descending,

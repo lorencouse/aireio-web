@@ -10,7 +10,6 @@ export async function GET(request: NextRequest) {
   const lng = searchParams.get('lng');
   const radius = searchParams.get('radius');
   const type = searchParams.get('type');
-  const pagetoken = searchParams.get('pagetoken');
 
   if (!lat || !lng || !radius || !type) {
     return NextResponse.json(
@@ -19,14 +18,11 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  let url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=${radius}&${
+  const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=${radius}&${
     type === 'coworking' ? 'keyword' : 'type'
   }=${type}&key=${API_KEY}`;
-  console.log(url);
 
-  if (pagetoken) {
-    url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?pagetoken=${pagetoken}&key=${API_KEY}`;
-  }
+  console.log(url);
 
   try {
     const response = await axios.get(url);

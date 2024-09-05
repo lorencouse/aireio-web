@@ -28,31 +28,29 @@ export const fetchPlacesFromGoogle = async (
   lat: string,
   lng: string
 ): Promise<GooglePlace[]> => {
-  const allPlaces: GooglePlace[] = [];
-  let pageToken: string | null = null;
+  const params = new URLSearchParams({
+    type,
+    lat,
+    lng,
+    radius
+  });
 
-  do {
-    const params = new URLSearchParams({
-      type,
-      lat,
-      lng,
-      radius,
-      ...(pageToken && { pagetoken: pageToken })
-    });
-    console.log('Fetching places with params:', params.toString());
+  console.log('Fetching places with params:', params.toString());
+
+  try {
     const res = await fetch(`/api/places/google-places-nearby?${params}`);
-
-    if (!res.ok)
+    if (!res.ok) {
       throw new Error(
         `Network response was not ok: ${res.status} ${res.statusText}`
       );
+    }
 
     const data = await res.json();
     console.log('Received data:', data);
 
-    if (!data.results?.length) {
-      console.log('No results found in this page');
-      break;
+    if (!data.results || !Array.isArray(data.results)) {
+      console.log('No results found or invalid response format');
+      return [];
     }
 
     const newPlaces = data.results.filter(
@@ -61,16 +59,12 @@ export const fetchPlacesFromGoogle = async (
         !city.blacklist_google_ids.includes(place.place_id)
     );
 
-    allPlaces.push(...newPlaces);
-    pageToken = data.next_page_token || null;
-
-    if (pageToken) {
-      console.log('Waiting before fetching next page...');
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-    }
-  } while (pageToken);
-
-  return allPlaces;
+    console.log(`Found ${newPlaces.length} new places`);
+    return newPlaces;
+  } catch (error) {
+    console.error('Error fetching places from Google:', error);
+    throw error;
+  }
 };
 
 export const createNewPlaces = async (
@@ -110,7 +104,8 @@ export const createNewPlaces = async (
           city: city.name,
           city_id: city.id,
           state: city.state,
-          country: city.country
+          country: city.country,
+          county_code: city.country_code
         },
         contact: {},
         amenities: {},

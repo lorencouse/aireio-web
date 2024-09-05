@@ -2,7 +2,7 @@ import { Suspense } from 'react';
 
 import useSupabase from '@/utils/hook/useSupabase';
 
-import HomeClient from './home-client';
+import HomeLayout from './home-layout';
 
 import { City } from '@/types/place';
 
@@ -30,7 +30,7 @@ export default async function Home() {
 
   return (
     <Suspense fallback={<LoadingGrid />}>
-      <HomeClient initialCities={cities} />
+      <HomeLayout initialCities={cities} />
     </Suspense>
   );
 }

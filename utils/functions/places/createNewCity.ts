@@ -43,7 +43,7 @@ const createNewCity = async (cityData: any) => {
 
     if (cityData.photos && cityData.photos.length > 0) {
       const googlePhotoUrl = cityData.photos[0];
-      const imgName = `${cityData.country_code}_${cityData.name}_${cityId}.jpg`;
+      const imgName = `${cityData.country_code}_${cityData.state}_${cityData.name}.jpg`;
 
       try {
         const success = await uploadImageToSupabase(

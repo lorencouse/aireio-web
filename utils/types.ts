@@ -58,6 +58,7 @@ export interface Place {
     state?: string;
     postal_code?: string;
     country?: string;
+    country_code?: string;
     formatted_address?: string;
   };
   contact: {

@@ -1,19 +1,22 @@
 // app/places/_components/CityHero.tsx
 import Image from 'next/image';
-import { getCityPhoto } from '@/utils/functions/cities/getCityPhoto';
 
 interface CityHeroProps {
-  cityId: string;
+  cityName: string;
+  countryName: string;
+  imageUrl: string;
 }
 
-export default async function CityHero({ cityId }: CityHeroProps) {
-  const { imageUrl, cityName, countryCode } = await getCityPhoto(cityId);
-
+export default async function CityHero({
+  cityName,
+  countryName,
+  imageUrl
+}: CityHeroProps) {
   return (
     <div className="relative w-full h-[50vh] min-h-[400px]">
       <Image
         src={imageUrl || '/images/logo.png'}
-        alt={`${cityName || 'City'} cityscape`}
+        alt={`${cityName || 'City'}, ${countryName || 'Country'} cityscape`}
         fill
         style={{ objectFit: 'cover' }}
         priority
@@ -23,7 +26,7 @@ export default async function CityHero({ cityId }: CityHeroProps) {
           {cityName || 'City Name Not Available'}
         </h1>
         <span className="text-white text-xl md:text-2xl font-bold text-center px-4 text-shadow-lg select-none">
-          {countryCode || 'Country Code Not Available'}
+          {countryName || 'Country Code Not Available'}
         </span>
       </div>
     </div>

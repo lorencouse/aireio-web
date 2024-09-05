@@ -7,11 +7,11 @@ import GooglePlacesAutocomplete from '@/components/homepage/google-places-search
 
 import { City } from '@/types/place';
 
-interface HomeClientProps {
+interface HomeLayoutProps {
   initialCities: City[];
 }
 
-export default function HomeClient({ initialCities }: HomeClientProps) {
+export default function HomeLayout({ initialCities }: HomeLayoutProps) {
 
 
   return (

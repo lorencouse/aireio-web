@@ -1,18 +1,18 @@
 // app/cities/[country]/[state]/[city]/page.tsx
-
-'use server';
-
 import { createClient } from '@/utils/supabase/server';
 import PlacesPageLayout from './places-page-layout';
-import { Suspense } from 'react';
+import CityHero from './_components/city-hero';
+import { getSupabaseCityPhotoUrl } from '@/utils/functions/cities/getSupabaseCityPhotoUrl';
 
-const Places = async ({
+export default async function Places({
   params
 }: {
   params: { country: string; state: string; city: string };
-}) => {
+}) {
   const cityName = params.city;
+  const countryName = params.country;
   const supabase = createClient();
+  const imageName = `${params.country}_${params.state}_${cityName}.jpg`;
 
   try {
     const { data: city, error } = await supabase
@@ -29,29 +29,28 @@ const Places = async ({
       throw new Error('City not found');
     }
 
-    console.log('city:', city);
+    // Get the public URL for the image
+
+    const imageUrl = getSupabaseCityPhotoUrl(
+      cityName,
+      params.state,
+      countryName
+    );
+
+    // console.log('city:', city);
 
     return (
       <div className="flex flex-col justify-center items-center w-full mt-[1rem] p-3">
-        <Suspense fallback={<div>Loading...</div>}>
-          <PlacesPageLayout city={city} />
-        </Suspense>
+        <CityHero
+          cityName={cityName.replace(/-/g, ' ')}
+          countryName={city.country}
+          imageUrl={imageUrl}
+        />
+        <PlacesPageLayout city={city} />
       </div>
     );
   } catch (error) {
     console.log('Error fetching city:', error, 'cityName:', cityName);
-    return (
-      <div>
-        Error loading city{' '}
-        {/* <span
-          className="text-blue-500 underline cursor-pointer hover:text-blue-800"
-          onClick={() => window.history.back()}
-        >
-          ← Go Back
-        </span> */}
-      </div>
-    );
+    return <div>Error loading city</div>;
   }
-};
-
-export default Places;
+}

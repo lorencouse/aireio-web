@@ -21,13 +21,12 @@ const useGetCity = () => {
         throw new Error('Failed to check city existence');
       }
 
-      const { exists, id, lat, lng, name, country_code, state } = await checkResponse.json();
+      const { exists, id, lat, lng, name, country_code, state } =
+        await checkResponse.json();
 
       if (exists) {
         console.log('City already exists:', id, lat, lng);
-        router.push(
-          `/cities/${country_code}/${state}/${name}?place_type=cafe&radius=1000&sort_method=distance&sort_order=asc&lat=${lat}&lng=${lng}&city_id=${id}`
-        );
+        router.push(`/cities/${country_code}/${state}/${name}`);
         return;
       }
 
@@ -36,6 +35,8 @@ const useGetCity = () => {
         google_id: city.place_id,
         name: city.address_components
           ? city.address_components[0].long_name
+              .replace(/\s/g, '-')
+              .replace(/[^a-zA-Z0-9-]/g, '')
           : '',
         full_name: city.address_components
           ? city.address_components.map((comp) => comp.long_name).join(', ')
@@ -43,8 +44,9 @@ const useGetCity = () => {
         lat: city.geometry?.location?.lat() || 0,
         lng: city.geometry?.location?.lng() || 0,
         state: city.address_components
-          ? city.address_components[city.address_components.length - 2]
-              ?.long_name || ''
+          ? city.address_components[
+              city.address_components.length - 2
+            ]?.long_name.replace(/\s/g, '-') || ''
           : '',
         state_code: city.address_components
           ? city.address_components[city.address_components.length - 2]
@@ -65,7 +67,7 @@ const useGetCity = () => {
       const newCity = await createNewCity(cityData);
 
       router.push(
-        `/cities/${newCity.country_code}/${newCity.state}/${newCity.name}?place_type=cafe&radius=1000&sort_method=distance&sort_order=asc&lat=${newCity.lat}&lng=${newCity.lng}&city_id=${newCity.id}`
+        `/cities/${newCity.country_code}/${newCity.state}/${newCity.name}`
       );
     } catch (error) {
       console.error('Detailed error in onPlaceSelected:', error);

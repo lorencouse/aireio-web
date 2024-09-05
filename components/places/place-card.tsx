@@ -51,7 +51,11 @@ const PlaceCard = ({ place, distance }: PlaceCardProps) => {
   return (
     <Card
       className="w-96 hover:scale-105 transition-transform duration-200 m-4 cursor-pointer"
-      onClick={() => router.push(`/places/${place.id}`)}
+      onClick={() =>
+        router.push(
+          `/cities/${place.address.country_code}/${place.address.state}/${place.address.city}/${place.id}`
+        )
+      }
     >
       <div className="relative w-full h-52">
         <Image

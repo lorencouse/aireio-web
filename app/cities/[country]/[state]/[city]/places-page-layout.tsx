@@ -30,9 +30,9 @@ export default function PlacesPageLayout({ city }: { city: City }) {
         </div>
       </div>
       <h1 className="text-4xl font-bold my-8 select-none">
-        Workspaces in {city && city.name}
+        Workspaces in {city && city.name.replace(/-/g, ' ')}
       </h1>
-      {/* <PlacesList city={city} searchParams={searchParams} /> */}
+      <PlacesList city={city} searchParams={searchParams} />
     </>
   );
 }
