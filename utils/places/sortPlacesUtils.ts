@@ -4,33 +4,34 @@ import { Place } from '@/utils/types';
 export const filterAndSortPlaces = (
   places: Place[],
   sortMethod: string,
-  lat: string, 
-  lng: string,
-  radius: string,
-  sortOrder: 'asc' | 'desc',
+  lat: number,
+  lng: number,
+  radius: number,
+  sortOrder: 'asc' | 'des'
 ) => {
-  const descending = sortOrder === 'desc';
-  const coordinates = { lat: parseFloat(lat), lng: parseFloat(lng) };
+  const descending = sortOrder === 'des';
+  const coordinates = { lat: lat, lng: lng };
 
+  console.log('filterAndSortPlaces:', coordinates, radius);
 
   return sortPlaces(
-    filterByRadius(places, coordinates, parseInt(radius)),
+    filterByRadius(places, coordinates, radius),
     sortMethod,
     coordinates,
-    descending,
+    descending
   );
 };
 
 export const filterByRadius = (
   places: Place[],
   coordinates: { lat: number; lng: number },
-  radius: number,
+  radius: number
 ) => {
   const radiusVal = radius / 1000;
   return places.filter((place) => {
     const distance = calcDistance(coordinates, {
       lat: place.lat,
-      lng: place.lng,
+      lng: place.lng
     });
     return distance <= radiusVal;
   });
@@ -40,7 +41,7 @@ export const sortPlaces = (
   places: Place[],
   sortMethod: string,
   coordinates: { lat: number; lng: number } | null,
-  descending: boolean,
+  descending: boolean
 ) => {
   return [...places].sort((a, b) => {
     let comparison = 0;

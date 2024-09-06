@@ -105,7 +105,7 @@ export const createNewPlaces = async (
           city_id: city.id,
           state: city.state,
           country: city.country,
-          county_code: city.country_code
+          country_code: city.country_code
         },
         contact: {},
         amenities: {},

@@ -1,11 +1,11 @@
 'use client';
-
 import React, { useState, useEffect } from 'react';
 import PlaceCard from '@/components/places/place-card';
 import calcDistance from '@/utils/places/calcDistance';
 import { City, Place } from '@/utils/types';
 import useGetPlaces from '@/utils/hook/useGetPlaces';
 import { filterAndSortPlaces } from '@/utils/places/sortPlacesUtils';
+import { useSearchParams } from 'next/navigation';
 
 const PlacesList = ({
   city,
@@ -15,26 +15,38 @@ const PlacesList = ({
   searchParams: { [key: string]: string | string[] | undefined };
 }) => {
   const { allPlaces, isLoading, loadPlaces } = useGetPlaces(city, searchParams);
-  const [filteredPlaces, setFilteredPlaces] = useState<Place[]>([]); // Initialize as empty array
+  const [filteredPlaces, setFilteredPlaces] = useState<Place[]>([]);
 
+  // const searchParams = useSearchParams();
+
+  // Load places only when city or place_type changes
   useEffect(() => {
     const fetchPlaces = async () => {
       await loadPlaces(city, searchParams);
     };
-
     fetchPlaces();
-  }, [city, searchParams.place_type]); // Added city as a dependency
+  }, [city, searchParams.place_type]);
 
+  // Update filtered places when search params or allPlaces change
   useEffect(() => {
-    if (!allPlaces || allPlaces.length === 0) return; // Avoid unnecessary filtering
+    if (!allPlaces || allPlaces.length === 0) return;
 
-    // Filter places based on search params
-    const radius = searchParams.radius || '1000';
-    const lat = searchParams.lat || city.lat.toString();
-    const lng = searchParams.lng || city.lng.toString();
-    const placeType = searchParams.place_type || 'cafe';
-    const sortMethod = searchParams.sort_method || 'distance';
-    const sortOrder = searchParams.sort_order || 'asc';
+    const radius = searchParams.get('radius')
+      ? parseInt(searchParams.get('radius')!)
+      : 1000;
+    const lat = searchParams.get('lat')
+      ? parseFloat(searchParams.get('lat')!)
+      : city.lat;
+    const lng = searchParams.get('lng')
+      ? parseFloat(searchParams.get('lng')!)
+      : city.lng;
+
+
+    console.log('URL params:', Object.fromEntries(searchParams));
+    console.log('radius:', radius, 'lat:', lat, 'lng:', lng);
+
+    const sortMethod = searchParams.get('sort_method') || 'distance';
+    const sortOrder = searchParams.get('sort_order') || 'asc';
 
     const filtered = filterAndSortPlaces(
       allPlaces,
@@ -42,12 +54,12 @@ const PlacesList = ({
       lat,
       lng,
       radius,
-      sortOrder
+      sortOrder as 'asc' | 'des'
     );
-    console.log(searchParams);
 
+    console.log('Filtered places:', filtered.length);
     setFilteredPlaces(filtered);
-  }, [searchParams, allPlaces]);
+  }, [allPlaces, searchParams, city]);
 
   return (
     <div className="flex flex-col items-end">
@@ -61,8 +73,12 @@ const PlacesList = ({
               place={place}
               distance={calcDistance(
                 {
-                  lat: parseFloat(searchParams.lat || city.lat.toString()),
-                  lng: parseFloat(searchParams.lng || city.lng.toString())
+                  lat: parseFloat(
+                    searchParams.get('lat') || city.lat.toString()
+                  ),
+                  lng: parseFloat(
+                    searchParams.get('lng') || city.lng.toString()
+                  )
                 },
                 { lat: place.lat, lng: place.lng }
               )}
@@ -76,4 +92,5 @@ const PlacesList = ({
     </div>
   );
 };
+
 export default PlacesList;

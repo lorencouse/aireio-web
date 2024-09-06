@@ -18,7 +18,7 @@ const usePlaces = (
   const loadPlaces = useCallback(
     async (city: City, searchParams: { [key: string]: string | string[] }) => {
       setIsLoading(true);
-      const placeType = searchParams.place_type || 'cafe';
+      const placeType = searchParams.get('place_type') || 'cafe';
       try {
         let fetchedPlaces: Place[] = [];
         if (city[`${placeType}_ids`]?.length) {
