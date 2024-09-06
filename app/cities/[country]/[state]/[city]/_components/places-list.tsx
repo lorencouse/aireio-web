@@ -14,10 +14,12 @@ const PlacesList = ({
   city: City;
   searchParams: { [key: string]: string | string[] | undefined };
 }) => {
-  const { allPlaces, isLoading, loadPlaces } = useGetPlaces(city, searchParams);
+  const { allPlaces, isLoading, loadPlaces, searchNewPlaces } = useGetPlaces(
+    city,
+    searchParams
+  );
   const [filteredPlaces, setFilteredPlaces] = useState<Place[]>([]);
-
-  // const searchParams = useSearchParams();
+  const [seachComplete, setSearchComplete] = useState(false);
 
   // Load places only when city or place_type changes
   useEffect(() => {
@@ -41,7 +43,6 @@ const PlacesList = ({
       ? parseFloat(searchParams.get('lng')!)
       : city.lng;
 
-
     console.log('URL params:', Object.fromEntries(searchParams));
     console.log('radius:', radius, 'lat:', lat, 'lng:', lng);
 
@@ -57,8 +58,24 @@ const PlacesList = ({
       sortOrder as 'asc' | 'des'
     );
 
-    console.log('Filtered places:', filtered.length);
-    setFilteredPlaces(filtered);
+    if (filtered.length === 0 && !seachComplete) {
+      searchNewPlaces(city, searchParams);
+      const newFiltered = filterAndSortPlaces(
+        allPlaces,
+        sortMethod,
+        lat,
+        lng,
+        radius,
+        sortOrder as 'asc' | 'des'
+      );
+
+      setFilteredPlaces(newFiltered);
+      setSearchComplete(true);
+    } else {
+      setFilteredPlaces(filtered);
+      setSearchComplete(false);
+      console.log('Filtered places:', filtered.length);
+    }
   }, [allPlaces, searchParams, city]);
 
   return (

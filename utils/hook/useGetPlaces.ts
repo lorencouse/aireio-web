@@ -14,7 +14,6 @@ const usePlaces = (
   const [allPlaces, setAllPlaces] = useState<Place[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-
   const loadPlaces = useCallback(
     async (city: City, searchParams: { [key: string]: string | string[] }) => {
       setIsLoading(true);
@@ -24,9 +23,19 @@ const usePlaces = (
         if (city[`${placeType}_ids`]?.length) {
           fetchedPlaces = await fetchPlacesFromDatabase(city, placeType);
         } else {
-          const lat = searchParams.lat || city.lat || '0';
-          const lng = searchParams.lng || city.lng || '0';
-          const radius = searchParams.radius || '1000';
+          const radius = searchParams.get('radius') || '1000';
+          const lat = searchParams.get('lat') || city.lat.toString();
+          const lng = searchParams.get('lng') || city.lng.toString();
+          console.log(
+            'lat:',
+            lat,
+            'lng:',
+            lng,
+            'radius:',
+            radius,
+            'placeType:',
+            placeType
+          );
           const googlePlaces = await fetchPlacesFromGoogle(
             city,
             placeType,
@@ -58,10 +67,10 @@ const usePlaces = (
     if (!city) return;
     setIsLoading(true);
 
-    const placeType = searchParams.place_type || 'cafe';
-    const radius = searchParams.radius || '1000';
-    const lat = searchParams.lat || city.lat || '0';
-    const lng = searchParams.lng || city.lng || '0';
+    const placeType = searchParams.get('place_type') || 'cafe';
+    const radius = searchParams.get('radius') || '1000';
+    const lat = searchParams.get('lat') || city.lat.toString();
+    const lng = searchParams.get('lng') || city.lng.toString();
 
     console.log('Searching new places');
     const googlePlaces = await fetchPlacesFromGoogle(
