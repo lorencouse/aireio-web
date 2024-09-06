@@ -11,6 +11,7 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
+import getSupabasePlacePhotoUrl from '@/utils/functions/places/getSupabasePlacePhotoIrl';
 
 interface PlaceCardProps {
   place: Place;
@@ -21,32 +22,35 @@ const PlaceCard = ({ place, distance }: PlaceCardProps) => {
   const router = useRouter();
   const [photoDataUrl, setPhotoDataUrl] = useState('/images/logo.png');
 
-  useEffect(() => {
-    const fetchPhoto = async () => {
-      if (place.photos && place.photos.length > 0) {
-        try {
-          const response = await axios.get(
-            `/api/cities/place-photo?photoReference=${place.photos[0].ref}&maxWidth=400`,
-            {
-              responseType: 'arraybuffer'
-            }
-          );
+  // useEffect(() => {
+  //   const fetchPhoto = async () => {
+  //     if (place.photos && place.photos.length > 0) {
+  //       try {
+  //         const response = await axios.get(
+  //           `/api/cities/place-photo?photoReference=${place.photos[0].ref}&maxWidth=400`,
+  //           {
+  //             responseType: 'arraybuffer'
+  //           }
+  //         );
 
-          const contentType = response.headers['content-type'];
-          const base64String = Buffer.from(response.data, 'binary').toString(
-            'base64'
-          );
-          const dataUrl = `data:${contentType};base64,${base64String}`;
+  //         const contentType = response.headers['content-type'];
+  //         const base64String = Buffer.from(response.data, 'binary').toString(
+  //           'base64'
+  //         );
+  //         const dataUrl = `data:${contentType};base64,${base64String}`;
 
-          setPhotoDataUrl(dataUrl);
-        } catch (error) {
-          console.error('Error fetching photo:', error);
-        }
-      }
-    };
+  //         setPhotoDataUrl(dataUrl);
+  //       } catch (error) {
+  //         console.error('Error fetching photo:', error);
+  //       }
+  //     }
+  //   };
 
-    fetchPhoto();
-  }, [place.photos]);
+  //   fetchPhoto();
+  // }, [place.photos]);
+
+  const photoUrl =  getSupabasePlacePhotoUrl(place.type, place.photos[0]?.ref)
+    // : '/images/logo.png';
 
   return (
     <Card
@@ -59,7 +63,7 @@ const PlaceCard = ({ place, distance }: PlaceCardProps) => {
     >
       <div className="relative w-full h-52">
         <Image
-          src={photoDataUrl}
+          src={photoUrl}
           alt={place.name}
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"

@@ -7,6 +7,8 @@ import { City, GooglePlace, Place } from '@/utils/types';
 import { Database } from '@/types/supabase';
 
 import useSupabase from '../hook/useSupabase';
+import uploadImageToSupabase from '../functions/places/uploadImageToSupabase';
+import axios from 'axios';
 
 const supabase = useSupabase();
 
@@ -117,6 +119,19 @@ export const createNewPlaces = async (
         photos: place.photos ? [{ ref: place.photos[0].photo_reference }] : []
       })
     );
+
+    filteredPlaces.forEach((place) => {
+      if (place.photos && place.photos.length > 0) {
+        try {
+          const response = axios.post(
+            `/api/cities/place-photo?photoReference=${place.photos[0].photo_reference}&maxWidth=800&type=${type}`
+          );
+        } catch (error) {
+          console.error('Error uploading place photo:', error);
+          throw error;
+        }
+      }
+    });
 
     console.log(`Inserting ${newPlaces.length} new places`);
     const { data: insertedPlaces, error } = await supabase

@@ -18,9 +18,9 @@ const GoogleMap: React.FC<MapWithDraggableMarkerProps> = ({
     null
   );
   const circleRef = useRef<google.maps.Circle | null>(null);
-  const initialLat = parseFloat(searchParams.lat || city.lat || '0');
-  const initialLng = parseFloat(searchParams.lng || city.lng || '0');
-  const initialRadius = parseFloat(searchParams?.radius || '1000');
+  const initialLat = parseFloat(searchParams.get('lat') || city.lat || '0');
+  const initialLng = parseFloat(searchParams.get('lng') || city.lng || '0');
+  const initialRadius = parseFloat(searchParams.get('radius') || '1000');
   const [center, setCenter] = useState({ lat: initialLat, lng: initialLng });
 
   const [zoom, setZoom] = useState(14);

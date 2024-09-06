@@ -7,6 +7,7 @@ import updateOsmPlaceData from '@/utils/places/updateOsmPlaceData';
 import PlacePageLayout from './place-page-layout';
 import { Suspense } from 'react';
 import LoadingPlace from './_components/loading-place';
+import getSupabasePlacePhotoUrl from '@/utils/functions/places/getSupabasePlacePhotoIrl';
 
 const checkIsUpToDate = (place: Place): boolean => {
   const thirtyDaysAgo = new Date();
@@ -53,12 +54,9 @@ export default async function PlacePage({
     updatedPlace = await updateOsmPlaceData(updatedPlace);
   }
 
-  const photoUrls = updatedPlace.photos
-    ? updatedPlace.photos.map(
-        (photo) =>
-          `https://maps.googleapis.com/maps/api/place/photo?maxwidth=600&photoreference=${photo.ref}&key=${process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY}`
-      )
-    : [];
+  const photoUrls = [
+    getSupabasePlacePhotoUrl(updatedPlace.type, updatedPlace.photos[0].ref)
+  ];
 
   return (
     <div className="container mx-auto p-4">

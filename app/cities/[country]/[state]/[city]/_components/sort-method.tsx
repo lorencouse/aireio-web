@@ -24,7 +24,7 @@ const SortMethod: React.FC<SortMethodProps> = ({
   searchParams
 }) => {
   const sortMethods = ['distance', 'rating', 'rating-count', 'price'];
-  const sortMethodParams = searchParams.sort_method || 'distance';
+  const sortMethodParams = searchParams.get('sort_method') || 'distance';
 
   const [sortMethod, setSortMethod] = useState(sortMethodParams);
 

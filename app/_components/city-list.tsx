@@ -1,6 +1,6 @@
 import React from 'react';
 
-import CityCard from '@/components/places/city-card';
+import CityCard from './city-card';
 
 import { City } from '@/utils/types';
 

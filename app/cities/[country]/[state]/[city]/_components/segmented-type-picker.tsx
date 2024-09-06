@@ -20,7 +20,7 @@ export default function SegmentedTypePicker({
     { value: 'library', icon: Library, label: 'Library' },
     { value: 'coworking', icon: Briefcase, label: 'Coworking' }
   ];
-  const placeTypeParams = (searchParams.place_type as string) || 'cafe';
+  const placeTypeParams = (searchParams.get('place_type') as string) || 'cafe';
   const [placeType, setPlaceType] = useState(placeTypeParams);
 
   const { updateUrlQuery } = useUpdateUrlQuery();

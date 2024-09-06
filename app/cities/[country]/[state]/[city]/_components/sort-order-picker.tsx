@@ -20,7 +20,7 @@ interface SortOrderPickerProps {
 
 const SortOrderPicker: React.FC<SortOrderPickerProps> = ({ searchParams }) => {
   const sortOrders = ['asc', 'des'];
-  const sortOrderParams = (searchParams.sort_order as string) || 'asc';
+  const sortOrderParams = (searchParams.get('sort_order') as string) || 'asc';
   const [sortOrder, setSortOrder] = useState(sortOrderParams);
   const { updateUrlQuery } = useUpdateUrlQuery();
 
