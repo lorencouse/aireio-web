@@ -1,113 +1,87 @@
 export interface City {
   id: string;
+  name: string;
   google_id: string;
   osm_id?: string;
-  name: string;
   lat: number;
   lng: number;
   state?: string;
+  state_code?: string;
   country?: string;
   country_code?: string;
-  cafe_ids?: string[];
-  library_ids?: string[];
-  coworking_space_ids?: string[];
-  google_place_ids?: string[];
-  blacklist_google_ids?: string[];
   photo_ref?: string;
+  created_at: Date;
+  updated_at: Date;
+  deleted: boolean;
 }
 
-export interface UserProfile {
-  id: string;
-  created_at: Date;
-  full_name?: string;
-  username?: string;
-  language?: string;
-  email?: string;
-  phone?: string;
-  bio?: string;
-  websites?: string[];
-  dob?: Date;
-  theme?: string;
-  favorites?: string[];
-  current_city_id?: string;
-  avatar_url?: string;
-}
 export interface Place {
   id: string;
-  google_place_id: string;
-  oms_place_id?: string;
+  google_id: string;
+  oms_id?: string;
   name: string;
   lat: number;
   lng: number;
   type: 'cafe' | 'library' | 'coworking';
   check_date?: Date;
   business_status?: string;
+  photo_refs: string[];
+  // address
+  add_1?: string;
+  add_2?: string;
+  level?: string;
+  district?: string;
+  city?: string;
+  city_id?: string;
+  county?: string;
+  state?: string;
+  postal_code?: string;
+  country?: string;
+  country_code?: string;
+  formatted_address?: string;
+  // contact info
+  phone?: string;
+  facebook?: string;
+  instagram?: string;
+  mastodon?: string;
+  tiktok?: string;
+  twitter?: string;
+  youtube?: string;
+  email?: string;
+  website?: string;
+  google_maps?: string;
+  // rating
+  rating_score?: number;
+  rating_count?: number;
+  // amenities
+  internet_access?: 'yes' | 'no' | 'wlan';
+  internet_access_fee?: string;
+  dine_in?: boolean;
+  outdoor_seating?: string;
+  indoor_seating?: string;
+  takeaway?: 'only' | 'yes' | 'no';
+  toilet?: string;
+  power_outlets?: string;
+  wheelchair_accessible?: 'limited' | 'yes' | 'no';
+  parking?: string;
+  parking_fee?: string;
+  serves_beer?: boolean;
+  serves_breakfast?: boolean;
+  serves_brunch?: boolean;
+  serves_dinner?: boolean;
+  serves_lunch?: boolean;
+  serves_vegetarian_food?: boolean;
+  serves_vegan_food?: boolean;
+  serves_wine?: boolean;
 
-  photos?: {
-    ref?: string;
-    url?: string;
-  }[];
-  address: {
-    add_1?: string;
-    add_2?: string;
-    level?: string;
-    district?: string;
-    city?: string;
-    city_id?: string;
-    county?: string;
-    state?: string;
-    postal_code?: string;
-    country?: string;
-    country_code?: string;
-    formatted_address?: string;
-  };
-  contact: {
-    phone?: string;
-    facebook?: string;
-    instagram?: string;
-    mastodon?: string;
-    tiktok?: string;
-    twitter?: string;
-    youtube?: string;
-    email?: string;
-    website?: string;
-    google_maps?: string;
-  };
-  amenities: {
-    internet_access?: 'yes' | 'no' | 'wlan';
-    internet_access_fee?: string;
-    dine_in?: boolean;
-    outdoor_seating?: string;
-    indoor_seating?: string;
-    takeaway?: 'only' | 'yes' | 'no';
-    toilet?: string;
-    power_outlets?: string;
-    wheelchair_accessible?: 'limited' | 'yes' | 'no';
-    parking?: string;
-    parking_fee?: string;
-    serves_beer?: boolean;
-    serves_breakfast?: boolean;
-    serves_brunch?: boolean;
-    serves_dinner?: boolean;
-    serves_lunch?: boolean;
-    serves_vegetarian_food?: boolean;
-    serves_vegan_food?: boolean;
-    serves_wine?: boolean;
-  };
-  tags: {
-    brand?: string;
-    brand_wikidata?: string;
-    open_now?: boolean;
-    cost_coffee?: string;
-    description?: string;
-    note?: string;
-    opening_hours?: string;
-    cost?: 0 | 1 | 2 | 3 | 4 | 5;
-  };
-  google_rating: {
-    score?: number;
-    count?: number;
-  };
+  brand?: string;
+  brand_wikidata?: string;
+  cost_coffee?: string;
+  description?: string;
+  note?: string;
+  opening_hours?: string;
+  price_level?: 0 | 1 | 2 | 3 | 4 | 5;
+  deleted: boolean;
 }
 
 export interface GooglePlace {
@@ -153,4 +127,21 @@ export interface GooglePlace {
   types: string[];
   user_ratings_total: number;
   vicinity: string;
+}
+
+export interface UserProfile {
+  id: string;
+  created_at: Date;
+  full_name?: string;
+  username?: string;
+  language?: string;
+  email?: string;
+  phone?: string;
+  bio?: string;
+  websites?: string[];
+  dob?: Date;
+  theme?: string;
+  favorites?: string[];
+  current_city_id?: string;
+  avatar_url?: string;
 }

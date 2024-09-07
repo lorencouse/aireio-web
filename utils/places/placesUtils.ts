@@ -12,18 +12,18 @@ import axios from 'axios';
 
 const supabase = useSupabase();
 
-export const fetchCity = async (cityId: string): Promise<City> => {
-  const { data, error } = await supabase
-    .from('cities')
-    .select('*')
-    .eq('id', cityId)
-    .single();
+// export const fetchCity = async (cityId: string): Promise<City> => {
+//   const { data, error } = await supabase
+//     .from('cities')
+//     .select('*')
+//     .eq('id', cityId)
+//     .single();
 
-  if (error) throw error;
-  return data as City;
-};
+//   if (error) throw error;
+//   return data as City;
+// };
 
-export const fetchPlacesFromGoogle = async (
+export const createAndReturnGooglePlaces = async (
   city: City,
   type: 'cafe' | 'library' | 'coworking',
   radius: string,
@@ -55,12 +55,20 @@ export const fetchPlacesFromGoogle = async (
       return [];
     }
 
-    const newPlaces = data.results.filter(
+    const operationalPlaces = data.results.filter(
       (place: GooglePlace) =>
-        !city.google_place_ids.includes(place.place_id) &&
-        !city.blacklist_google_ids.includes(place.place_id)
+        place.business_status === 'OPERATIONAL' &&
+        typeof place.user_ratings_total === 'number' &&
+        place.user_ratings_total >= 5 &&
+        typeof place.rating === 'number' &&
+        place.rating >= 2.5
     );
 
+    if (!operationalPlaces.length) {
+      console.log('No new places found');
+      return [];
+    }
+    const newPlaces = await createNewPlaces(city, type, operationalPlaces);
     console.log(`Found ${newPlaces.length} new places`);
     return newPlaces;
   } catch (error) {
@@ -72,95 +80,49 @@ export const fetchPlacesFromGoogle = async (
 export const createNewPlaces = async (
   city: City,
   type: 'cafe' | 'library' | 'coworking',
-  googlePlaces: GooglePlace[]
+  places: GooglePlace[]
 ): Promise<Place[]> => {
   try {
-    if (!city || !type || !googlePlaces) {
+    if (!city || !type || !places) {
       throw new Error('Missing required parameters for createNewPlaces');
     }
 
-    const filteredPlaces = googlePlaces.filter(
-      (place: GooglePlace) =>
-        place.business_status === 'OPERATIONAL' &&
-        typeof place.user_ratings_total === 'number' &&
-        place.user_ratings_total >= 5 &&
-        typeof place.rating === 'number' &&
-        place.rating >= 2.5
-    );
-
-    if (!filteredPlaces.length) {
-      console.log('No new places found');
-      return [];
-    }
-
-    const newPlaces: Place[] = filteredPlaces.map(
+    const newPlaces: Place[] = places.map(
       (place: GooglePlace): Omit<Place, 'id'> => ({
-        google_place_id: place.place_id,
         name: place.name,
+        city_id: city.id,
+        google_id: place.place_id,
         lat: place.geometry.location.lat,
         lng: place.geometry.location.lng,
         type,
         business_status: place.business_status,
-        address: {
-          add_1: place.formatted_address || place.vicinity,
-          city: city.name,
-          city_id: city.id,
-          state: city.state,
-          country: city.country,
-          country_code: city.country_code
-        },
-        contact: {},
-        amenities: {},
-        google_rating: {
-          score: place.rating,
-          count: place.user_ratings_total
-        },
-        tags: { cost: place.price_level },
-        photos: place.photos ? [{ ref: place.photos[0].photo_reference }] : []
+        add_1: place.formatted_address || place.vicinity,
+        city: city.name,
+        state: city.state,
+        country: city.country,
+        country_code: city.country_code,
+        rating_score: place.rating,
+        rating_count: place.user_ratings_total,
+        price_level: place.price_level,
+        photo_refs: place.photos ? [place.photos[0].photo_reference] : []
       })
     );
-
-    filteredPlaces.forEach((place) => {
-      if (place.photos && place.photos.length > 0) {
-        try {
-          const response = axios.post(
-            `/api/cities/place-photo?photoReference=${place.photos[0].photo_reference}&maxWidth=800&type=${type}`
-          );
-        } catch (error) {
-          console.error('Error uploading place photo:', error);
-          throw error;
-        }
-      }
-    });
 
     console.log(`Inserting ${newPlaces.length} new places`);
     const { data: insertedPlaces, error } = await supabase
       .from('places')
-      .upsert(newPlaces, { onConflict: 'google_place_id' })
+      .upsert(newPlaces, { onConflict: 'google_id' })
       .select();
 
     if (error) throw error;
-    if (!insertedPlaces || insertedPlaces.length === 0)
-      throw new Error('No places were inserted');
+    if (!insertedPlaces || insertedPlaces.length === 0) {
+      console.log('No new places inserted');
+      return [];
+    }
 
-    console.log(`Updating city with ${insertedPlaces.length} places`);
-    const typeIds = `${type}_ids` as keyof City;
-    const { data: updatedCity, error: updateError } = await supabase
-      .from('cities')
-      .update({
-        [typeIds]: [
-          ...(city[typeIds] || []),
-          ...insertedPlaces.map((place) => place.id)
-        ],
-        google_place_ids: [
-          ...(city.google_place_ids || []),
-          ...insertedPlaces.map((place) => place.google_place_id)
-        ]
-      })
-      .eq('id', city.id)
-      .select();
-
-    if (updateError) throw updateError;
+    insertedPlaces.forEach((place) => {
+      uploadPlacePhotosToSupabase(place);
+    });
 
     return insertedPlaces;
   } catch (error) {
@@ -169,20 +131,75 @@ export const createNewPlaces = async (
   }
 };
 
-export const fetchPlacesFromDatabase = async (
-  city: City,
-  type: 'cafe' | 'library' | 'coworking'
-): Promise<Place[]> => {
+export const uploadPlacePhotosToSupabase = async (place: Place) => {
+  const photos = place.photo_refs;
+  if (!photos || !photos.length) {
+    console.log('No photos found for place', place.name);
+    return;
+  }
+  const type = place.type;
+
+  // Determine if we're in a browser or server environment
+  const isServer = typeof window === 'undefined';
+
+  // Get the base URL for the API
+  const baseUrl = isServer
+    ? process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000' // Replace with your actual API URL
+    : '';
+
+  const uploadPromises = photos.map(async (photo, index) => {
+    const imageName = `${place.country_code}_${place.state}_${place.city}_${place.name}_${index}.jpg`;
+    const formattedImageName = encodeURIComponent(
+      imageName.replace(/[^a-zA-Z0-9_.-]/g, '_')
+    );
+
+    const apiPath = '/api/cities/place-photo';
+    const params = new URLSearchParams({
+      photoReference: photo,
+      maxWidth: '500',
+      type,
+      imageName: formattedImageName,
+      placeId: place.id
+    });
+
+    const fullUrl = `${baseUrl}${apiPath}?${params.toString()}`;
+
+    try {
+      const response = await axios.post(fullUrl);
+      console.log('Photo upload successful:', response.data);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error('Axios error:', error.message, error.response?.data);
+      } else {
+        console.error('Unexpected error:', error);
+      }
+      throw error;
+    }
+  });
+
+  try {
+    await Promise.all(uploadPromises);
+    console.log('All photos uploaded successfully');
+  } catch (error) {
+    console.error('Error uploading one or more photos:', error);
+  }
+};
+
+export const fetchPlacesFromDatabase = async (city: City): Promise<Place[]> => {
   const { data, error, count } = await supabase
     .from('places')
-    .select('*', { count: 'exact' })
-    .in('id', city[`${type}_ids`] || [])
-    .order('name')
-    .limit(200);
+    .select('*')
+    .eq('city_id', city.id);
 
   if (error) {
     console.error('Error fetching places:', error);
     throw error;
+  }
+
+  if (!data || data.length === 0) {
+    console.log('No places found');
+    return [];
   }
 
   return data as Place[];

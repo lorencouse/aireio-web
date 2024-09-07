@@ -13,18 +13,13 @@ const createNewCity = async (cityData: any) => {
       google_id: cityData.google_id || '',
       osm_id: '',
       name: cityData.name,
-      full_name: cityData.full_name,
+      // full_name: cityData.full_name,
       lat: cityData.lat || 0,
       lng: cityData.lng || 0,
       state: cityData.state || '',
       state_code: cityData.state_code || '',
       country: cityData.country || '',
       country_code: cityData.country_code || '',
-      cafe_ids: [],
-      library_ids: [],
-      coworking_ids: [],
-      google_place_ids: [],
-      blacklist_google_ids: [],
       photo_ref: ''
     };
 

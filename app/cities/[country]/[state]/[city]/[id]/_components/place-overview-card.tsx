@@ -1,5 +1,3 @@
-
-
 import React from 'react';
 import { Place } from '@/utils/types';
 import { Card, CardContent } from '@/components/ui/card';
@@ -32,11 +30,11 @@ const PlaceOverviewCard = ({
           <div className="w-full md:w-3/4 md:pl-6">
             {place && <PlaceBreadCrumb place={place} />}
 
-            {place.google_rating && (
+            {place.rating_score && (
               <div className="flex items-center mb-2">
                 <StarIcon className="w-4 h-4 mr-1" />
                 <span>
-                  {place.google_rating.score} ({place.google_rating.count})
+                  {place.rating_score} ({place.rating_count})
                 </span>
               </div>
             )}
@@ -44,7 +42,7 @@ const PlaceOverviewCard = ({
             {place.type === 'cafe' && (
               <p className="mb-2">
                 Price Level:{' '}
-                {place.tags.cost ? '$'.repeat(place.tags.cost) : '?'}
+                {place.price_level ? '$'.repeat(place.price_level) : '?'}
               </p>
             )}
 
@@ -55,15 +53,15 @@ const PlaceOverviewCard = ({
               <h3 className="font-bold mt-4 mb-2">Amenities:</h3>
               <p>
                 Outdoor Seating:{' '}
-                {place.amenities.outdoor_seating || 'Not specified'}
+                {place.outdoor_seating || 'Not specified'}
               </p>
               <p>
                 Power Outlets:{' '}
-                {place.amenities.power_outlets || 'Not specified'}
+                {place.power_outlets || 'Not specified'}
               </p>
               <p>
                 Wheelchair Accessible:{' '}
-                {place.amenities.wheelchair_accessible || 'Not specified'}
+                {place.wheelchair_accessible || 'Not specified'}
               </p>
             </div>
           </div>

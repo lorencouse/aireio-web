@@ -22,11 +22,13 @@ const PlacePageLayout = ({
 
   return (
     <div>
-      <PopupPlaceDeleted
-        showModal={showModal}
-        setShowModal={setShowModal}
-        cityId={place.address.city_id}
-      />
+      {place.deleted && (
+        <PopupPlaceDeleted
+          showModal={showModal}
+          setShowModal={setShowModal}
+          cityId={place.city_id}
+        />
+      )}
       <PlaceHero place={place} photoUrl={photoUrls[0]} />
       <PlaceOverviewCard place={place} photoUrls={photoUrls} />
 

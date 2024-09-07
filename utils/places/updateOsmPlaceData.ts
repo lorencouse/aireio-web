@@ -16,118 +16,99 @@ const updateOsmPlaceData = async (place: Place) => {
   try {
     const updatedPlace: Place = {
       ...place,
-      oms_place_id: osmData.id?.toString(),
-      address: {
-        ...place.address,
-        add_1:
-          place.address.add_1 === undefined || place.address.add_1 === ''
-            ? `${osmData.tags['addr:housenumber'] || ''} ${
-                osmData.tags['addr:street'] || ''
-              }`.trim() || place.address.add_1
-            : place.address.add_1,
-        level:
-          place.address.level === undefined || place.address.level === ''
-            ? osmData.tags.level || place.address.level
-            : place.address.level,
-        city:
-          place.address.city === undefined || place.address.city === ''
-            ? osmData.tags['addr:city'] || place.address.city
-            : place.address.city,
-        state:
-          place.address.state === undefined || place.address.state === ''
-            ? osmData.tags['addr:state'] || place.address.state
-            : place.address.state,
-        postal_code:
-          place.address.postal_code === undefined ||
-          place.address.postal_code === ''
-            ? osmData.tags['addr:postcode'] || place.address.postal_code
-            : place.address.postal_code,
-      },
-      contact: {
-        ...place.contact,
-        phone:
-          place.contact.phone === undefined || place.contact.phone === ''
-            ? osmData.tags.phone || place.contact.phone
-            : place.contact.phone,
-        website:
-          place.contact.website === undefined || place.contact.website === ''
-            ? osmData.tags.website || place.contact.website
-            : place.contact.website,
-        facebook: osmData.tags['contact:facebook'] || place.contact.facebook,
-        instagram: osmData.tags['contact:instagram'] || place.contact.instagram,
-        mastodon: osmData.tags['contact:mastodon'] || place.contact.mastodon,
-        tiktok: osmData.tags['contact:tiktok'] || place.contact.tiktok,
-        twitter: osmData.tags['contact:twitter'] || place.contact.twitter,
-        youtube: osmData.tags['contact:youtube'] || place.contact.youtube,
-        email: osmData.tags.email || place.contact.email,
-      },
-      amenities: {
-        ...place.amenities,
-        outdoor_seating:
-          osmData.tags.outdoor_seating || place.amenities.outdoor_seating,
-        indoor_seating:
-          osmData.tags.indoor_seating || place.amenities.indoor_seating,
-        toilet: osmData.tags.toilet || place.amenities.toilet,
-        power_outlets: osmData.tags.outlets || place.amenities.power_outlets,
-        internet_access:
-          place.amenities.internet_access === undefined
-            ? (osmData.tags.internet_access as 'yes' | 'no' | 'wlan') ||
-              place.amenities.internet_access
-            : place.amenities.internet_access,
-        internet_access_fee:
-          place.amenities.internet_access_fee === undefined
-            ? osmData.tags['internet_access:fee'] ||
-              place.amenities.internet_access_fee
-            : place.amenities.internet_access_fee,
-        dine_in:
-          place.amenities.dine_in === undefined
-            ? osmData.tags.dine_in === 'yes'
-            : place.amenities.dine_in,
-        takeaway:
-          place.amenities.takeaway === undefined
-            ? (osmData.tags.takeaway as 'only' | 'yes' | 'no') ||
-              place.amenities.takeaway
-            : place.amenities.takeaway,
-        wheelchair_accessible:
-          place.amenities.wheelchair_accessible === undefined
-            ? (osmData.tags.wheelchair as 'limited' | 'yes' | 'no') ||
-              place.amenities.wheelchair_accessible
-            : place.amenities.wheelchair_accessible,
-        serves_beer:
-          place.amenities.serves_beer === undefined
-            ? osmData.tags['drink:beer'] === 'yes'
-            : place.amenities.serves_beer,
-        serves_vegetarian_food:
-          place.amenities.serves_vegetarian_food === undefined
-            ? osmData.tags['diet:vegetarian'] === 'yes'
-            : place.amenities.serves_vegetarian_food,
-        serves_vegan_food:
-          place.amenities.serves_vegan_food === undefined
-            ? osmData.tags['diet:vegan'] === 'yes'
-            : place.amenities.serves_vegan_food,
-        serves_wine:
-          place.amenities.serves_wine === undefined
-            ? osmData.tags['drink:wine'] === 'yes'
-            : place.amenities.serves_wine,
-      },
-      tags: {
-        ...place.tags,
-        brand: osmData.tags.brand || place.tags.brand,
-        brand_wikidata:
-          osmData.tags['brand:wikidata'] || place.tags.brand_wikidata,
-        cost_coffee: osmData.tags['cost:coffee'] || place.tags.cost_coffee,
-        note: osmData.tags.note || place.tags.note,
-        description:
-          place.tags.description === undefined || place.tags.description === ''
-            ? osmData.tags.description || place.tags.description
-            : place.tags.description,
-        opening_hours:
-          place.tags.opening_hours === undefined ||
-          place.tags.opening_hours === ''
-            ? formatOpeningHours(osmData.tags.opening_hours) ||
-              place.tags.opening_hours
-            : place.tags.opening_hours,
-      },
+      oms_id: osmData.id?.toString(),
+      add_1:
+        place.add_1 === undefined || place.add_1 === ''
+          ? `${osmData.tags['addr:housenumber'] || ''} ${
+              osmData.tags['addr:street'] || ''
+            }`.trim() || place.add_1
+          : place.add_1,
+      level:
+        place.level === undefined || place.level === ''
+          ? osmData.tags.level || place.level
+          : place.level,
+      city:
+        place.city === undefined || place.city === ''
+          ? osmData.tags['addr:city'] || place.city
+          : place.city,
+      state:
+        place.state === undefined || place.state === ''
+          ? osmData.tags['addr:state'] || place.state
+          : place.state,
+      postal_code:
+        place.postal_code === undefined || place.postal_code === ''
+          ? osmData.tags['addr:postcode'] || place.postal_code
+          : place.postal_code,
+      phone:
+        place.phone === undefined || place.phone === ''
+          ? osmData.tags.phone || place.phone
+          : place.phone,
+      website:
+        place.website === undefined || place.website === ''
+          ? osmData.tags.website || place.website
+          : place.website,
+      facebook: osmData.tags['contact:facebook'] || place.facebook,
+      instagram: osmData.tags['contact:instagram'] || place.instagram,
+      mastodon: osmData.tags['contact:mastodon'] || place.mastodon,
+      tiktok: osmData.tags['contact:tiktok'] || place.tiktok,
+      twitter: osmData.tags['contact:twitter'] || place.twitter,
+      youtube: osmData.tags['contact:youtube'] || place.youtube,
+      email: osmData.tags.email || place.email,
+      outdoor_seating: osmData.tags.outdoor_seating || place.outdoor_seating,
+      indoor_seating: osmData.tags.indoor_seating || place.indoor_seating,
+      toilet: osmData.tags.toilet || place.toilet,
+      power_outlets: osmData.tags.outlets || place.power_outlets,
+      internet_access:
+        place.internet_access === undefined
+          ? (osmData.tags.internet_access as 'yes' | 'no' | 'wlan') ||
+            place.internet_access
+          : place.internet_access,
+      internet_access_fee:
+        place.internet_access_fee === undefined
+          ? osmData.tags['internet_access:fee'] || place.internet_access_fee
+          : place.internet_access_fee,
+      dine_in:
+        place.dine_in === undefined
+          ? osmData.tags.dine_in === 'yes'
+          : place.dine_in,
+      takeaway:
+        place.takeaway === undefined
+          ? (osmData.tags.takeaway as 'only' | 'yes' | 'no') || place.takeaway
+          : place.takeaway,
+      wheelchair_accessible:
+        place.wheelchair_accessible === undefined
+          ? (osmData.tags.wheelchair as 'limited' | 'yes' | 'no') ||
+            place.wheelchair_accessible
+          : place.wheelchair_accessible,
+      serves_beer:
+        place.serves_beer === undefined
+          ? osmData.tags['drink:beer'] === 'yes'
+          : place.serves_beer,
+      serves_vegetarian_food:
+        place.serves_vegetarian_food === undefined
+          ? osmData.tags['diet:vegetarian'] === 'yes'
+          : place.serves_vegetarian_food,
+      serves_vegan_food:
+        place.serves_vegan_food === undefined
+          ? osmData.tags['diet:vegan'] === 'yes'
+          : place.serves_vegan_food,
+      serves_wine:
+        place.serves_wine === undefined
+          ? osmData.tags['drink:wine'] === 'yes'
+          : place.serves_wine,
+      brand: osmData.tags.brand || place.brand,
+      brand_wikidata: osmData.tags['brand:wikidata'] || place.brand_wikidata,
+      cost_coffee: osmData.tags['cost:coffee'] || place.cost_coffee,
+      note: osmData.tags.note || place.note,
+      description:
+        place.description === undefined || place.description === ''
+          ? osmData.tags.description || place.description
+          : place.description,
+      opening_hours:
+        place.opening_hours === undefined || place.opening_hours === ''
+          ? formatOpeningHours(osmData.tags.opening_hours) ||
+            place.opening_hours
+          : place.opening_hours
     };
     console.log('Updated with OSM Data');
     const { error } = await supabase
@@ -154,7 +135,7 @@ export default updateOsmPlaceData;
 const fetchOSMDetails = async (
   longitude: number,
   latitude: number,
-  type: 'cafe' | 'library' | 'coworking',
+  type: 'cafe' | 'library' | 'coworking'
 ) => {
   try {
     let amenityType = type;
@@ -179,8 +160,8 @@ const fetchOSMDetails = async (
 
     const response = await axios.get(url, {
       headers: {
-        'User-Agent': 'YourApp/1.0',
-      },
+        'User-Agent': 'YourApp/1.0'
+      }
     });
 
     // Sort results by distance and get the closest match
@@ -197,7 +178,7 @@ const fetchOSMDetails = async (
   } catch (error) {
     console.error(
       'Error fetching OSM data:',
-      error.response?.data || error.message,
+      error.response?.data || error.message
     );
     return null;
   }

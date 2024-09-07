@@ -3,6 +3,7 @@ import { Place } from '@/utils/types';
 
 export const filterAndSortPlaces = (
   places: Place[],
+  type: string,
   sortMethod: string,
   lat: number,
   lng: number,
@@ -14,12 +15,10 @@ export const filterAndSortPlaces = (
 
   console.log('filterAndSortPlaces:', coordinates, radius);
 
-  return sortPlaces(
-    filterByRadius(places, coordinates, radius),
-    sortMethod,
-    coordinates,
-    descending
-  );
+  const placesByType = filterByType(places, type);
+  const filteredPlaces = filterByRadius(placesByType, coordinates, radius);
+
+  return sortPlaces(filteredPlaces, sortMethod, coordinates, descending);
 };
 
 export const filterByRadius = (
@@ -37,6 +36,10 @@ export const filterByRadius = (
   });
 };
 
+export const filterByType = (places: Place[], type: string) => {
+  return places.filter((place) => place.type === type);
+};
+
 export const sortPlaces = (
   places: Place[],
   sortMethod: string,
@@ -50,11 +53,11 @@ export const sortPlaces = (
       const distanceB = calcDistance(coordinates, { lat: b.lat, lng: b.lng });
       comparison = distanceA - distanceB;
     } else if (sortMethod === 'rating-count') {
-      comparison = (b.google_rating.count || 0) - (a.google_rating.count || 0);
+      comparison = (b.rating_count || 0) - (a.rating_count || 0);
     } else if (sortMethod === 'price') {
-      comparison = (b.tags.cost || 0) - (a.tags.cost || 0);
+      comparison = (b.price_level || 0) - (a.price_level || 0);
     } else {
-      comparison = (b.google_rating.score || 0) - (a.google_rating.score || 0);
+      comparison = (b.rating_score || 0) - (a.rating_score || 0);
     }
     return descending ? comparison : -comparison;
   });

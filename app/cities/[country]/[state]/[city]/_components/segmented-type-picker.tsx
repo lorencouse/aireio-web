@@ -38,6 +38,7 @@ export default function SegmentedTypePicker({
             value={value}
             className="flex items-center justify-center"
             onClick={() => handlePlaceTypeChange(value)}
+            key={value}
           >
             <Icon className="mr-2 h-4 w-4" />
             {label}

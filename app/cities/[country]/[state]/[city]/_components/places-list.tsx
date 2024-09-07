@@ -27,7 +27,7 @@ const PlacesList = ({
       await loadPlaces(city, searchParams);
     };
     fetchPlaces();
-  }, [city, searchParams.place_type]);
+  }, [searchParams.place_type]);
 
   // Update filtered places when search params or allPlaces change
   useEffect(() => {
@@ -42,15 +42,14 @@ const PlacesList = ({
     const lng = searchParams.get('lng')
       ? parseFloat(searchParams.get('lng')!)
       : city.lng;
-
-    console.log('URL params:', Object.fromEntries(searchParams));
-    console.log('radius:', radius, 'lat:', lat, 'lng:', lng);
+    const type = searchParams.get('place_type') || 'cafe';
 
     const sortMethod = searchParams.get('sort_method') || 'distance';
     const sortOrder = searchParams.get('sort_order') || 'asc';
 
     const filtered = filterAndSortPlaces(
       allPlaces,
+      type,
       sortMethod,
       lat,
       lng,
@@ -62,6 +61,7 @@ const PlacesList = ({
       searchNewPlaces(city, searchParams);
       const newFiltered = filterAndSortPlaces(
         allPlaces,
+        type,
         sortMethod,
         lat,
         lng,
@@ -76,7 +76,7 @@ const PlacesList = ({
       setSearchComplete(false);
       console.log('Filtered places:', filtered.length);
     }
-  }, [allPlaces, searchParams, city]);
+  }, [allPlaces, searchParams]);
 
   return (
     <div className="flex flex-col items-end">

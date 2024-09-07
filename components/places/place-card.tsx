@@ -1,8 +1,6 @@
 import Image from 'next/image';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useRouter } from 'next/navigation';
-import axios from 'axios';
-
 import {
   Card,
   CardContent,
@@ -11,7 +9,7 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
-import getSupabasePlacePhotoUrl from '@/utils/functions/places/getSupabasePlacePhotoIrl';
+import getSupabasePlacePhotoUrls from '@/utils/functions/places/getSupabasePlacePhotoUrl';
 
 interface PlaceCardProps {
   place: Place;
@@ -20,17 +18,15 @@ interface PlaceCardProps {
 
 const PlaceCard = ({ place, distance }: PlaceCardProps) => {
   const router = useRouter();
-  const [photoDataUrl, setPhotoDataUrl] = useState('/images/logo.png');
-
-  const photoUrl =  getSupabasePlacePhotoUrl(place.type, place.photos[0]?.ref)
-
+  const photoRef = place.photos ? place.photo_refs[0] : '';
+  const photoUrl = getSupabasePlacePhotoUrls(place.type, place.id);
 
   return (
     <Card
       className="w-96 hover:scale-105 transition-transform duration-200 m-4 cursor-pointer"
       onClick={() =>
         router.push(
-          `/cities/${place.address.country_code}/${place.address.state}/${place.address.city}/${place.id}`
+          `/cities/${place.country_code}/${place.state}/${place.city}/${place.id}`
         )
       }
     >
@@ -42,12 +38,14 @@ const PlaceCard = ({ place, distance }: PlaceCardProps) => {
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           style={{ objectFit: 'cover', objectPosition: 'center' }}
           className="rounded-t-md"
+          priority={true}
+          loading="eager"
         />
       </div>
       <CardHeader>
         <CardTitle className="text-xl">{place.name}</CardTitle>
         <CardDescription className="flex items-center">
-          {place.address.add_1}
+          {place.add_1}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -59,8 +57,8 @@ const PlaceCard = ({ place, distance }: PlaceCardProps) => {
         {place.type === 'cafe' && (
           <div>
             <span className="font-bold">Price: </span>
-            {place.tags.cost ? (
-              Array.from({ length: place.tags.cost }, (_, i) => (
+            {place.price_level ? (
+              Array.from({ length: place.price_level }, (_, i) => (
                 <span key={i}>$</span>
               ))
             ) : (
@@ -68,9 +66,9 @@ const PlaceCard = ({ place, distance }: PlaceCardProps) => {
             )}
           </div>
         )}
-        {place.google_rating.score ? (
+        {place.rating_score ? (
           <div className="text-sm">
-            {place.google_rating.score} ⭐ ({place.google_rating.count})
+            {place.rating_score} ⭐ ({place.rating_count})
           </div>
         ) : (
           <div className="text-sm"></div>

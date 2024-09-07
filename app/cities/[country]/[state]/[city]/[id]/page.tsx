@@ -7,7 +7,7 @@ import updateOsmPlaceData from '@/utils/places/updateOsmPlaceData';
 import PlacePageLayout from './place-page-layout';
 import { Suspense } from 'react';
 import LoadingPlace from './_components/loading-place';
-import getSupabasePlacePhotoUrl from '@/utils/functions/places/getSupabasePlacePhotoIrl';
+import getSupabasePlacePhotoUrls from '@/utils/functions/places/getSupabasePlacePhotoUrl';
 
 const checkIsUpToDate = (place: Place): boolean => {
   const thirtyDaysAgo = new Date();
@@ -54,10 +54,10 @@ export default async function PlacePage({
     updatedPlace = await updateOsmPlaceData(updatedPlace);
   }
 
-  const photoUrls = [
-    getSupabasePlacePhotoUrl(updatedPlace.type, updatedPlace.photos[0].ref)
-  ];
-
+  const photoUrls = await getSupabasePlacePhotoUrls(
+    updatedPlace.type,
+    updatedPlace.id
+  );
   return (
     <div className="container mx-auto p-4">
       <Suspense fallback={<LoadingPlace />}>

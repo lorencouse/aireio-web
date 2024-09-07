@@ -28,7 +28,7 @@ export default function PlaceBreadCrumb({ place }: { place: Place }) {
             onClick={() => window.history.back()}
             className='cursor-pointer'
           >
-            {place.address.city || place.address.state || 'Places'}
+            {place.city || place.state || 'Places'}
           </span>
         </BreadcrumbItem>
         <BreadcrumbSeparator>

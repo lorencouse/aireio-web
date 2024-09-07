@@ -3,11 +3,11 @@ import { useCallback, useState } from 'react';
 import {
   createNewPlaces,
   fetchPlacesFromDatabase,
-  fetchPlacesFromGoogle
+  createAndReturnGooglePlaces
 } from '@/utils/places/placesUtils';
 import { City, Place } from '@/utils/types';
 
-const usePlaces = (
+const useGetPlaces = (
   city: City,
   searchParams: { [key: string]: string | string[] | undefined }
 ) => {
@@ -20,9 +20,10 @@ const usePlaces = (
       const placeType = searchParams.get('place_type') || 'cafe';
       try {
         let fetchedPlaces: Place[] = [];
-        if (city[`${placeType}_ids`]?.length) {
-          fetchedPlaces = await fetchPlacesFromDatabase(city, placeType);
-        } else {
+
+        fetchedPlaces = await fetchPlacesFromDatabase(city);
+        // } else {
+        if (fetchedPlaces.length === 0) {
           const radius = searchParams.get('radius') || '1000';
           const lat = searchParams.get('lat') || city.lat.toString();
           const lng = searchParams.get('lng') || city.lng.toString();
@@ -36,17 +37,12 @@ const usePlaces = (
             'placeType:',
             placeType
           );
-          const googlePlaces = await fetchPlacesFromGoogle(
+          const newPlaces = await createAndReturnGooglePlaces(
             city,
             placeType,
             radius,
             lat,
             lng
-          );
-          const newPlaces = await createNewPlaces(
-            city,
-            placeType,
-            googlePlaces
           );
           fetchedPlaces = [...fetchedPlaces, ...newPlaces];
         }
@@ -73,14 +69,13 @@ const usePlaces = (
     const lng = searchParams.get('lng') || city.lng.toString();
 
     console.log('Searching new places');
-    const googlePlaces = await fetchPlacesFromGoogle(
+    const newPlaces = await createAndReturnGooglePlaces(
       city,
       placeType,
       radius,
       lat,
       lng
     );
-    const newPlaces = await createNewPlaces(city, placeType, googlePlaces);
     setAllPlaces((prevPlaces) => [...prevPlaces, ...newPlaces]);
     setIsLoading(false);
   };
@@ -93,4 +88,4 @@ const usePlaces = (
   };
 };
 
-export default usePlaces;
+export default useGetPlaces;
