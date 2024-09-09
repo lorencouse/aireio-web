@@ -23,8 +23,8 @@ const PlacePageLayout = ({
 
   const fetchPhotos = async () => {
     if (photoUrls.length <= 1) {
-      await uploadPlacePhotosToSupabase(place);
-      const urls = await getSupabasePlacePhotoUrls(place.type, place.id);
+      
+      const urls = await uploadPlacePhotosToSupabase(place);
       setUpdatedPhotoUrls(urls);
     }
   };
@@ -44,7 +44,7 @@ const PlacePageLayout = ({
           cityId={place.city_id}
         />
       )}
-      <PlaceHero place={place} photoUrl={photoUrls[photoUrls.length - 1]} />
+      <PlaceHero place={place} photoUrl={photoUrls[0]} />
       <PlaceOverviewCard place={place} photoUrls={updatedPhotoUrls} />
 
       <PlaceDetails place={place} />

@@ -11,7 +11,13 @@ import { Place, City } from '@/utils/types';
 import CityList from '@/components/homepage/city-list';
 import PlacesList from './_components/places-list';
 
-export default function PlacesPageLayout({ city }: { city: City }) {
+export default function PlacesPageLayout({
+  city,
+  places
+}: {
+  city: City;
+  places;
+}) {
   const searchParams = useSearchParams();
 
   return (
@@ -32,7 +38,7 @@ export default function PlacesPageLayout({ city }: { city: City }) {
       <h1 className="text-4xl font-bold my-8 select-none">
         Workspaces in {city && city.name.replace(/-/g, ' ')}
       </h1>
-      <PlacesList city={city} searchParams={searchParams} />
+      <PlacesList city={city} searchParams={searchParams} places={places} />
     </>
   );
 }

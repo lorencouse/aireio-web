@@ -36,7 +36,7 @@ const Gallery = ({ photos }: { photos: string[] }) => {
 
   const mainImages = useMemo(
     () =>
-      photos.reverse().map((photoUrl, index) => (
+      photos.map((photoUrl, index) => (
         <CarouselItem key={index} className="relative w-full aspect-[4/3]">
           <Image
             src={photoUrl || '/default-image.jpg'}
@@ -54,7 +54,7 @@ const Gallery = ({ photos }: { photos: string[] }) => {
 
   const thumbnailImages = useMemo(
     () =>
-      photos.reverse().map((photoUrl, index) => (
+      photos.map((photoUrl, index) => (
         <CarouselItem
           key={index}
           className="relative aspect-square cursor-pointer"

@@ -23,11 +23,10 @@ const PlaceCard = ({ place, distance }: PlaceCardProps) => {
   const [photoUrls, setPhotoUrls] = useState<string[]>([placeholderImage]);
 
   const fetchPhotos = async () => {
-    const urls = await getSupabasePlacePhotoUrls(place.type, place.id);
+    const urls = await getSupabasePlacePhotoUrls(place.city_id, place.id);
 
     if (urls.length === 0 || urls[0] === placeholderImage) {
-      await uploadPlacePhotosToSupabase(place);
-      const newUrls = await getSupabasePlacePhotoUrls(place.type, place.id);
+      const newUrls = await uploadPlacePhotosToSupabase(place);
       setPhotoUrls(newUrls);
     } else {
       setPhotoUrls(urls);
@@ -49,7 +48,7 @@ const PlaceCard = ({ place, distance }: PlaceCardProps) => {
     >
       <div className="relative w-full h-52">
         <Image
-          src={photoUrls[photoUrls.length - 1]}
+          src={photoUrls[0]}
           alt={place.name}
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"

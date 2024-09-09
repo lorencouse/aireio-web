@@ -37,6 +37,19 @@ export default async function Places({
       countryName
     );
 
+    // Fetch places
+
+    const { data: places, error: placesError } = await supabase
+      .from('places')
+      .select('*')
+      .eq('city_id', city.id);
+
+    if (placesError) {
+      throw placesError;
+    } else if (!places) {
+      throw new Error('Places not found');
+    }
+
     // console.log('city:', city);
 
     return (
@@ -46,7 +59,7 @@ export default async function Places({
           countryName={city.country}
           imageUrl={imageUrl}
         />
-        <PlacesPageLayout city={city} />
+        <PlacesPageLayout city={city} places={places} />
       </div>
     );
   } catch (error) {

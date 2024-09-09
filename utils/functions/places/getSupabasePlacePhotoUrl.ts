@@ -7,17 +7,17 @@ const supabase = createClient(
 );
 
 const getSupabasePlacePhotoUrls = async (
-  type: string,
+  cityId: string,
   placeId: string
 ): Promise<string[]> => {
-  if (!placeId || !type) {
+  if (!placeId || !cityId) {
     return [placeholderImage];
   }
 
   try {
     const { data, error } = await supabase.storage
       .from('images')
-      .list(`places/${type}/${placeId}`);
+      .list(`places/${cityId}/${placeId}`);
 
     if (error) {
       throw error;
@@ -29,7 +29,7 @@ const getSupabasePlacePhotoUrls = async (
         data.map(async (file) => {
           const { data: fileData } = supabase.storage
             .from('images')
-            .getPublicUrl(`places/${type}/${placeId}/${file.name}`);
+            .getPublicUrl(`places/${cityId}/${placeId}/${file.name}`);
 
           if (fileData) {
             const url = new URL(fileData.publicUrl);

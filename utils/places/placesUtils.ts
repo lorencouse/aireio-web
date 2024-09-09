@@ -120,46 +120,64 @@ export const createNewPlaces = async (
   }
 };
 
-export const uploadPlacePhotosToSupabase = async (place: Place) => {
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
+
+export const uploadPlacePhotosToSupabase = async (
+  place: Place
+): Promise<string[]> => {
   const photoRefs = place.photo_refs;
   if (!photoRefs || !photoRefs.length) {
     console.log('No photos found for place', place.name);
-    return;
+    return [];
   }
-  const type = place.type;
 
   const uploadPromises = photoRefs.map(async (photoRef, index) => {
     let imageName;
     if (photoRefs.length === 1) {
-      imageName = `${place.country_code}_${place.state}_${place.city}_${place.name}.jpg`;
+      imageName = `${place.name}_${place.city}_${place.state}_${place.country_code}.jpg`;
     } else {
-      imageName = `${place.country_code}_${place.state}_${place.city}_${place.name}_${index + 1}.jpg`;
+      imageName = `${place.name}_${place.city}_${place.state}_${place.country_code}_${index + 1}.jpg`;
     }
-    const formattedImageName = encodeURIComponent(
-      imageName.replace(/[^a-zA-Z0-9_.-]/g, '_')
-    );
-
-    const apiPath = `/api/cities/place-photo?maxWidth=500&type=${type}&imageName=${formattedImageName}&placeId=${place.id}&photoRef=${photoRef}`;
+    const formattedImageName = imageName.replace(/[^a-zA-Z0-9_.-]/g, '_');
+    const apiPath = `/api/cities/place-photo?maxWidth=500&cityId=${place.city_id}&imageName=${formattedImageName}&placeId=${place.id}&photoRef=${photoRef}`;
 
     try {
       const response = await axios.post(apiPath);
       console.log('Photo upload successful:', response.data);
-      return response.data;
+
+      // Construct the URL manually
+      const url = new URL(
+        `${SUPABASE_URL}/storage/v1/object/public/images/places/${place.city_id}/${place.id}/${formattedImageName}`
+      );
+
+      // Add cache-control header to the URL
+      url.searchParams.append(
+        'cache-control',
+        'public, max-age=31536000, immutable'
+      );
+
+      return url.toString();
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error('Axios error:', error.message, error.response?.data);
       } else {
         console.error('Unexpected error:', error);
       }
-      throw error;
+      return null;
     }
   });
 
   try {
-    await Promise.all(uploadPromises);
+    const results = await Promise.all(uploadPromises);
+    const successfulUploads = results.filter(
+      (url): url is string => url !== null
+    );
     console.log('All photos uploaded successfully');
+    console.log('Constructed URLs:', successfulUploads);
+    return successfulUploads;
   } catch (error) {
     console.error('Error uploading one or more photos:', error);
+    return [];
   }
 };
 

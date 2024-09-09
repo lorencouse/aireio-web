@@ -9,17 +9,19 @@ import { useSearchParams } from 'next/navigation';
 
 const PlacesList = ({
   city,
-  searchParams
+  searchParams,
+  places
 }: {
   city: City;
   searchParams: { [key: string]: string | string[] | undefined };
+  places: Place[];
 }) => {
   const { allPlaces, isLoading, loadPlaces, searchNewPlaces } = useGetPlaces(
     city,
     searchParams
   );
-  const [filteredPlaces, setFilteredPlaces] = useState<Place[]>([]);
-  const [seachComplete, setSearchComplete] = useState(false);
+  const [filteredPlaces, setFilteredPlaces] = useState<Place[]>(places);
+  const [searchComplete, setSearchComplete] = useState(false);
 
   // Load places only when city or place_type changes
   useEffect(() => {
@@ -57,7 +59,7 @@ const PlacesList = ({
       sortOrder as 'asc' | 'des'
     );
 
-    if (filtered.length === 0 && !seachComplete) {
+    if (filtered.length === 0 && !searchComplete) {
       searchNewPlaces(city, searchParams);
       const newFiltered = filterAndSortPlaces(
         allPlaces,

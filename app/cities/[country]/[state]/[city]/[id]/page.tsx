@@ -55,7 +55,7 @@ export default async function PlacePage({
   }
 
   const photoUrls = await getSupabasePlacePhotoUrls(
-    updatedPlace.type,
+    updatedPlace.city_id,
     updatedPlace.id
   );
   return (

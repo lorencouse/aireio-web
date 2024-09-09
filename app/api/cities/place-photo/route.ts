@@ -8,11 +8,12 @@ export async function POST(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const maxWidth = searchParams.get('maxWidth') || '400';
   const photoReference = searchParams.get('photoRef');
-  const type = searchParams.get('type');
+  // const type = searchParams.get('type');
   const imageName = searchParams.get('imageName');
   const placeId = searchParams.get('placeId');
+  const cityId = searchParams.get('cityId');
 
-  if (!photoReference || !type || !imageName || !placeId) {
+  if (!photoReference || !imageName || !placeId || !cityId) {
     return NextResponse.json(
       { error: 'Missing required parameters' },
       { status: 400 }
@@ -33,7 +34,7 @@ export async function POST(request: NextRequest) {
     const success = await uploadImageToSupabase(
       url,
       `${imageName}`,
-      `places/${type}/${placeId}`
+      `places/${cityId}/${placeId}`
     );
     if (success) {
       console.log('Place photo uploaded to Supabase');
