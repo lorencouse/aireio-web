@@ -103,12 +103,7 @@ const updateOsmPlaceData = async (place: Place) => {
       description:
         place.description === undefined || place.description === ''
           ? osmData.tags.description || place.description
-          : place.description,
-      opening_hours:
-        place.opening_hours === undefined || place.opening_hours === ''
-          ? formatOpeningHours(osmData.tags.opening_hours) ||
-            place.opening_hours
-          : place.opening_hours
+          : place.description
     };
     console.log('Updated with OSM Data');
     const { error } = await supabase
@@ -204,7 +199,7 @@ function deg2rad(deg: number) {
   return deg * (Math.PI / 180);
 }
 
-const formatOpeningHours = (hours: string) => {
-  if (!hours) return hours;
-  return hours.replace(/[;,.]/g, '\n').trim();
-};
+// const formatOpeningHours = (hours: string) => {
+//   if (!hours) return hours;
+//   return hours.replace(/[;,.]/g, '\n').trim();
+// };

@@ -1,5 +1,6 @@
 // app/places/_components/CityHero.tsx
 import Image from 'next/image';
+import { placeholderImage } from '@/utils/constants';
 
 interface CityHeroProps {
   cityName: string;
@@ -15,7 +16,7 @@ export default async function CityHero({
   return (
     <div className="relative w-full h-[50vh] min-h-[400px]">
       <Image
-        src={imageUrl || '/images/logo.png'}
+        src={imageUrl || placeholderImage}
         alt={`${cityName || 'City'}, ${countryName || 'Country'} cityscape`}
         fill
         style={{ objectFit: 'cover' }}

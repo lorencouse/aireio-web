@@ -12,17 +12,6 @@ import axios from 'axios';
 
 const supabase = useSupabase();
 
-// export const fetchCity = async (cityId: string): Promise<City> => {
-//   const { data, error } = await supabase
-//     .from('cities')
-//     .select('*')
-//     .eq('id', cityId)
-//     .single();
-
-//   if (error) throw error;
-//   return data as City;
-// };
-
 export const createAndReturnGooglePlaces = async (
   city: City,
   type: 'cafe' | 'library' | 'coworking',
@@ -120,9 +109,9 @@ export const createNewPlaces = async (
       return [];
     }
 
-    insertedPlaces.forEach((place) => {
-      uploadPlacePhotosToSupabase(place);
-    });
+    // insertedPlaces.forEach((place) => {
+    //   uploadPlacePhotosToSupabase(place);
+    // });
 
     return insertedPlaces;
   } catch (error) {
@@ -132,40 +121,28 @@ export const createNewPlaces = async (
 };
 
 export const uploadPlacePhotosToSupabase = async (place: Place) => {
-  const photos = place.photo_refs;
-  if (!photos || !photos.length) {
+  const photoRefs = place.photo_refs;
+  if (!photoRefs || !photoRefs.length) {
     console.log('No photos found for place', place.name);
     return;
   }
   const type = place.type;
 
-  // Determine if we're in a browser or server environment
-  const isServer = typeof window === 'undefined';
-
-  // Get the base URL for the API
-  const baseUrl = isServer
-    ? process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000' // Replace with your actual API URL
-    : '';
-
-  const uploadPromises = photos.map(async (photo, index) => {
-    const imageName = `${place.country_code}_${place.state}_${place.city}_${place.name}_${index}.jpg`;
+  const uploadPromises = photoRefs.map(async (photoRef, index) => {
+    let imageName;
+    if (photoRefs.length === 1) {
+      imageName = `${place.country_code}_${place.state}_${place.city}_${place.name}.jpg`;
+    } else {
+      imageName = `${place.country_code}_${place.state}_${place.city}_${place.name}_${index + 1}.jpg`;
+    }
     const formattedImageName = encodeURIComponent(
       imageName.replace(/[^a-zA-Z0-9_.-]/g, '_')
     );
 
-    const apiPath = '/api/cities/place-photo';
-    const params = new URLSearchParams({
-      photoReference: photo,
-      maxWidth: '500',
-      type,
-      imageName: formattedImageName,
-      placeId: place.id
-    });
-
-    const fullUrl = `${baseUrl}${apiPath}?${params.toString()}`;
+    const apiPath = `/api/cities/place-photo?maxWidth=500&type=${type}&imageName=${formattedImageName}&placeId=${place.id}&photoRef=${photoRef}`;
 
     try {
-      const response = await axios.post(fullUrl);
+      const response = await axios.post(apiPath);
       console.log('Photo upload successful:', response.data);
       return response.data;
     } catch (error) {

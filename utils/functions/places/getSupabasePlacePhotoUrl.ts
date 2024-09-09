@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import { placeholderImage } from '@/utils/constants';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -10,7 +11,7 @@ const getSupabasePlacePhotoUrls = async (
   placeId: string
 ): Promise<string[]> => {
   if (!placeId || !type) {
-    return ['/images/logo.png'];
+    return [placeholderImage];
   }
 
   try {
@@ -39,7 +40,7 @@ const getSupabasePlacePhotoUrls = async (
             );
             return url.toString();
           }
-          return null;
+          return [placeholderImage];
         })
       );
 
@@ -53,10 +54,10 @@ const getSupabasePlacePhotoUrls = async (
     }
 
     // If no files found, return array with default image
-    return ['/images/logo.png'];
+    return [placeholderImage];
   } catch (error) {
     console.error('Error fetching Supabase photo URLs:', error);
-    return ['/images/logo.png'];
+    return [placeholderImage];
   }
 };
 

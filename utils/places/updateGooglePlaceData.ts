@@ -4,15 +4,9 @@ import { createClient } from '../supabase/server';
 
 import convertGoogleAddress from '@/utils/places/convertGoogleAddress';
 import { uploadPlacePhotosToSupabase } from './placesUtils';
-// import { Database } from '@/types/supabase';
-
-// import addPlaceToBlacklist from './addPlaceToBlacklist';
 
 export const updateGooglePlaceData = async (place: Place) => {
   const supabase = createClient();
-  // const thirtyDaysAgo = new Date();
-  // thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-
   try {
     const res = await axios.get(
       `https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.google_id}&key=${process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY}`
@@ -55,7 +49,7 @@ export const updateGooglePlaceData = async (place: Place) => {
       check_date: new Date(),
       business_status: googlePlace.business_status ?? place.business_status,
       photo_refs: googlePlace.photos
-        ? googlePlace.photos.slice(0, 6).map((photo) => photo.photo_reference)
+        ? googlePlace.photos.slice(1, 5).map((photo) => photo.photo_reference)
         : place.photo_refs,
       add_1: convertedAddress.add_1,
       add_2: convertedAddress.add_2,
@@ -95,7 +89,7 @@ export const updateGooglePlaceData = async (place: Place) => {
       website: googlePlace.website ?? place.website ?? undefined,
       google_maps: googlePlace.url ?? place.google_maps ?? undefined,
       opening_hours:
-        googlePlace.opening_hours?.weekday_text?.join('; ') ??
+        googlePlace.opening_hours?.weekday_text ??
         place?.opening_hours ??
         undefined,
       price_level: googlePlace.price_level ?? place?.price_level ?? undefined,
@@ -122,7 +116,7 @@ export const updateGooglePlaceData = async (place: Place) => {
 
     console.log('Place updated with Google Data successfully');
 
-    await uploadPlacePhotosToSupabase(updatedPlace as Place);
+    // await uploadPlacePhotosToSupabase(updatedPlace as Place);
 
     return updatedPlace as Place;
   } catch (error) {

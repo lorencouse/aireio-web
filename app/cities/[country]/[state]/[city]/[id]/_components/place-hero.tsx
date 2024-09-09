@@ -5,6 +5,8 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 
 import { Place } from '@/types/place';
 
+import { placeholderImage } from '@/utils/constants';
+
 interface PlaceHeroProps {
   place: Place;
   photoUrl: string;
@@ -16,7 +18,7 @@ const PlaceHero: React.FC<PlaceHeroProps> = ({ place, photoUrl }) => {
     <div className="relative w-full h-[50vh] min-h-[400px]">
       {photoUrl ? (
         <Image
-          src={photoUrl || '/images/logo.png'}
+          src={photoUrl || placeholderImage}
           alt={`${place.name}`}
           width={1200}
           height={600}

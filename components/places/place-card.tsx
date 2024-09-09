@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   Card,
@@ -10,6 +10,8 @@ import {
   CardTitle
 } from '@/components/ui/card';
 import getSupabasePlacePhotoUrls from '@/utils/functions/places/getSupabasePlacePhotoUrl';
+import { uploadPlacePhotosToSupabase } from '@/utils/places/placesUtils';
+import { placeholderImage } from '@/utils/constants';
 
 interface PlaceCardProps {
   place: Place;
@@ -18,8 +20,23 @@ interface PlaceCardProps {
 
 const PlaceCard = ({ place, distance }: PlaceCardProps) => {
   const router = useRouter();
-  const photoRef = place.photos ? place.photo_refs[0] : '';
-  const photoUrl = getSupabasePlacePhotoUrls(place.type, place.id);
+  const [photoUrls, setPhotoUrls] = useState<string[]>([placeholderImage]);
+
+  const fetchPhotos = async () => {
+    const urls = await getSupabasePlacePhotoUrls(place.type, place.id);
+
+    if (urls.length === 0 || urls[0] === placeholderImage) {
+      await uploadPlacePhotosToSupabase(place);
+      const newUrls = await getSupabasePlacePhotoUrls(place.type, place.id);
+      setPhotoUrls(newUrls);
+    } else {
+      setPhotoUrls(urls);
+    }
+  };
+
+  useEffect(() => {
+    fetchPhotos();
+  }, []);
 
   return (
     <Card
@@ -32,7 +49,7 @@ const PlaceCard = ({ place, distance }: PlaceCardProps) => {
     >
       <div className="relative w-full h-52">
         <Image
-          src={photoUrl}
+          src={photoUrls[photoUrls.length - 1]}
           alt={place.name}
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"

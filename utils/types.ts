@@ -79,7 +79,7 @@ export interface Place {
   cost_coffee?: string;
   description?: string;
   note?: string;
-  opening_hours?: string;
+  opening_hours?: string[];
   price_level?: 0 | 1 | 2 | 3 | 4 | 5;
   deleted: boolean;
 }

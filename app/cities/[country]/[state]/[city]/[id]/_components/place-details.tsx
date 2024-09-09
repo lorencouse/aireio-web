@@ -52,9 +52,8 @@ const PlaceDetails = ({ place }: { place: Place }) => {
     ? new URL(place.website).hostname.replace('www.', '')
     : '';
 
-  const formattedOpeningHours = place?.opening_hours
-    ? place.opening_hours.replace(/; /g, '\n')
-    : '?';
+
+
 
   return (
     <Card>
@@ -111,9 +110,20 @@ const PlaceDetails = ({ place }: { place: Place }) => {
           </div>
         )}
 
-        <div className="flex items-center space-x-2 mb-4">
+        <div className="flex space-x-2 mb-4">
           <Icon name="clock" className="w-5 h-5" />
-          <p>{formattedOpeningHours}</p>
+          {/* <p>{formattedOpeningHours}</p> */}
+          <div>
+            {place?.opening_hours ? (
+              <ul>
+                {place.opening_hours.map((day) => (
+                  <li key={day}>{day}</li>
+                ))}
+              </ul>
+            ) : (
+              <span>?</span>
+            )}
+          </div>
         </div>
 
         <div className="flex justify-between mt-4">

@@ -9,13 +9,13 @@ import {
   Carousel,
   CarouselApi,
   CarouselContent,
-  CarouselItem,
+  CarouselItem
 } from '@/components/ui/carousel';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogTitle,
+  DialogTitle
 } from '@/components/ui/dialog';
 
 const Gallery = ({ photos }: { photos: string[] }) => {
@@ -31,33 +31,33 @@ const Gallery = ({ photos }: { photos: string[] }) => {
       thumbnailApi.scrollTo(index);
       setCurrent(index);
     },
-    [mainApi, thumbnailApi],
+    [mainApi, thumbnailApi]
   );
 
   const mainImages = useMemo(
     () =>
-      photos.map((photoUrl, index) => (
-        <CarouselItem key={index} className='relative w-full aspect-[4/3]'>
+      photos.reverse().map((photoUrl, index) => (
+        <CarouselItem key={index} className="relative w-full aspect-[4/3]">
           <Image
             src={photoUrl || '/default-image.jpg'}
             alt={`Carousel Main Image ${index + 1}`}
             fill
-            sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
-            className='object-cover rounded-lg cursor-pointer'
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            className="object-cover rounded-lg cursor-pointer"
             onClick={() => setIsFullscreenOpen(true)}
-            loading='lazy'
+            loading="lazy"
           />
         </CarouselItem>
       )),
-    [photos],
+    [photos]
   );
 
   const thumbnailImages = useMemo(
     () =>
-      photos.map((photoUrl, index) => (
+      photos.reverse().map((photoUrl, index) => (
         <CarouselItem
           key={index}
-          className='relative aspect-square cursor-pointer'
+          className="relative aspect-square cursor-pointer"
           onClick={() => handleClick(index)}
         >
           <Image
@@ -68,13 +68,13 @@ const Gallery = ({ photos }: { photos: string[] }) => {
             }`}
             src={photoUrl || '/default-image.jpg'}
             fill
-            sizes='(max-width: 768px) 20vw, 10vw'
+            sizes="(max-width: 768px) 20vw, 10vw"
             alt={`Carousel Thumbnail Image ${index + 1}`}
-            loading='lazy'
+            loading="lazy"
           />
         </CarouselItem>
       )),
-    [photos, current, handleClick],
+    [photos, current, handleClick]
   );
 
   useEffect(() => {
@@ -118,34 +118,34 @@ const Gallery = ({ photos }: { photos: string[] }) => {
   }
 
   return (
-    <div className='w-full max-w-3xl mx-auto space-y-4'>
-      <div className='relative'>
+    <div className="w-full max-w-3xl mx-auto space-y-4">
+      <div className="relative">
         <Carousel setApi={setMainApi}>
-          <CarouselContent className='-ml-1'>{mainImages}</CarouselContent>
+          <CarouselContent className="-ml-1">{mainImages}</CarouselContent>
         </Carousel>
         <Button
-          variant='outline'
-          size='icon'
-          className='absolute left-2 top-1/2 transform -translate-y-1/2 opacity-50'
+          variant="outline"
+          size="icon"
+          className="absolute left-2 top-1/2 transform -translate-y-1/2 opacity-50"
           onClick={handlePrevious}
         >
-          <ChevronLeft className='h-4 w-4' />
+          <ChevronLeft className="h-4 w-4" />
         </Button>
         <Button
-          variant='outline'
-          size='icon'
-          className='absolute right-2 top-1/2 transform -translate-y-1/2 opacity-50'
+          variant="outline"
+          size="icon"
+          className="absolute right-2 top-1/2 transform -translate-y-1/2 opacity-50"
           onClick={handleNext}
         >
-          <ChevronRight className='h-4 w-4' />
+          <ChevronRight className="h-4 w-4" />
         </Button>
       </div>
       <Carousel setApi={setThumbnailApi} opts={{ align: 'start' }}>
-        <CarouselContent className='-ml-1'>
+        <CarouselContent className="-ml-1">
           {thumbnailImages.map((thumbnail, index) => (
             <CarouselItem
               key={index}
-              className='pl-1 basis-1/5 sm:basis-1/6 md:basis-1/7'
+              className="pl-1 basis-1/5 sm:basis-1/6 md:basis-1/7"
             >
               {thumbnail}
             </CarouselItem>
@@ -154,7 +154,7 @@ const Gallery = ({ photos }: { photos: string[] }) => {
       </Carousel>
 
       <Dialog open={isFullscreenOpen} onOpenChange={setIsFullscreenOpen}>
-        <DialogContent className='max-w-[90vw] max-h-[90vh] p-0 h-full'>
+        <DialogContent className="max-w-[90vw] max-h-[90vh] p-0 h-full">
           <VisuallyHidden>
             <DialogTitle>Fullscreen Image View</DialogTitle>
             <DialogDescription>
@@ -163,44 +163,44 @@ const Gallery = ({ photos }: { photos: string[] }) => {
             </DialogDescription>
           </VisuallyHidden>
           <Button
-            variant='outline'
-            size='icon'
-            className='absolute right-2 top-2 z-50'
+            variant="outline"
+            size="icon"
+            className="absolute right-2 top-2 z-50"
             onClick={() => setIsFullscreenOpen(false)}
-            aria-label='Close fullscreen view'
+            aria-label="Close fullscreen view"
           >
-            <X className='h-4 w-4' />
+            <X className="h-4 w-4" />
           </Button>
           <Image
             src={photos[current] || '/default-image.jpg'}
             alt={`Fullscreen Image ${current + 1} of ${photos.length}`}
             fill
-            sizes='90vw'
-            className='object-contain'
+            sizes="90vw"
+            className="object-contain"
           />
           <Button
-            variant='outline'
-            size='icon'
-            className='absolute left-2 top-1/2 transform -translate-y-1/2'
+            variant="outline"
+            size="icon"
+            className="absolute left-2 top-1/2 transform -translate-y-1/2"
             onClick={() => {
               handlePrevious();
               setCurrent((prev) => (prev > 0 ? prev - 1 : photos.length - 1));
             }}
-            aria-label='Previous image'
+            aria-label="Previous image"
           >
-            <ChevronLeft className='h-4 w-4' />
+            <ChevronLeft className="h-4 w-4" />
           </Button>
           <Button
-            variant='outline'
-            size='icon'
-            className='absolute right-2 top-1/2 transform -translate-y-1/2'
+            variant="outline"
+            size="icon"
+            className="absolute right-2 top-1/2 transform -translate-y-1/2"
             onClick={() => {
               handleNext();
               setCurrent((prev) => (prev < photos.length - 1 ? prev + 1 : 0));
             }}
-            aria-label='Next image'
+            aria-label="Next image"
           >
-            <ChevronRight className='h-4 w-4' />
+            <ChevronRight className="h-4 w-4" />
           </Button>
         </DialogContent>
       </Dialog>

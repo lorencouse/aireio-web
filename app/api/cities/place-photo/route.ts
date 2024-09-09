@@ -7,7 +7,7 @@ const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY;
 export async function POST(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const maxWidth = searchParams.get('maxWidth') || '400';
-  const photoReference = searchParams.get('photoReference');
+  const photoReference = searchParams.get('photoRef');
   const type = searchParams.get('type');
   const imageName = searchParams.get('imageName');
   const placeId = searchParams.get('placeId');
