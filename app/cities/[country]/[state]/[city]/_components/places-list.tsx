@@ -29,7 +29,7 @@ const PlacesList = ({
       await loadPlaces(city, searchParams);
     };
     fetchPlaces();
-  }, [searchParams.place_type]);
+  }, []);
 
   // Update filtered places when search params or allPlaces change
   useEffect(() => {
@@ -78,7 +78,7 @@ const PlacesList = ({
       setSearchComplete(false);
       console.log('Filtered places:', filtered.length);
     }
-  }, [allPlaces, searchParams]);
+  }, [searchParams, allPlaces]);
 
   return (
     <div className="flex flex-col items-end">

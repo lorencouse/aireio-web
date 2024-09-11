@@ -22,8 +22,6 @@ export async function GET(request: NextRequest) {
     type === 'coworking' ? 'keyword' : 'type'
   }=${type}&key=${API_KEY}`;
 
-  console.log(url);
-
   try {
     const response = await axios.get(url);
     return NextResponse.json(response.data);

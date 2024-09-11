@@ -109,9 +109,9 @@ export const createNewPlaces = async (
       return [];
     }
 
-    // insertedPlaces.forEach((place) => {
-    //   uploadPlacePhotosToSupabase(place);
-    // });
+    insertedPlaces.forEach((place) => {
+      uploadPlacePhotosToSupabase(place);
+    });
 
     return insertedPlaces;
   } catch (error) {

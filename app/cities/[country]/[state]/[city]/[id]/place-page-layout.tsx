@@ -23,9 +23,9 @@ const PlacePageLayout = ({
 
   const fetchPhotos = async () => {
     if (photoUrls.length <= 1) {
-      
       const urls = await uploadPlacePhotosToSupabase(place);
-      setUpdatedPhotoUrls(urls);
+      const allUrls = [...photoUrls, ...urls];
+      setUpdatedPhotoUrls(allUrls);
     }
   };
 
