@@ -3,6 +3,8 @@ import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 
 import { Place } from '@/utils/types';
+import Amenity from './amenity';
+import { EmojiAmenity } from './emoji-amenity';
 
 // Custom Icon component
 const Icon = ({ name, className }: { name: string; className?: string }) => {
@@ -52,110 +54,107 @@ const PlaceDetails = ({ place }: { place: Place }) => {
     ? new URL(place.website).hostname.replace('www.', '')
     : '';
 
-
-
-
   return (
     <Card>
-      <CardContent className="pt-6 text-lg ">
-        <div className="flex items-center space-x-2 mb-4">
-          <Icon
-            name={place.type === 'cafe' ? 'coffee' : 'library'}
-            className="w-5 h-5"
+      <CardContent className="pt-6 text-lg flex flex-row justify-between">
+        <div className="contact-info">
+          <div className="flex items-center space-x-2 mb-4">
+            <Icon
+              name={place.type === 'cafe' ? 'coffee' : 'library'}
+              className="w-5 h-5"
+            />
+            <span className="capitalize">{place.type}</span>
+          </div>
+
+          <div className="flex items-center space-x-2 mb-4">
+            <Icon name="map-pin" className="w-5 h-5" />
+            <div>
+              <span
+                className="hover:underline cursor-pointer"
+                variant="link"
+                onClick={() =>
+                  handlePress(
+                    place.google_maps ||
+                      `https://www.google.com/maps/search/?api=1&query=${place.lat},${place.lon}`
+                  )
+                }
+              >
+                <p>{place?.formatted_address}</p>
+              </span>
+            </div>
+          </div>
+
+          {place?.phone && (
+            <div className="flex items-center space-x-2 mb-4">
+              <Icon name="phone" className="w-5 h-5" />
+              <span
+                variant="link"
+                onClick={() => handlePress(`tel:${place.phone}`)}
+                className="hover:underline cursor-pointer"
+              >
+                {place.phone}
+              </span>
+            </div>
+          )}
+
+          {place?.website && (
+            <div className="flex items-center space-x-2 mb-4">
+              <Icon name="globe" className="w-5 h-5" />
+              <span
+                variant="link"
+                onClick={() => handlePress(place.website)}
+                className="hover:underline cursor-pointer"
+              >
+                {websiteName}
+              </span>
+            </div>
+          )}
+
+          <div className="flex space-x-2 mb-4">
+            <Icon name="clock" className="w-5 h-5" />
+            {/* <p>{formattedOpeningHours}</p> */}
+            <div>
+              {place?.opening_hours ? (
+                <ul>
+                  {place.opening_hours.map((day) => (
+                    <li key={day}>{day}</li>
+                  ))}
+                </ul>
+              ) : (
+                <span>?</span>
+              )}
+            </div>
+          </div>
+
+          <div className="flex justify-between mt-4">
+            <EmojiAmenity emoji="🛜" value={place.internet_access} />
+            <EmojiAmenity emoji="🚽" value={place.toilet} />
+            <EmojiAmenity emoji="♿︎" value={place.wheelchair_accessible} />
+            <EmojiAmenity emoji="🔌" value={place.power_outlets} />
+            <EmojiAmenity emoji="🅿️🚗" value={place.parking} />
+            <EmojiAmenity emoji="🍻" value={place.serves_beer} />
+            <EmojiAmenity emoji="🍷" value={place.serves_wine} />
+            <EmojiAmenity emoji="🍳" value={place.serves_breakfast} />
+            <EmojiAmenity emoji="🥞" value={place.serves_brunch} />
+            <EmojiAmenity emoji="🥪" value={place.serves_lunch} />
+            <EmojiAmenity emoji="🍽️" value={place.serves_dinner} />
+            <EmojiAmenity emoji="🪑" value={place.indoor_seating} />
+            <EmojiAmenity emoji="☀️" value={place.outdoor_seating} />
+          </div>
+        </div>
+        <div className="amenities flex flex-col mx-6 mt-4">
+          <p className="mb-6 text-2xl underline">This Location Serves</p>
+          <Amenity
+            name="Vegetarian Food"
+            value={place.serves_vegetarian_food}
           />
-          <span className="capitalize">{place.type}</span>
-        </div>
-
-        <div className="flex items-center space-x-2 mb-4">
-          <Icon name="map-pin" className="w-5 h-5" />
-          <div>
-            <span
-              className="hover:underline cursor-pointer"
-              variant="link"
-              onClick={() =>
-                handlePress(
-                  place.google_maps ||
-                    `https://www.google.com/maps/search/?api=1&query=${place.lat},${place.lon}`
-                )
-              }
-            >
-              <p>{place?.formatted_address}</p>
-            </span>
-          </div>
-        </div>
-
-        {place?.phone && (
-          <div className="flex items-center space-x-2 mb-4">
-            <Icon name="phone" className="w-5 h-5" />
-            <span
-              variant="link"
-              onClick={() => handlePress(`tel:${place.phone}`)}
-              className="hover:underline cursor-pointer"
-            >
-              {place.phone}
-            </span>
-          </div>
-        )}
-
-        {place?.website && (
-          <div className="flex items-center space-x-2 mb-4">
-            <Icon name="globe" className="w-5 h-5" />
-            <span
-              variant="link"
-              onClick={() => handlePress(place.website)}
-              className="hover:underline cursor-pointer"
-            >
-              {websiteName}
-            </span>
-          </div>
-        )}
-
-        <div className="flex space-x-2 mb-4">
-          <Icon name="clock" className="w-5 h-5" />
-          {/* <p>{formattedOpeningHours}</p> */}
-          <div>
-            {place?.opening_hours ? (
-              <ul>
-                {place.opening_hours.map((day) => (
-                  <li key={day}>{day}</li>
-                ))}
-              </ul>
-            ) : (
-              <span>?</span>
-            )}
-          </div>
-        </div>
-
-        <div className="flex justify-between mt-4">
-          <span title="Internet Access">
-            🛜:{' '}
-            {place?.internet_access === 'yes' ||
-            place?.internet_access === 'wlan'
-              ? '✅'
-              : place?.internet_access === 'no'
-                ? '🚫'
-                : '🤔'}
-          </span>
-          <span title="Seating">
-            🪑:{' '}
-            {place?.outdoor_seating === 'yes'
-              ? '✅ Outdoor'
-              : place?.indoor_seating === 'yes'
-                ? '✅ Indoor'
-                : place?.outdoor_seating || place?.indoor_seating
-                  ? '🚫'
-                  : '🤔'}
-          </span>
-          <span title="Wheelchair Accessible">
-            ♿️:{' '}
-            {place?.wheelchair_accessible === 'yes'
-              ? '✅'
-              : place?.wheelchair_accessible === 'limited'
-                ? '⚠️'
-                : place?.wheelchair_accessible === 'no'
-                  ? '🚫'
-                  : '🤔'}
-          </span>
+          <Amenity name="Vegan Food" value={place.serves_vegan_food} />
+          <Amenity name="Beer" value={place.serves_beer} />
+          <Amenity name="Wine" value={place.serves_wine} />
+          <Amenity name="Breakfast" value={place.serves_breakfast} />
+          <Amenity name="Brunch" value={place.serves_brunch} />
+          <Amenity name="Lunch" value={place.serves_lunch} />
+          <Amenity name="Dinner" value={place.serves_dinner} />
         </div>
       </CardContent>
     </Card>

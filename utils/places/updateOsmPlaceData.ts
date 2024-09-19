@@ -3,6 +3,14 @@ import axios from 'axios';
 
 import { Database } from '@/types/supabase';
 
+function convertStringToBool(
+  value: string | boolean | undefined
+): boolean | undefined {
+  if (typeof value === 'boolean') return value;
+  if (value === undefined) return undefined;
+  return value.toLowerCase() === 'yes';
+}
+
 const updateOsmPlaceData = async (place: Place) => {
   const { lat, lng, type } = place;
   const osmData = await fetchOSMDetails(lng, lat, type);
@@ -54,48 +62,40 @@ const updateOsmPlaceData = async (place: Place) => {
       twitter: osmData.tags['contact:twitter'] || place.twitter,
       youtube: osmData.tags['contact:youtube'] || place.youtube,
       email: osmData.tags.email || place.email,
-      outdoor_seating: osmData.tags.outdoor_seating || place.outdoor_seating,
-      indoor_seating: osmData.tags.indoor_seating || place.indoor_seating,
-      toilet: osmData.tags.toilet || place.toilet,
-      power_outlets: osmData.tags.outlets || place.power_outlets,
+      outdoor_seating:
+        place.outdoor_seating ??
+        convertStringToBool(osmData.tags.outdoor_seating),
+      indoor_seating:
+        place.indoor_seating ??
+        convertStringToBool(osmData.tags.indoor_seating),
+      toilet: place.toilet ?? convertStringToBool(osmData.tags.toilet),
+      power_outlets:
+        place.power_outlets ?? convertStringToBool(osmData.tags.outlets),
       internet_access:
-        place.internet_access === undefined
-          ? (osmData.tags.internet_access as 'yes' | 'no' | 'wlan') ||
-            place.internet_access
-          : place.internet_access,
+        place.internet_access ??
+        convertStringToBool(
+          osmData.tags.internet_access === 'wlan'
+            ? 'yes'
+            : osmData.tags.internet_access
+        ),
       internet_access_fee:
-        place.internet_access_fee === undefined
-          ? osmData.tags['internet_access:fee'] || place.internet_access_fee
-          : place.internet_access_fee,
-      dine_in:
-        place.dine_in === undefined
-          ? osmData.tags.dine_in === 'yes'
-          : place.dine_in,
-      takeaway:
-        place.takeaway === undefined
-          ? (osmData.tags.takeaway as 'only' | 'yes' | 'no') || place.takeaway
-          : place.takeaway,
+        place.internet_access_fee ??
+        convertStringToBool(osmData.tags['internet_access:fee']),
+      dine_in: place.dine_in ?? convertStringToBool(osmData.tags.dine_in),
+      takeaway: place.takeaway ?? convertStringToBool(osmData.tags.takeaway),
       wheelchair_accessible:
-        place.wheelchair_accessible === undefined
-          ? (osmData.tags.wheelchair as 'limited' | 'yes' | 'no') ||
-            place.wheelchair_accessible
-          : place.wheelchair_accessible,
+        place.wheelchair_accessible ??
+        convertStringToBool(osmData.tags.wheelchair),
       serves_beer:
-        place.serves_beer === undefined
-          ? osmData.tags['drink:beer'] === 'yes'
-          : place.serves_beer,
+        place.serves_beer ?? convertStringToBool(osmData.tags['drink:beer']),
       serves_vegetarian_food:
-        place.serves_vegetarian_food === undefined
-          ? osmData.tags['diet:vegetarian'] === 'yes'
-          : place.serves_vegetarian_food,
+        place.serves_vegetarian_food ??
+        convertStringToBool(osmData.tags['diet:vegetarian']),
       serves_vegan_food:
-        place.serves_vegan_food === undefined
-          ? osmData.tags['diet:vegan'] === 'yes'
-          : place.serves_vegan_food,
+        place.serves_vegan_food ??
+        convertStringToBool(osmData.tags['diet:vegan']),
       serves_wine:
-        place.serves_wine === undefined
-          ? osmData.tags['drink:wine'] === 'yes'
-          : place.serves_wine,
+        place.serves_wine ?? convertStringToBool(osmData.tags['drink:wine']),
       brand: osmData.tags.brand || place.brand,
       brand_wikidata: osmData.tags['brand:wikidata'] || place.brand_wikidata,
       cost_coffee: osmData.tags['cost:coffee'] || place.cost_coffee,

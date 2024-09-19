@@ -6,7 +6,9 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 
 import PlaceBreadCrumb from './place-breadcrumb';
 import { StarIcon } from '@radix-ui/react-icons';
-
+import { Badge } from '@/components/ui/badge';
+import { AddInfoButton } from './add-info-button';
+import Amenity  from './amenity';
 const PlaceOverviewCard = ({
   place,
   photoUrls
@@ -45,24 +47,21 @@ const PlaceOverviewCard = ({
                 {place.price_level ? '$'.repeat(place.price_level) : '?'}
               </p>
             )}
-
-            <p className="mb-2">
-              Type: <span className="capitalize">{place.type}</span>
-            </p>
             <div>
-              <h3 className="font-bold mt-4 mb-2">Amenities:</h3>
-              <p>
-                Outdoor Seating:{' '}
-                {place.outdoor_seating || 'Not specified'}
-              </p>
-              <p>
-                Power Outlets:{' '}
-                {place.power_outlets || 'Not specified'}
-              </p>
-              <p>
-                Wheelchair Accessible:{' '}
-                {place.wheelchair_accessible || 'Not specified'}
-              </p>
+              {/* <h3 className="font-bold mt-4 mb-2">Amenities:</h3> */}
+
+              <Amenity name={'Indoor Seating'} value={place.indoor_seating} />
+
+              <Amenity name={'Outdoor Seating'} value={place.outdoor_seating} />
+
+              <Amenity name={'Power Outlets'} value={place.power_outlets} />
+
+              <Amenity name={'Wifi'} value={place.internet_access} />
+
+              <Amenity
+                name={'Wheelchair Accessible'}
+                value={place.wheelchair_accessible}
+              />
             </div>
           </div>
         </CardContent>

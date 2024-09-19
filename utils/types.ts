@@ -22,9 +22,9 @@ export interface Place {
   name: string;
   lat: number;
   lng: number;
-  type: 'cafe' | 'library' | 'coworking';
+  type: string;
   check_date?: Date;
-  business_status?: string;
+  // business_status?: string;
   photo_refs: string[];
   // address
   add_1?: string;
@@ -54,17 +54,17 @@ export interface Place {
   rating_score?: number;
   rating_count?: number;
   // amenities
-  internet_access?: 'yes' | 'no' | 'wlan';
-  internet_access_fee?: string;
+  internet_access?: boolean;
+  internet_access_fee?: boolean;
   dine_in?: boolean;
-  outdoor_seating?: string;
-  indoor_seating?: string;
-  takeaway?: 'only' | 'yes' | 'no';
-  toilet?: string;
-  power_outlets?: string;
-  wheelchair_accessible?: 'limited' | 'yes' | 'no';
-  parking?: string;
-  parking_fee?: string;
+  outdoor_seating?: boolean;
+  indoor_seating?: boolean;
+  takeaway?: boolean;
+  toilet?: boolean;
+  power_outlets?: boolean;
+  wheelchair_accessible?: boolean;
+  parking?: boolean;
+  parking_fee?: boolean;
   serves_beer?: boolean;
   serves_breakfast?: boolean;
   serves_brunch?: boolean;
@@ -80,7 +80,7 @@ export interface Place {
   description?: string;
   note?: string;
   opening_hours?: string[];
-  price_level?: 0 | 1 | 2 | 3 | 4 | 5;
+  price_level?: number;
   deleted: boolean;
 }
 

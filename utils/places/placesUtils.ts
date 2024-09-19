@@ -14,7 +14,7 @@ const supabase = useSupabase();
 
 export const createAndReturnGooglePlaces = async (
   city: City,
-  type: 'cafe' | 'library' | 'coworking',
+  type: string,
   radius: string,
   lat: string,
   lng: string
@@ -68,7 +68,7 @@ export const createAndReturnGooglePlaces = async (
 
 export const createNewPlaces = async (
   city: City,
-  type: 'cafe' | 'library' | 'coworking',
+  type: string,
   places: GooglePlace[]
 ): Promise<Place[]> => {
   try {
@@ -76,34 +76,38 @@ export const createNewPlaces = async (
       throw new Error('Missing required parameters for createNewPlaces');
     }
 
-    const newPlaces: Place[] = places.map(
-      (place: GooglePlace): Omit<Place, 'id'> => ({
-        name: place.name,
-        city_id: city.id,
-        google_id: place.place_id,
-        lat: place.geometry.location.lat,
-        lng: place.geometry.location.lng,
-        type,
-        business_status: place.business_status,
-        add_1: place.formatted_address || place.vicinity,
-        city: city.name,
-        state: city.state,
-        country: city.country,
-        country_code: city.country_code,
-        rating_score: place.rating,
-        rating_count: place.user_ratings_total,
-        price_level: place.price_level,
-        photo_refs: place.photos ? [place.photos[0].photo_reference] : []
-      })
-    );
+    const newPlaces: Omit<Place, 'id'>[] = places.map((place: GooglePlace) => ({
+      name: place.name,
+      city_id: city.id,
+      google_id: place.place_id,
+      lat: place.geometry.location.lat,
+      lng: place.geometry.location.lng,
+      type,
+      add_1: place.formatted_address || place.vicinity,
+      city: city.name,
+      state: city.state,
+      country: city.country,
+      country_code: city.country_code,
+      rating_score: place.rating,
+      rating_count: place.user_ratings_total,
+      price_level: place.price_level,
+      photo_refs: place.photos ? [place.photos[0].photo_reference] : []
+    }));
 
     console.log(`Inserting ${newPlaces.length} new places`);
     const { data: insertedPlaces, error } = await supabase
       .from('places')
-      .upsert(newPlaces, { onConflict: 'google_id' })
+      .upsert(newPlaces, {
+        onConflict: 'google_id',
+        ignoreDuplicates: false
+      })
       .select();
 
-    if (error) throw error;
+    if (error) {
+      console.error('Error in upsert operation:', error);
+      throw error;
+    }
+
     if (!insertedPlaces || insertedPlaces.length === 0) {
       console.log('No new places inserted');
       return [];

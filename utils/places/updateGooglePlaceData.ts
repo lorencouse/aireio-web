@@ -47,7 +47,7 @@ export const updateGooglePlaceData = async (place: Place) => {
       lat: googlePlace.geometry?.location?.lat ?? place.lat,
       lng: googlePlace.geometry?.location?.lng ?? place.lng,
       check_date: new Date(),
-      business_status: googlePlace.business_status ?? place.business_status,
+      // business_status: googlePlace.business_status ?? place.business_status,
       photo_refs: googlePlace.photos
         ? googlePlace.photos.slice(1, 5).map((photo) => photo.photo_reference)
         : place.photo_refs,
@@ -64,9 +64,10 @@ export const updateGooglePlaceData = async (place: Place) => {
         googlePlace.formatted_address ?? place?.formatted_address,
 
       dine_in: googlePlace.dine_in ?? place.amenities?.dine_in ?? undefined,
-      wheelchair_accessible: googlePlace.wheelchair_accessible_entrance
-        ? 'yes'
-        : (place.amenities?.wheelchair_accessible ?? undefined),
+      wheelchair_accessible:
+        googlePlace.wheelchair_accessible_entrance ??
+        place.amenities?.wheelchair_accessible ??
+        undefined,
       serves_beer: googlePlace.serves_beer ?? place.serves_beer ?? undefined,
       serves_breakfast:
         googlePlace.serves_breakfast ?? place.serves_breakfast ?? undefined,
