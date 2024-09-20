@@ -7,6 +7,7 @@ import {
   PopoverContent,
   PopoverTrigger
 } from '@/components/ui/popover';
+import { getUser } from '@/utils/supabase/queries';
 
 export default function Amenity({
   name,
@@ -16,6 +17,7 @@ export default function Amenity({
   value: boolean;
 }) {
   const [buttonValue, setButtonValue] = useState<boolean | null>(null);
+  
 
   return (
     <div className="seating flex flex-row items-center gap-4 mb-2">
@@ -28,7 +30,7 @@ export default function Amenity({
                 ? 'Yes'
                 : value === false
                   ? 'No'
-                  : 'Not specified'}
+                  : 'Add'}
             </span>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-5">

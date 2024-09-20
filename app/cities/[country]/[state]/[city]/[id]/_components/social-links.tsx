@@ -1,48 +1,64 @@
-//   facebook?: string;
-//   instagram?: string;
-//   mastodon?: string;
-//   tiktok?: string;
-//   twitter?: string;
-//   youtube?: string;
-//   email?: string;
-//   website?: string;
-//   google_maps?: string;
-
 import React from 'react';
-
 import { Place } from '@/utils/types';
+import {
+  Facebook,
+  Instagram,
+  Mastodon,
+  Tiktok,
+  Twitter,
+  Youtube,
+  Globe,
+  MapPin,
+  Mail
+} from 'lucide-react';
+import AddSocialLink from './social-link-add-button';
 
 const SocialLinks = ({ place }: { place: Place }) => {
-  const { facebook, instagram, mastodon, tiktok, twitter, youtube } = place;
-  // social links object to array { name: 'facebook', link: facebook }
-  const socialLinks = [
-    { name: 'facebook', link: facebook },
-    { name: 'instagram', link: instagram },
-    { name: 'mastodon', link: mastodon },
-    { name: 'tiktok', link: tiktok },
-    { name: 'twitter', link: twitter },
-    { name: 'youtube', link: youtube },
-    { name: 'website', link: place.website },
-    { name: 'google maps', link: place.google_maps },
-    { name: 'email', link: place.email },
-  ]
+  const {
+    facebook,
+    instagram,
+    mastodon,
+    tiktok,
+    twitter,
+    youtube,
+    website,
+    google_maps,
+    email
+  } = place;
+
+  const socials = [
+    { name: 'facebook', link: facebook, icon: Facebook },
+    { name: 'instagram', link: instagram, icon: Instagram },
+    { name: 'mastodon', link: mastodon, icon: Mastodon },
+    { name: 'tiktok', link: tiktok, icon: Tiktok },
+    { name: 'twitter', link: twitter, icon: Twitter },
+    { name: 'youtube', link: youtube, icon: Youtube },
+    { name: 'website', link: website, icon: Globe },
+    { name: 'google maps', link: google_maps, icon: MapPin },
+    { name: 'email', link: email, icon: Mail }
+  ];
 
   return (
-
-          <div key={index} className="flex flex-row items-center space-x-2">
-    {socialLinks.map((link, index) => (
-        <Icon name="link" className="w-5 h-5" />
-        <a
-          href={link.link}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="hover:underline">{link.name}</a>
-    ))}
-  </div> 
-  )
-
-
-
-    } 
+    <div className="flex flex-row flex-wrap gap-4 mt-4 items-center">
+      <p className="font-bold">Social Links:</p>
+      {socials.map((social, index) =>
+        social.link && social.link.length > 0 ? (
+          <a
+            key={index}
+            href={social.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-blue-500 transition-colors duration-200"
+            title={`${social.name} for ${place.city} ${place.name} `}
+          >
+            <social.icon className="w-6 h-6 text-foreground" />
+          </a>
+        ) : (
+          <AddSocialLink key={index} name={social.name} />
+        )
+      )}
+    </div>
+  );
+};
 
 export default SocialLinks;

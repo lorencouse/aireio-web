@@ -84,6 +84,59 @@ export interface Place {
   deleted: boolean;
 }
 
+export interface UserSubmittedPlaceDetails {
+  id: string;
+  place_id: string;
+  user_id: string;
+  updated: Date;
+  // contact info
+  phone?: string;
+  facebook?: string;
+  instagram?: string;
+  mastodon?: string;
+  tiktok?: string;
+  twitter?: string;
+  youtube?: string;
+  email?: string;
+  website?: string;
+
+  // amenities
+  internet_access?: boolean;
+  internet_access_fee?: boolean;
+  internet_name?: string;
+  internet_password?: string;
+  dine_in?: boolean;
+  outdoor_seating?: boolean;
+  indoor_seating?: boolean;
+  takeaway?: boolean;
+  toilet?: boolean;
+  toilet_code?: string;
+  power_outlets?: boolean;
+  wheelchair_accessible?: boolean;
+  parking?: boolean;
+  parking_fee?: boolean;
+  serves_beer?: boolean;
+  serves_breakfast?: boolean;
+  serves_brunch?: boolean;
+  serves_dinner?: boolean;
+  serves_lunch?: boolean;
+  serves_vegetarian_food?: boolean;
+  serves_vegan_food?: boolean;
+  serves_wine?: boolean;
+
+  price_level?: number;
+  cost_coffee?: number;
+  internet_password?: string;
+  bathroom_code?: string;
+  description?: string;
+  note?: string;
+  
+  // rating
+  rating_score?: number;
+  review?: string;
+  photos?: string[];
+}
+
 export interface GooglePlace {
   business_status: string;
   geometry: {

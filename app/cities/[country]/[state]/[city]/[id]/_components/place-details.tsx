@@ -5,6 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Place } from '@/utils/types';
 import Amenity from './amenity';
 import { EmojiAmenity } from './emoji-amenity';
+import SocialLinks from './social-links';
 
 // Custom Icon component
 const Icon = ({ name, className }: { name: string; className?: string }) => {
@@ -58,6 +59,18 @@ const PlaceDetails = ({ place }: { place: Place }) => {
     <Card>
       <CardContent className="pt-6 text-lg flex flex-row justify-between">
         <div className="contact-info">
+          <div className="mb-8">
+            {(place.notes && place.notes.length > 0) ||
+              (place.description && place.description.length > 0 && (
+                <>
+                  <h3 className="underline font-extrabold mb-4">
+                    {place.name} Overview
+                  </h3>
+                  <p>{place.description}</p>
+                  <p>{place.note}</p>
+                </>
+              ))}
+          </div>
           <div className="flex items-center space-x-2 mb-4">
             <Icon
               name={place.type === 'cafe' ? 'coffee' : 'library'}
@@ -126,35 +139,26 @@ const PlaceDetails = ({ place }: { place: Place }) => {
             </div>
           </div>
 
-          <div className="flex justify-between mt-4">
-            <EmojiAmenity emoji="🛜" value={place.internet_access} />
-            <EmojiAmenity emoji="🚽" value={place.toilet} />
-            <EmojiAmenity emoji="♿︎" value={place.wheelchair_accessible} />
-            <EmojiAmenity emoji="🔌" value={place.power_outlets} />
-            <EmojiAmenity emoji="🅿️🚗" value={place.parking} />
-            <EmojiAmenity emoji="🍻" value={place.serves_beer} />
-            <EmojiAmenity emoji="🍷" value={place.serves_wine} />
-            <EmojiAmenity emoji="🍳" value={place.serves_breakfast} />
-            <EmojiAmenity emoji="🥞" value={place.serves_brunch} />
-            <EmojiAmenity emoji="🥪" value={place.serves_lunch} />
-            <EmojiAmenity emoji="🍽️" value={place.serves_dinner} />
-            <EmojiAmenity emoji="🪑" value={place.indoor_seating} />
-            <EmojiAmenity emoji="☀️" value={place.outdoor_seating} />
-          </div>
+
+          <SocialLinks place={place} />
         </div>
         <div className="amenities flex flex-col mx-6 mt-4">
-          <p className="mb-6 text-2xl underline">This Location Serves</p>
-          <Amenity
-            name="Vegetarian Food"
-            value={place.serves_vegetarian_food}
-          />
-          <Amenity name="Vegan Food" value={place.serves_vegan_food} />
-          <Amenity name="Beer" value={place.serves_beer} />
-          <Amenity name="Wine" value={place.serves_wine} />
-          <Amenity name="Breakfast" value={place.serves_breakfast} />
-          <Amenity name="Brunch" value={place.serves_brunch} />
-          <Amenity name="Lunch" value={place.serves_lunch} />
-          <Amenity name="Dinner" value={place.serves_dinner} />
+          {(place.type === 'cafe' || place.type === 'restaurant') && (
+            <>
+              <p className="mb-6 text-2xl underline">This Location Serves</p>
+              <Amenity
+                name="Vegetarian Food"
+                value={place.serves_vegetarian_food}
+              />
+              <Amenity name="Vegan Food" value={place.serves_vegan_food} />
+              <Amenity name="Beer" value={place.serves_beer} />
+              <Amenity name="Wine" value={place.serves_wine} />
+              <Amenity name="Breakfast" value={place.serves_breakfast} />
+              <Amenity name="Brunch" value={place.serves_brunch} />
+              <Amenity name="Lunch" value={place.serves_lunch} />
+              <Amenity name="Dinner" value={place.serves_dinner} />
+            </>
+          )}
         </div>
       </CardContent>
     </Card>

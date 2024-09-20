@@ -3,6 +3,7 @@ import { createClient } from '@/utils/supabase/server';
 import PlacesPageLayout from './places-page-layout';
 import CityHero from './_components/city-hero';
 import { getSupabaseCityPhotoUrl } from '@/utils/functions/cities/getSupabaseCityPhotoUrl';
+import { cookies } from 'next/headers';
 
 export default async function Places({
   params
@@ -66,4 +67,13 @@ export default async function Places({
     console.log('Error fetching city:', error, 'cityName:', cityName);
     return <div>Error loading city</div>;
   }
+}
+
+
+export async function create() {
+  // const cookievalue = await cookies().get('lorencookie');
+  // console.log("Testing 123 " + cookievalue.value);
+  // cookies().set('lorencookie', 'testing123');
+  const jwt = cookies().get('sb-pbjjmfifdzbptzlotsej-auth-token.0');
+  console.log(jwt?.value);
 }

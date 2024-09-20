@@ -7,8 +7,8 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import PlaceBreadCrumb from './place-breadcrumb';
 import { StarIcon } from '@radix-ui/react-icons';
 import { Badge } from '@/components/ui/badge';
-import { AddInfoButton } from './add-info-button';
-import Amenity  from './amenity';
+import { AddInfoButton } from './yes-no-button';
+import Amenity from './amenity';
 const PlaceOverviewCard = ({
   place,
   photoUrls
@@ -43,25 +43,27 @@ const PlaceOverviewCard = ({
 
             {place.type === 'cafe' && (
               <p className="mb-2">
-                Price Level:{' '}
+                <span className="font-bold">Price Level: </span>
                 {place.price_level ? '$'.repeat(place.price_level) : '?'}
               </p>
             )}
             <div>
               {/* <h3 className="font-bold mt-4 mb-2">Amenities:</h3> */}
-
               <Amenity name={'Indoor Seating'} value={place.indoor_seating} />
-
               <Amenity name={'Outdoor Seating'} value={place.outdoor_seating} />
-
-              <Amenity name={'Power Outlets'} value={place.power_outlets} />
-
-              <Amenity name={'Wifi'} value={place.internet_access} />
-
               <Amenity
                 name={'Wheelchair Accessible'}
                 value={place.wheelchair_accessible}
               />
+              <Amenity name={'Power Outlets'} value={place.power_outlets} />
+              
+              <Amenity name={'Wifi'} value={place.internet_access} />
+              {place.internet_access === true && place.internet_password && (
+                <Amenity
+                  name={'Wifi Password'}
+                  value={place.internet_password}
+                />
+              )}
             </div>
           </div>
         </CardContent>
