@@ -51,7 +51,6 @@ export default async function Places({
       throw new Error('Places not found');
     }
 
-    // console.log('city:', city);
 
     return (
       <div className="flex flex-col justify-center items-center w-full mt-[1rem] p-3">
@@ -70,10 +69,3 @@ export default async function Places({
 }
 
 
-export async function create() {
-  // const cookievalue = await cookies().get('lorencookie');
-  // console.log("Testing 123 " + cookievalue.value);
-  // cookies().set('lorencookie', 'testing123');
-  const jwt = cookies().get('sb-pbjjmfifdzbptzlotsej-auth-token.0');
-  console.log(jwt?.value);
-}

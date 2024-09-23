@@ -137,6 +137,23 @@ export interface UserSubmittedPlaceDetails {
   photos?: string[];
 }
 
+export interface UserProfile {
+  id: string;
+  created_at: Date;
+  full_name?: string;
+  username?: string;
+  language?: string;
+  email?: string;
+  phone?: string;
+  bio?: string;
+  websites?: string[];
+  dob?: Date;
+  theme?: string;
+  favorites?: string[];
+  current_city_id?: string;
+  avatar_url?: string;
+}
+
 export interface GooglePlace {
   business_status: string;
   geometry: {
@@ -182,19 +199,4 @@ export interface GooglePlace {
   vicinity: string;
 }
 
-export interface UserProfile {
-  id: string;
-  created_at: Date;
-  full_name?: string;
-  username?: string;
-  language?: string;
-  email?: string;
-  phone?: string;
-  bio?: string;
-  websites?: string[];
-  dob?: Date;
-  theme?: string;
-  favorites?: string[];
-  current_city_id?: string;
-  avatar_url?: string;
-}
+
