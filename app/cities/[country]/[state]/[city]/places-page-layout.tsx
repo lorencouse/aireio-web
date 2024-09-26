@@ -25,11 +25,9 @@ export default function PlacesPageLayout({
 }) {
   const searchParams = useSearchParams();
 
-  const { allPlaces, isLoading, loadPlaces, searchNewPlaces } = useGetPlaces(
-    city,
-    searchParams
-  );
   const [filteredPlaces, setFilteredPlaces] = useState<Place[]>(places);
+  const [allPlaces, setAllPlaces] = useState<Place[]>(places);
+  const [isLoading, setIsLoading] = useState(true);
   const [searchComplete, setSearchComplete] = useState(false);
 
   const handleSearch = async () => {
@@ -49,12 +47,7 @@ export default function PlacesPageLayout({
   };
 
   // Load places only when city or place_type changes
-  useEffect(() => {
-    const fetchPlaces = async () => {
-      await loadPlaces(city, searchParams);
-    };
-    fetchPlaces();
-  }, []);
+
 
   // Update filtered places when search params or allPlaces change
   useEffect(() => {
@@ -85,20 +78,6 @@ export default function PlacesPageLayout({
     );
 
     if (filtered.length === 0 && !searchComplete) {
-      // searchNewPlaces(city, searchParams);
-      // const newFiltered = filterAndSortPlaces(
-      //   allPlaces,
-      //   type,
-      //   sortMethod,
-      //   lat,
-      //   lng,
-      //   radius,
-      //   sortOrder as 'asc' | 'des'
-      // );
-
-      // setFilteredPlaces(newFiltered);
-      // setSearchComplete(true);
-
       handleSearch();
     } else {
       setFilteredPlaces(filtered);

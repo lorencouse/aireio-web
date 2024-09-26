@@ -4,7 +4,7 @@ import {
   createNewPlaces,
   fetchPlacesFromDatabase,
   createAndReturnGooglePlaces
-} from '@/utils/places/placesUtils';
+} from '@/app/cities/[country]/[state]/[city]/placesUtils';
 import { City, Place } from '@/utils/types';
 
 const useGetPlaces = (

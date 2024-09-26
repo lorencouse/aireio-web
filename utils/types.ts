@@ -26,6 +26,7 @@ export interface Place {
   check_date?: Date;
   // business_status?: string;
   photo_refs: string[];
+  photo_names?: string[];
   // address
   add_1?: string;
   add_2?: string;
@@ -130,7 +131,7 @@ export interface UserSubmittedPlaceDetails {
   bathroom_code?: string;
   description?: string;
   note?: string;
-  
+
   // rating
   rating_score?: number;
   review?: string;
@@ -198,5 +199,3 @@ export interface GooglePlace {
   user_ratings_total: number;
   vicinity: string;
 }
-
-

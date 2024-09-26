@@ -1,13 +1,17 @@
-'use client';
-import React, { useState, useEffect } from 'react';
-import PlaceCard from '@/components/places/place-card';
-import calcDistance from '@/utils/places/calcDistance';
+import React from 'react';
+import PlaceCard from '@/app/cities/[country]/[state]/[city]/_components/place-card';
 import { City, Place } from '@/utils/types';
-import useGetPlaces from '@/utils/hook/useGetPlaces';
-import { filterAndSortPlaces } from '@/utils/places/sortPlacesUtils';
-import { useSearchParams } from 'next/navigation';
+import calcDistance from '@/utils/places/calcDistance';
 
-const PlacesList = ({ filteredPlaces, searchParams, city }: { filteredPlaces: Place[], searchParams: URLSearchParams, city: City }) => {
+const PlacesList = ({
+  filteredPlaces,
+  searchParams,
+  city
+}: {
+  filteredPlaces: Place[];
+  searchParams: URLSearchParams;
+  city: City;
+}) => {
   return (
     <div className="flex flex-col items-end">
       <span className="text-lg font-bold pr-4 ">

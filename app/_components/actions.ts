@@ -10,26 +10,39 @@ export const fetchCity = async (city: City) => {
   const { name, country_code, state } = city;
 
   try {
-    const { data: newCity, error: insertError } = await supabase
+    // URL encode the city name
+    const encodedName = encodeURIComponent(name);
+
+    const { data: existingCity, error: fetchError } = await supabase
       .from('cities')
-      .insert(city)
       .select('id')
+      .eq('name', name)
+      .eq('country_code', country_code)
+      .eq('state', state)
       .single();
 
-    if (insertError) {
-      if (insertError.code === '23505') {
-        // City already exists, redirect
-        redirect(`/cities/${country_code}/${state}/${name}`);
+    if (fetchError) {
+      if (fetchError.code === 'PGRST116') {
+        // City doesn't exist, insert it
+        const { data: newCity, error: insertError } = await supabase
+          .from('cities')
+          .insert(city)
+          .select('id')
+          .single();
+
+        if (insertError) {
+          console.error('Error inserting city:', insertError);
+          throw new Error('Failed to insert city');
+        } else if (newCity) {
+          await uploadCityPhoto(city, newCity.id);
+        }
       } else {
-        // Handle other types of errors
-        console.error('Error inserting city:', insertError);
-        throw new Error('Failed to insert city');
+        console.error('Error fetching city:', fetchError);
+        throw new Error('Failed to fetch city');
       }
-    } else if (newCity) {
-      // Upload city photo then redirect
-      await uploadCityPhoto(city, newCity.id);
-    } else {
-      throw new Error('Failed to insert city: No data returned');
+    } else if (existingCity) {
+      // City already exists, redirect
+      redirect(`/cities/${country_code}/${state}/${encodedName}`);
     }
   } catch (error) {
     console.error('Unexpected error in fetchCity:', error);

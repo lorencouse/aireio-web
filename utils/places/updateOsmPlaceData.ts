@@ -2,6 +2,7 @@ import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import axios from 'axios';
 
 import { Database } from '@/types/supabase';
+import calcDistance from './calcDistance';
 
 function convertStringToBool(
   value: string | boolean | undefined
@@ -163,8 +164,14 @@ const fetchOSMDetails = async (
     const elements = response.data.elements;
     if (elements.length > 0) {
       const sortedElements = elements.sort((a, b) => {
-        const distA = distance(latitude, longitude, a.lat, a.lng);
-        const distB = distance(latitude, longitude, b.lat, b.lng);
+        const distA = calcDistance(
+          { lat: latitude, lng: longitude },
+          { lat: a.lat, lng: a.lng }
+        );
+        const distB = calcDistance(
+          { lat: latitude, lng: longitude },
+          { lat: b.lat, lng: b.lng }
+        );
         return distA - distB;
       });
       return sortedElements[0]; // Return the closest match
@@ -178,28 +185,3 @@ const fetchOSMDetails = async (
     return null;
   }
 };
-
-// Helper function to calculate distance between two points
-function distance(lat1: number, lng1: number, lat2: number, lng2: number) {
-  const R = 6371; // Radius of the earth in km
-  const dLat = deg2rad(lat2 - lat1);
-  const dLng = deg2rad(lng2 - lng1);
-  const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(deg2rad(lat1)) *
-      Math.cos(deg2rad(lat2)) *
-      Math.sin(dLng / 2) *
-      Math.sin(dLng / 2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  const d = R * c; // Distance in km
-  return d;
-}
-
-function deg2rad(deg: number) {
-  return deg * (Math.PI / 180);
-}
-
-// const formatOpeningHours = (hours: string) => {
-//   if (!hours) return hours;
-//   return hours.replace(/[;,.]/g, '\n').trim();
-// };

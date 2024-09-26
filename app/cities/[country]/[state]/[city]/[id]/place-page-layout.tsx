@@ -8,30 +8,36 @@ import PlaceDetails from './_components/place-details';
 import LoadingPlace from './_components/loading-place';
 import PopupPlaceDeleted from './_components/popup-place-deleted';
 import { Place } from '@/utils/types';
-import { uploadPlacePhotosToSupabase } from '@/utils/places/placesUtils';
-import getSupabasePlacePhotoUrls from '@/utils/functions/places/getSupabasePlacePhotoUrl';
+import { uploadPlacePhotos } from '@/utils/places/uploadPlacePhotos';
+import { getPlacePhotoUrls } from '@/utils/functions/places/getPlacePhotoUrls';
+import { createAndReturnGooglePlaces } from '../actions';
 const PlacePageLayout = ({
-  place,
-  photoUrls
+  place
+  // photoUrls
 }: {
   place: Place;
-  photoUrls: string[];
+  // photoUrls: string[];
 }) => {
   const [showModal, setShowModal] = useState(false);
   const router = useRouter();
-  const [updatedPhotoUrls, setUpdatedPhotoUrls] = useState<string[]>(photoUrls);
+  const photoUrls = getPlacePhotoUrls(place);
+  // const [updatedPhotoUrls, setUpdatedPhotoUrls] = useState<string[]>(photoUrls);
 
-  const fetchPhotos = async () => {
-    if (photoUrls.length <= 1) {
-      const urls = await uploadPlacePhotosToSupabase(place);
-      const allUrls = [...photoUrls, ...urls];
-      setUpdatedPhotoUrls(allUrls);
-    }
-  };
+  // const fetchPhotos = async () => {
+  //   if (photoUrls.length <= 1) {
+  //     const photoNames = await uploadPlacePhotos(place);
+  //     const updatedPlace = {
+  //       ...place,
+  //       photo_names: photoNames
+  //     };
+  //     const allUrls = getPlacePhotoUrls(updatedPlace);
+  //     setUpdatedPhotoUrls(allUrls);
+  //   }
+  // };
 
-  useEffect(() => {
-    fetchPhotos();
-  }, []);
+  // useEffect(() => {
+  //   fetchPhotos();
+  // }, []);
 
   if (!place) return <LoadingPlace />;
 
@@ -45,7 +51,7 @@ const PlacePageLayout = ({
         />
       )}
       <PlaceHero place={place} photoUrl={photoUrls[0]} />
-      <PlaceOverviewCard place={place} photoUrls={updatedPhotoUrls} />
+      <PlaceOverviewCard place={place} photoUrls={photoUrls} />
 
       <PlaceDetails place={place} />
     </div>
