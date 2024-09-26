@@ -1,4 +1,4 @@
-export interface City {
+export type City = {
   id: string;
   name: string;
   google_id: string;
@@ -14,8 +14,8 @@ export interface City {
   updated_at: Date;
   deleted: boolean;
 }
-
-export interface Place {
+ 
+export type Place = {
   id: string;
   google_id: string;
   oms_id?: string;
@@ -85,7 +85,7 @@ export interface Place {
   deleted: boolean;
 }
 
-export interface UserSubmittedPlaceDetails {
+export type UserSubmittedPlaceDetails = {
   id: string;
   place_id: string;
   user_id: string;
@@ -138,7 +138,7 @@ export interface UserSubmittedPlaceDetails {
   photos?: string[];
 }
 
-export interface UserProfile {
+export type UserProfile = {
   id: string;
   created_at: Date;
   full_name?: string;
@@ -155,7 +155,7 @@ export interface UserProfile {
   avatar_url?: string;
 }
 
-export interface GooglePlace {
+export type GooglePlace = {
   business_status: string;
   geometry: {
     location: {

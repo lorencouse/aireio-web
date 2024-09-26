@@ -13,31 +13,12 @@ import { getPlacePhotoUrls } from '@/utils/functions/places/getPlacePhotoUrls';
 import { createAndReturnGooglePlaces } from '../actions';
 const PlacePageLayout = ({
   place
-  // photoUrls
 }: {
   place: Place;
-  // photoUrls: string[];
 }) => {
   const [showModal, setShowModal] = useState(false);
   const router = useRouter();
   const photoUrls = getPlacePhotoUrls(place);
-  // const [updatedPhotoUrls, setUpdatedPhotoUrls] = useState<string[]>(photoUrls);
-
-  // const fetchPhotos = async () => {
-  //   if (photoUrls.length <= 1) {
-  //     const photoNames = await uploadPlacePhotos(place);
-  //     const updatedPlace = {
-  //       ...place,
-  //       photo_names: photoNames
-  //     };
-  //     const allUrls = getPlacePhotoUrls(updatedPlace);
-  //     setUpdatedPhotoUrls(allUrls);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   fetchPhotos();
-  // }, []);
 
   if (!place) return <LoadingPlace />;
 

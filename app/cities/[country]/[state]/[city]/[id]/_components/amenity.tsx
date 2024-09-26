@@ -8,16 +8,41 @@ import {
   PopoverTrigger
 } from '@/components/ui/popover';
 import { getUser } from '@/utils/supabase/queries';
+import { SubmitUserPlaceData } from '../actions';
 
 export default function Amenity({
   name,
-  value
+  value,
+  placeId
 }: {
   name: string;
   value: boolean;
+  placeId: string;
 }) {
   const [buttonValue, setButtonValue] = useState<boolean | null>(null);
-  
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleTrueClick = async () => {
+    if (buttonValue === true) {
+      setButtonValue(null);
+    } else {
+      setButtonValue(true);
+      const success = await SubmitUserPlaceData(placeId, name, true);
+
+      if (success) {
+        setSubmitted(true);
+      }
+    }
+  };
+
+  const handleFalseClick = async () => {
+    if (buttonValue === false) {
+      setButtonValue(null);
+    } else {
+      setButtonValue(false);
+      const success = await SubmitUserPlaceData(placeId, name, false);
+    }
+  };
 
   return (
     <div className="seating flex flex-row items-center gap-4 mb-2">
@@ -26,11 +51,7 @@ export default function Amenity({
         <Popover>
           <PopoverTrigger asChild>
             <span className="ml-2 underline cursor-pointer">
-              {value === true
-                ? 'Yes'
-                : value === false
-                  ? 'No'
-                  : 'Add'}
+              {value === true ? 'Yes' : value === false ? 'No' : 'Add'}
             </span>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-5">
@@ -41,11 +62,8 @@ export default function Amenity({
               <Button
                 variant={buttonValue === true ? 'default' : 'outline'}
                 size="icon"
-                onClick={() => {
-                  buttonValue === true
-                    ? setButtonValue(null)
-                    : setButtonValue(true);
-                }}
+                onClick={handleTrueClick}
+                disabled={submitted}
               >
                 <span
                   className={
@@ -58,11 +76,8 @@ export default function Amenity({
               <Button
                 variant={buttonValue === false ? 'default' : 'outline'}
                 size="icon"
-                onClick={() => {
-                  buttonValue === false
-                    ? setButtonValue(null)
-                    : setButtonValue(false);
-                }}
+                onClick={handleFalseClick}
+                disabled={submitted}
               >
                 <span
                   className={

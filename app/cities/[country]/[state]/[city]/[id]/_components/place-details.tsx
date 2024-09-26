@@ -139,7 +139,6 @@ const PlaceDetails = ({ place }: { place: Place }) => {
             </div>
           </div>
 
-
           <SocialLinks place={place} />
         </div>
         <div className="amenities flex flex-col mx-6 mt-4">
@@ -147,16 +146,45 @@ const PlaceDetails = ({ place }: { place: Place }) => {
             <>
               <p className="mb-6 text-2xl underline">This Location Serves</p>
               <Amenity
-                name="Vegetarian Food"
+                name="Serves Vegetarian Food"
                 value={place.serves_vegetarian_food}
+                placeId={place.id}
               />
-              <Amenity name="Vegan Food" value={place.serves_vegan_food} />
-              <Amenity name="Beer" value={place.serves_beer} />
-              <Amenity name="Wine" value={place.serves_wine} />
-              <Amenity name="Breakfast" value={place.serves_breakfast} />
-              <Amenity name="Brunch" value={place.serves_brunch} />
-              <Amenity name="Lunch" value={place.serves_lunch} />
-              <Amenity name="Dinner" value={place.serves_dinner} />
+              <Amenity
+                name="Serves Vegan Food"
+                value={place.serves_vegan_food}
+                placeId={place.id}
+              />
+              <Amenity
+                name="Serves Beer"
+                value={place.serves_beer}
+                placeId={place.id}
+              />
+              <Amenity
+                name="Serves Wine"
+                value={place.serves_wine}
+                placeId={place.id}
+              />
+              <Amenity
+                name="Serves Breakfast"
+                value={place.serves_breakfast}
+                placeId={place.id}
+              />
+              <Amenity
+                name="Serves Brunch"
+                value={place.serves_brunch}
+                placeId={place.id}
+              />
+              <Amenity
+                name="Serves Lunch"
+                value={place.serves_lunch}
+                placeId={place.id}
+              />
+              <Amenity
+                name="Serves Dinner"
+                value={place.serves_dinner}
+                placeId={place.id}
+              />
             </>
           )}
         </div>
