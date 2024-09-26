@@ -2,19 +2,17 @@
 
 import React from 'react';
 import SegmentedTypePicker from './_components/segmented-type-picker';
-import RadiusSlider from './_components/radius-slider';
 import SortMethod from './_components/sort-method';
 import SortOrderPicker from './_components/sort-order-picker';
 import GoogleMap from './_components/google-map';
 import { useSearchParams } from 'next/navigation';
 import { Place, City } from '@/utils/types';
-import CityList from '@/components/homepage/city-list';
 import PlacesList from './_components/places-list';
-import useGetPlaces from '@/utils/hook/useGetPlaces';
 import { filterAndSortPlaces } from '@/utils/places/sortPlacesUtils';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
-// import { create } from './page';
+import { fetchNewPlaces } from './actions';
+import LoadingGrid from '@/components/general/loading-grid';
 
 export default function PlacesPageLayout({
   city,
@@ -27,13 +25,17 @@ export default function PlacesPageLayout({
 
   const [filteredPlaces, setFilteredPlaces] = useState<Place[]>(places);
   const [allPlaces, setAllPlaces] = useState<Place[]>(places);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [searchComplete, setSearchComplete] = useState(false);
 
   const handleSearch = async () => {
-    await searchNewPlaces(city, searchParams);
+    const { type, radius, lat, lng, sortMethod, sortOrder } =
+      parseSearchParams();
+    const newPlaces = await fetchNewPlaces(city, type, radius, lat, lng);
+    const allNewPlaces = [...places, ...newPlaces];
+    setAllPlaces(allNewPlaces);
     const newFiltered = filterAndSortPlaces(
-      allPlaces,
+      allNewPlaces,
       type,
       sortMethod,
       lat,
@@ -44,28 +46,30 @@ export default function PlacesPageLayout({
 
     setFilteredPlaces(newFiltered);
     setSearchComplete(true);
+    setIsLoading(false);
   };
 
-  // Load places only when city or place_type changes
-
+  const parseSearchParams = () => {
+    const type = searchParams.get('place_type') || 'cafe';
+    const radius = searchParams.get('radius')
+      ? searchParams.get('radius')
+      : '1000';
+    const lat = searchParams.get('lat')
+      ? searchParams.get('lat')
+      : city.lat.toString();
+    const lng = searchParams.get('lng')
+      ? searchParams.get('lng')
+      : city.lng.toString();
+    const sortMethod = searchParams.get('sort_method') || 'distance';
+    const sortOrder = searchParams.get('sort_order') || 'asc';
+    return { radius, lat, lng, type, sortMethod, sortOrder };
+  };
 
   // Update filtered places when search params or allPlaces change
   useEffect(() => {
     if (!allPlaces || allPlaces.length === 0) return;
 
-    const radius = searchParams.get('radius')
-      ? parseInt(searchParams.get('radius')!)
-      : 1000;
-    const lat = searchParams.get('lat')
-      ? parseFloat(searchParams.get('lat')!)
-      : city.lat;
-    const lng = searchParams.get('lng')
-      ? parseFloat(searchParams.get('lng')!)
-      : city.lng;
-    const type = searchParams.get('place_type') || 'cafe';
-
-    const sortMethod = searchParams.get('sort_method') || 'distance';
-    const sortOrder = searchParams.get('sort_order') || 'asc';
+    const { type, radius, lat, lng, sortMethod, sortOrder } = parseSearchParams();
 
     const filtered = filterAndSortPlaces(
       allPlaces,
@@ -78,6 +82,8 @@ export default function PlacesPageLayout({
     );
 
     if (filtered.length === 0 && !searchComplete) {
+      setFilteredPlaces([]);
+      setIsLoading(true);
       handleSearch();
     } else {
       setFilteredPlaces(filtered);
@@ -105,11 +111,15 @@ export default function PlacesPageLayout({
       <h1 className="text-4xl font-bold my-8 select-none">
         Workspaces in {city && city.name.replace(/-/g, ' ')}
       </h1>
-      <PlacesList
-        filteredPlaces={filteredPlaces}
-        searchParams={searchParams}
-        city={city}
-      />
+      {isLoading ? (
+        <LoadingGrid />
+      ) : 
+        <PlacesList
+          filteredPlaces={filteredPlaces}
+          searchParams={searchParams}
+          city={city}
+        />
+      }
     </>
   );
 }

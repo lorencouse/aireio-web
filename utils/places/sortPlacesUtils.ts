@@ -5,9 +5,9 @@ export const filterAndSortPlaces = (
   places: Place[],
   type: string,
   sortMethod: string,
-  lat: number,
-  lng: number,
-  radius: number,
+  lat: string,
+  lng: string,
+  radius: string,
   sortOrder: 'asc' | 'des'
 ) => {
   const descending = sortOrder === 'des';
@@ -23,8 +23,8 @@ export const filterAndSortPlaces = (
 
 export const filterByRadius = (
   places: Place[],
-  coordinates: { lat: number; lng: number },
-  radius: number
+  coordinates: { lat: string; lng: string },
+  radius: string
 ) => {
   const radiusVal = radius / 1000;
   return places.filter((place) => {
