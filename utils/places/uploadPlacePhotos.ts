@@ -34,16 +34,16 @@ export const uploadPlacePhotos = async (place: Place): Promise<string[]> => {
         );
 
         if (uploadSuccess) {
-          console.log(
-            `Place photo uploaded to Supabase: ${formattedImageName}`
-          );
+          // console.log(
+          //   `Place photo uploaded to Supabase: ${formattedImageName}`
+          // );
           return formattedImageName;
         } else {
-          console.error(`Failed to upload photo: ${formattedImageName}`);
+          // console.error(`Failed to upload photo: ${formattedImageName}`);
           return null;
         }
       } catch (error) {
-        console.error('Error uploading photo:', error);
+        // console.error('Error uploading photo:', error);
         return null;
       }
     })
@@ -62,16 +62,15 @@ export const uploadPlacePhotos = async (place: Place): Promise<string[]> => {
       .single();
 
     if (error) {
-      console.error('Error updating photo_names in database:', error);
-      // Here you might want to implement some error handling strategy
-      // For now, we'll return the original photo_names
+      // console.error('Error updating photo_names in database:', error);
+
       return place.photo_names;
     } else {
-      console.log(`Updated photo_names for place: ${place.name}`);
+      // console.log(`Updated photo_names for place: ${place.name}`);
       return allPhotoNames;
     }
   }
 
-  console.log(`Finished uploading photos for place: ${place.name}`);
+  // console.log(`Finished uploading photos for place: ${place.name}`);
   return place.photo_names;
 };

@@ -5,7 +5,7 @@ export const getPlacePhotoUrls = (place: Place): string[] => {
   if (!place.photo_names || place.photo_names.length === 0) {
     return [placeholderImage];
   }
-  console.log('Photo names:', place.photo_names);
+  // console.log('Photo names:', place.photo_names);
 
   return place.photo_names.map(
     (photoName) =>

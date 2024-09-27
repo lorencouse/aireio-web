@@ -7,54 +7,59 @@ import { City } from '@/utils/types';
 
 export const fetchCity = async (city: City) => {
   const supabase = createClient();
-  const { name, country_code, state } = city;
+  const { name, country_code, state, google_id } = city;
 
   try {
-    // URL encode the city name
-    const encodedName = encodeURIComponent(name);
-
-    const { data: existingCity, error: fetchError } = await supabase
+    const { data: upsertedCity, error: upsertError } = await supabase
       .from('cities')
-      .select('id')
-      .eq('name', name)
-      .eq('country_code', country_code)
-      .eq('state', state)
+      .upsert(city, {
+        onConflict: 'google_id',
+        returning: 'minimal'
+      })
+      .select()
       .single();
 
-    if (fetchError) {
-      if (fetchError.code === 'PGRST116') {
-        // City doesn't exist, insert it
-        const { data: newCity, error: insertError } = await supabase
-          .from('cities')
-          .insert(city)
-          .select('id')
-          .single();
-
-        if (insertError) {
-          console.error('Error inserting city:', insertError);
-          throw new Error('Failed to insert city');
-        } else if (newCity) {
-          await uploadCityPhoto(city, newCity.id);
-        }
-      } else {
-        console.error('Error fetching city:', fetchError);
-        throw new Error('Failed to fetch city');
-      }
-    } else if (existingCity) {
-      // City already exists, redirect
-      redirect(`/cities/${country_code}/${state}/${encodedName}`);
+    if (upsertError) {
+      console.error('Error upserting city:', upsertError);
+      throw new Error('Failed to upsert city');
     }
+
+    if (upsertedCity) {
+      const res = await fetch(
+        `https://maps.googleapis.com/maps/api/place/details/json?place_id=${google_id}&fields=photos&key=${process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY}`
+      );
+      if (!res.ok) {
+        throw new Error(
+          `Network response was not ok: ${res.status} ${res.statusText}`
+        );
+      }
+      const data = await res.json();
+      console.log('Received data:', data);
+
+      const photoRef = data.result?.photos?.[0]?.photo_reference || '';
+      console.log('Photo reference:', photoRef);
+
+      const completeCity = {
+        ...city,
+        id: upsertedCity.id,
+        photo_ref: photoRef
+      };
+      await uploadCityPhoto(completeCity);
+    }
+
+    redirect(`/cities/${country_code}/${state}/${name}`);
   } catch (error) {
     console.error('Unexpected error in fetchCity:', error);
     throw error;
   }
 };
 
-const uploadCityPhoto = async (city: City, cityId: string) => {
+const uploadCityPhoto = async (city: City) => {
   const supabase = createClient();
+  const maxWidth = 1200;
 
-  if (city.photos && city.photos.length > 0) {
-    const googlePhotoUrl = city.photos[0];
+  if (city.photo_ref) {
+    const googlePhotoUrl = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=${maxWidth}&photoreference=${city.photo_ref}&key=${process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY}`;
     const imgName = `${city.country_code}_${city.state}_${city.name}.jpg`;
 
     try {
@@ -68,7 +73,7 @@ const uploadCityPhoto = async (city: City, cityId: string) => {
         const { error: updateError } = await supabase
           .from('cities')
           .update({ photo_ref: imgName })
-          .eq('id', cityId);
+          .eq('id', city.id);
 
         if (updateError) throw updateError;
 
@@ -76,7 +81,6 @@ const uploadCityPhoto = async (city: City, cityId: string) => {
       }
     } catch (error) {
       console.error('Error uploading image to Supabase:', error);
-      // Log the error but continue with the redirect
     }
   }
 

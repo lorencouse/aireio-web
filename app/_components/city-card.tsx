@@ -2,6 +2,7 @@ import Image from 'next/image';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'; // Adjust this import based on your project structure
 import Link from 'next/link';
 import { getSupabaseCityPhotoUrl } from '@/utils/functions/cities/getSupabaseCityPhotoUrl';
+import { City } from '@/utils/types';
 
 interface CityCardProps {
   city: City;
@@ -9,11 +10,11 @@ interface CityCardProps {
 
 const CityCard: React.FC<CityCardProps> = ({ city }) => {
   const imageUrl = getSupabaseCityPhotoUrl(
-    city.name,
-    city.state,
-    city.country_code
+    city.name ? city.name : '',
+    city.state ? city.state : '',
+    city!.country_code ? city.country_code : ''
   );
-  const cityName = city.name.replace(/-/g, ' ');
+  const cityName = city.name ? city.name.replace(/-/g, ' ') : '';
   return (
     <Link href={`/cities/${city.country_code}/${city.state}/${city.name}`}>
       <div className="relative w-96 h-64 cursor-pointer rounded-lg overflow-hidden shadow-md m-4 hover:scale-105 duration-200">

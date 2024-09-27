@@ -49,19 +49,37 @@ const PlaceOverviewCard = ({
             )}
             <div>
               {/* <h3 className="font-bold mt-4 mb-2">Amenities:</h3> */}
-              <Amenity name={'Indoor Seating'} value={place.indoor_seating} />
-              <Amenity name={'Outdoor Seating'} value={place.outdoor_seating} />
+              <Amenity
+                name={'Indoor Seating'}
+                value={place.indoor_seating}
+                placeId={place.id}
+              />
+              <Amenity
+                name={'Outdoor Seating'}
+                value={place.outdoor_seating}
+                placeId={place.id}
+              />
               <Amenity
                 name={'Wheelchair Accessible'}
                 value={place.wheelchair_accessible}
+                placeId={place.id}
               />
-              <Amenity name={'Power Outlets'} value={place.power_outlets} />
-              
-              <Amenity name={'Wifi'} value={place.internet_access} />
+              <Amenity
+                name={'Power Outlets'}
+                value={place.power_outlets}
+                placeId={place.id}
+              />
+
+              <Amenity
+                name={'Wifi'}
+                value={place.internet_access}
+                placeId={place.id}
+              />
               {place.internet_access === true && place.internet_password && (
                 <Amenity
                   name={'Wifi Password'}
                   value={place.internet_password}
+                  placeId={place.id}
                 />
               )}
             </div>

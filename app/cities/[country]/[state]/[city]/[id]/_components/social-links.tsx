@@ -3,8 +3,6 @@ import { Place } from '@/utils/types';
 import {
   Facebook,
   Instagram,
-  Mastodon,
-  Tiktok,
   Twitter,
   Youtube,
   Globe,
@@ -17,8 +15,8 @@ const SocialLinks = ({ place }: { place: Place }) => {
   const {
     facebook,
     instagram,
-    mastodon,
     tiktok,
+    mastodon,
     twitter,
     youtube,
     website,
@@ -29,8 +27,8 @@ const SocialLinks = ({ place }: { place: Place }) => {
   const socials = [
     { name: 'facebook', link: facebook, icon: Facebook },
     { name: 'instagram', link: instagram, icon: Instagram },
-    { name: 'mastodon', link: mastodon, icon: Mastodon },
-    { name: 'tiktok', link: tiktok, icon: Tiktok },
+    { name: 'mastodon', link: mastodon, icon: Globe },
+    { name: 'tiktok', link: tiktok, icon: Globe },
     { name: 'twitter', link: twitter, icon: Twitter },
     { name: 'youtube', link: youtube, icon: Youtube },
     { name: 'website', link: website, icon: Globe },

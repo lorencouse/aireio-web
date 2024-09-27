@@ -9,8 +9,6 @@ import { Input } from '@/components/ui/input';
 import {
   Facebook,
   Instagram,
-  Mastodon,
-  Tiktok,
   Twitter,
   Youtube,
   Globe,
@@ -22,8 +20,8 @@ import {
 const iconMap: Record<string, LucideIcon> = {
   facebook: Facebook,
   instagram: Instagram,
-  mastodon: Mastodon,
-  tiktok: Tiktok,
+  mastodon: Globe,
+  tiktok: Globe,
   twitter: Twitter,
   youtube: Youtube,
   website: Globe,

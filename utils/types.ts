@@ -10,11 +10,11 @@ export type City = {
   country?: string;
   country_code?: string;
   photo_ref?: string;
-  created_at: Date;
-  updated_at: Date;
+  created_at: string;
+  updated_at: string;
   deleted: boolean;
-}
- 
+};
+
 export type Place = {
   id: string;
   google_id: string;
@@ -23,7 +23,7 @@ export type Place = {
   lat: number;
   lng: number;
   type: string;
-  check_date?: Date;
+  check_date?: string;
   // business_status?: string;
   photo_refs: string[];
   photo_names?: string[];
@@ -83,13 +83,13 @@ export type Place = {
   opening_hours?: string[];
   price_level?: number;
   deleted: boolean;
-}
+};
 
 export type UserSubmittedPlaceDetails = {
   id: string;
   place_id: string;
   user_id: string;
-  updated: Date;
+  updated: string;
   // contact info
   phone?: string;
   facebook?: string;
@@ -136,11 +136,11 @@ export type UserSubmittedPlaceDetails = {
   rating_score?: number;
   review?: string;
   photos?: string[];
-}
+};
 
 export type UserProfile = {
   id: string;
-  created_at: Date;
+  created_at: string;
   full_name?: string;
   username?: string;
   language?: string;
@@ -148,12 +148,12 @@ export type UserProfile = {
   phone?: string;
   bio?: string;
   websites?: string[];
-  dob?: Date;
+  dob?: string;
   theme?: string;
   favorites?: string[];
   current_city_id?: string;
   avatar_url?: string;
-}
+};
 
 export type GooglePlace = {
   business_status: string;
@@ -198,4 +198,4 @@ export type GooglePlace = {
   types: string[];
   user_ratings_total: number;
   vicinity: string;
-}
+};

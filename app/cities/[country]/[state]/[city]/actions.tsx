@@ -81,7 +81,7 @@ export const fetchNewPlaces = async (
   });
   const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY;
 
-  console.log('Fetching places with params:', params.toString());
+  // console.log('Fetching places with params:', params.toString());
 
   try {
     const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=${radius}&${
@@ -154,7 +154,7 @@ export const createNewPlaces = async (
       photo_names: [] // Initialize with an empty array
     }));
 
-    console.log(`Inserting ${newPlaces.length} new places`);
+    // console.log(`Inserting ${newPlaces.length} new places`);
     const { data: insertedPlaces, error } = await supabase
       .from('places')
       .upsert(newPlaces, {

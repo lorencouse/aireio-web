@@ -27,7 +27,7 @@ const GooglePlacesAutocomplete: React.FC = () => {
       const place = autocomplete.getPlace();
       if (place.geometry && place.address_components) {
         try {
-          const city: City = {
+          const city: Partial<City> = {
             google_id: place.place_id || '',
             osm_id: '',
             name: place.address_components[0].long_name
