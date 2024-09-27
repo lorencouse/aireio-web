@@ -1,4 +1,4 @@
-export interface City {
+export type City = {
   id: string;
   name: string;
   google_id: string;
@@ -10,22 +10,23 @@ export interface City {
   country?: string;
   country_code?: string;
   photo_ref?: string;
-  created_at: Date;
-  updated_at: Date;
+  created_at: string;
+  updated_at: string;
   deleted: boolean;
-}
+};
 
-export interface Place {
+export type Place = {
   id: string;
   google_id: string;
   oms_id?: string;
   name: string;
   lat: number;
   lng: number;
-  type: 'cafe' | 'library' | 'coworking';
-  check_date?: Date;
-  business_status?: string;
+  type: string;
+  check_date?: string;
+  // business_status?: string;
   photo_refs: string[];
+  photo_names?: string[];
   // address
   add_1?: string;
   add_2?: string;
@@ -54,17 +55,17 @@ export interface Place {
   rating_score?: number;
   rating_count?: number;
   // amenities
-  internet_access?: 'yes' | 'no' | 'wlan';
-  internet_access_fee?: string;
+  internet_access?: boolean;
+  internet_access_fee?: boolean;
   dine_in?: boolean;
-  outdoor_seating?: string;
-  indoor_seating?: string;
-  takeaway?: 'only' | 'yes' | 'no';
-  toilet?: string;
-  power_outlets?: string;
-  wheelchair_accessible?: 'limited' | 'yes' | 'no';
-  parking?: string;
-  parking_fee?: string;
+  outdoor_seating?: boolean;
+  indoor_seating?: boolean;
+  takeaway?: boolean;
+  toilet?: boolean;
+  power_outlets?: boolean;
+  wheelchair_accessible?: boolean;
+  parking?: boolean;
+  parking_fee?: boolean;
   serves_beer?: boolean;
   serves_breakfast?: boolean;
   serves_brunch?: boolean;
@@ -80,11 +81,81 @@ export interface Place {
   description?: string;
   note?: string;
   opening_hours?: string[];
-  price_level?: 0 | 1 | 2 | 3 | 4 | 5;
+  price_level?: number;
   deleted: boolean;
-}
+};
 
-export interface GooglePlace {
+export type UserSubmittedPlaceDetails = {
+  id: string;
+  place_id: string;
+  user_id: string;
+  updated: string;
+  // contact info
+  phone?: string;
+  facebook?: string;
+  instagram?: string;
+  mastodon?: string;
+  tiktok?: string;
+  twitter?: string;
+  youtube?: string;
+  email?: string;
+  website?: string;
+
+  // amenities
+  internet_access?: boolean;
+  internet_access_fee?: boolean;
+  internet_name?: string;
+  internet_password?: string;
+  dine_in?: boolean;
+  outdoor_seating?: boolean;
+  indoor_seating?: boolean;
+  takeaway?: boolean;
+  toilet?: boolean;
+  toilet_code?: string;
+  power_outlets?: boolean;
+  wheelchair_accessible?: boolean;
+  parking?: boolean;
+  parking_fee?: boolean;
+  serves_beer?: boolean;
+  serves_breakfast?: boolean;
+  serves_brunch?: boolean;
+  serves_dinner?: boolean;
+  serves_lunch?: boolean;
+  serves_vegetarian_food?: boolean;
+  serves_vegan_food?: boolean;
+  serves_wine?: boolean;
+
+  price_level?: number;
+  cost_coffee?: number;
+  internet_password?: string;
+  bathroom_code?: string;
+  description?: string;
+  note?: string;
+
+  // rating
+  rating_score?: number;
+  review?: string;
+  photos?: string[];
+};
+
+export type UserProfile = {
+  id: string;
+  created_at: string;
+  full_name?: string;
+  username?: string;
+  language?: string;
+  email?: string;
+  phone?: string;
+  bio?: string;
+  websites?: string[];
+  dob?: string;
+  theme?: string;
+  favorites?: string[];
+  current_city_id?: string;
+  avatar_url?: string;
+};
+
+export type GooglePlace = {
   business_status: string;
   geometry: {
     location: {
@@ -127,21 +198,4 @@ export interface GooglePlace {
   types: string[];
   user_ratings_total: number;
   vicinity: string;
-}
-
-export interface UserProfile {
-  id: string;
-  created_at: Date;
-  full_name?: string;
-  username?: string;
-  language?: string;
-  email?: string;
-  phone?: string;
-  bio?: string;
-  websites?: string[];
-  dob?: Date;
-  theme?: string;
-  favorites?: string[];
-  current_city_id?: string;
-  avatar_url?: string;
-}
+};

@@ -2,6 +2,15 @@ import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import axios from 'axios';
 
 import { Database } from '@/types/supabase';
+import calcDistance from './calcDistance';
+
+function convertStringToBool(
+  value: string | boolean | undefined
+): boolean | undefined {
+  if (typeof value === 'boolean') return value;
+  if (value === undefined) return undefined;
+  return value.toLowerCase() === 'yes';
+}
 
 const updateOsmPlaceData = async (place: Place) => {
   const { lat, lng, type } = place;
@@ -54,48 +63,40 @@ const updateOsmPlaceData = async (place: Place) => {
       twitter: osmData.tags['contact:twitter'] || place.twitter,
       youtube: osmData.tags['contact:youtube'] || place.youtube,
       email: osmData.tags.email || place.email,
-      outdoor_seating: osmData.tags.outdoor_seating || place.outdoor_seating,
-      indoor_seating: osmData.tags.indoor_seating || place.indoor_seating,
-      toilet: osmData.tags.toilet || place.toilet,
-      power_outlets: osmData.tags.outlets || place.power_outlets,
+      outdoor_seating:
+        place.outdoor_seating ??
+        convertStringToBool(osmData.tags.outdoor_seating),
+      indoor_seating:
+        place.indoor_seating ??
+        convertStringToBool(osmData.tags.indoor_seating),
+      toilet: place.toilet ?? convertStringToBool(osmData.tags.toilet),
+      power_outlets:
+        place.power_outlets ?? convertStringToBool(osmData.tags.outlets),
       internet_access:
-        place.internet_access === undefined
-          ? (osmData.tags.internet_access as 'yes' | 'no' | 'wlan') ||
-            place.internet_access
-          : place.internet_access,
+        place.internet_access ??
+        convertStringToBool(
+          osmData.tags.internet_access === 'wlan'
+            ? 'yes'
+            : osmData.tags.internet_access
+        ),
       internet_access_fee:
-        place.internet_access_fee === undefined
-          ? osmData.tags['internet_access:fee'] || place.internet_access_fee
-          : place.internet_access_fee,
-      dine_in:
-        place.dine_in === undefined
-          ? osmData.tags.dine_in === 'yes'
-          : place.dine_in,
-      takeaway:
-        place.takeaway === undefined
-          ? (osmData.tags.takeaway as 'only' | 'yes' | 'no') || place.takeaway
-          : place.takeaway,
+        place.internet_access_fee ??
+        convertStringToBool(osmData.tags['internet_access:fee']),
+      dine_in: place.dine_in ?? convertStringToBool(osmData.tags.dine_in),
+      takeaway: place.takeaway ?? convertStringToBool(osmData.tags.takeaway),
       wheelchair_accessible:
-        place.wheelchair_accessible === undefined
-          ? (osmData.tags.wheelchair as 'limited' | 'yes' | 'no') ||
-            place.wheelchair_accessible
-          : place.wheelchair_accessible,
+        place.wheelchair_accessible ??
+        convertStringToBool(osmData.tags.wheelchair),
       serves_beer:
-        place.serves_beer === undefined
-          ? osmData.tags['drink:beer'] === 'yes'
-          : place.serves_beer,
+        place.serves_beer ?? convertStringToBool(osmData.tags['drink:beer']),
       serves_vegetarian_food:
-        place.serves_vegetarian_food === undefined
-          ? osmData.tags['diet:vegetarian'] === 'yes'
-          : place.serves_vegetarian_food,
+        place.serves_vegetarian_food ??
+        convertStringToBool(osmData.tags['diet:vegetarian']),
       serves_vegan_food:
-        place.serves_vegan_food === undefined
-          ? osmData.tags['diet:vegan'] === 'yes'
-          : place.serves_vegan_food,
+        place.serves_vegan_food ??
+        convertStringToBool(osmData.tags['diet:vegan']),
       serves_wine:
-        place.serves_wine === undefined
-          ? osmData.tags['drink:wine'] === 'yes'
-          : place.serves_wine,
+        place.serves_wine ?? convertStringToBool(osmData.tags['drink:wine']),
       brand: osmData.tags.brand || place.brand,
       brand_wikidata: osmData.tags['brand:wikidata'] || place.brand_wikidata,
       cost_coffee: osmData.tags['cost:coffee'] || place.cost_coffee,
@@ -163,8 +164,14 @@ const fetchOSMDetails = async (
     const elements = response.data.elements;
     if (elements.length > 0) {
       const sortedElements = elements.sort((a, b) => {
-        const distA = distance(latitude, longitude, a.lat, a.lng);
-        const distB = distance(latitude, longitude, b.lat, b.lng);
+        const distA = calcDistance(
+          { lat: latitude, lng: longitude },
+          { lat: a.lat, lng: a.lng }
+        );
+        const distB = calcDistance(
+          { lat: latitude, lng: longitude },
+          { lat: b.lat, lng: b.lng }
+        );
         return distA - distB;
       });
       return sortedElements[0]; // Return the closest match
@@ -178,28 +185,3 @@ const fetchOSMDetails = async (
     return null;
   }
 };
-
-// Helper function to calculate distance between two points
-function distance(lat1: number, lng1: number, lat2: number, lng2: number) {
-  const R = 6371; // Radius of the earth in km
-  const dLat = deg2rad(lat2 - lat1);
-  const dLng = deg2rad(lng2 - lng1);
-  const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(deg2rad(lat1)) *
-      Math.cos(deg2rad(lat2)) *
-      Math.sin(dLng / 2) *
-      Math.sin(dLng / 2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  const d = R * c; // Distance in km
-  return d;
-}
-
-function deg2rad(deg: number) {
-  return deg * (Math.PI / 180);
-}
-
-// const formatOpeningHours = (hours: string) => {
-//   if (!hours) return hours;
-//   return hours.replace(/[;,.]/g, '\n').trim();
-// };

@@ -31,6 +31,7 @@ export default async function Navbar() {
   const supabase = createClient();
   const user = await getUser(supabase);
 
+
   const menuItems = [
     {
       title: 'Home',

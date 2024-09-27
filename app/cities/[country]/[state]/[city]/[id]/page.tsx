@@ -1,13 +1,10 @@
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
+import { createClient } from '@/utils/supabase/server';
 import { Place } from '@/utils/types';
-import { Database } from '@/types/supabase';
 import updateGooglePlaceData from '@/utils/places/updateGooglePlaceData';
 import updateOsmPlaceData from '@/utils/places/updateOsmPlaceData';
 import PlacePageLayout from './place-page-layout';
 import { Suspense } from 'react';
 import LoadingPlace from './_components/loading-place';
-import getSupabasePlacePhotoUrls from '@/utils/functions/places/getSupabasePlacePhotoUrl';
 
 const checkIsUpToDate = (place: Place): boolean => {
   const thirtyDaysAgo = new Date();
@@ -24,7 +21,7 @@ export default async function PlacePage({
 }: {
   params: { id: string };
 }) {
-  const supabase = createServerComponentClient<Database>({ cookies });
+  const supabase = createClient();
 
   const { data: place, error } = await supabase
     .from('places')
@@ -51,17 +48,13 @@ export default async function PlacePage({
 
   if (!checkIsUpToDate(updatedPlace)) {
     updatedPlace = (await updateGooglePlaceData(updatedPlace)) || updatedPlace;
-    updatedPlace = await updateOsmPlaceData(updatedPlace);
+    updatedPlace = (await updateOsmPlaceData(updatedPlace)) || updatedPlace;
   }
 
-  const photoUrls = await getSupabasePlacePhotoUrls(
-    updatedPlace.city_id,
-    updatedPlace.id
-  );
   return (
     <div className="container mx-auto p-4">
       <Suspense fallback={<LoadingPlace />}>
-        <PlacePageLayout place={updatedPlace} photoUrls={photoUrls} />
+        <PlacePageLayout place={updatedPlace} />
       </Suspense>
     </div>
   );

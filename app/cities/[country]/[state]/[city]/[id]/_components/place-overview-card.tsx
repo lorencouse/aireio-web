@@ -6,7 +6,9 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 
 import PlaceBreadCrumb from './place-breadcrumb';
 import { StarIcon } from '@radix-ui/react-icons';
-
+import { Badge } from '@/components/ui/badge';
+import { AddInfoButton } from './yes-no-button';
+import Amenity from './amenity';
 const PlaceOverviewCard = ({
   place,
   photoUrls
@@ -41,28 +43,45 @@ const PlaceOverviewCard = ({
 
             {place.type === 'cafe' && (
               <p className="mb-2">
-                Price Level:{' '}
+                <span className="font-bold">Price Level: </span>
                 {place.price_level ? '$'.repeat(place.price_level) : '?'}
               </p>
             )}
-
-            <p className="mb-2">
-              Type: <span className="capitalize">{place.type}</span>
-            </p>
             <div>
-              <h3 className="font-bold mt-4 mb-2">Amenities:</h3>
-              <p>
-                Outdoor Seating:{' '}
-                {place.outdoor_seating || 'Not specified'}
-              </p>
-              <p>
-                Power Outlets:{' '}
-                {place.power_outlets || 'Not specified'}
-              </p>
-              <p>
-                Wheelchair Accessible:{' '}
-                {place.wheelchair_accessible || 'Not specified'}
-              </p>
+              {/* <h3 className="font-bold mt-4 mb-2">Amenities:</h3> */}
+              <Amenity
+                name={'Indoor Seating'}
+                value={place.indoor_seating}
+                placeId={place.id}
+              />
+              <Amenity
+                name={'Outdoor Seating'}
+                value={place.outdoor_seating}
+                placeId={place.id}
+              />
+              <Amenity
+                name={'Wheelchair Accessible'}
+                value={place.wheelchair_accessible}
+                placeId={place.id}
+              />
+              <Amenity
+                name={'Power Outlets'}
+                value={place.power_outlets}
+                placeId={place.id}
+              />
+
+              <Amenity
+                name={'Wifi'}
+                value={place.internet_access}
+                placeId={place.id}
+              />
+              {place.internet_access === true && place.internet_password && (
+                <Amenity
+                  name={'Wifi Password'}
+                  value={place.internet_password}
+                  placeId={place.id}
+                />
+              )}
             </div>
           </div>
         </CardContent>

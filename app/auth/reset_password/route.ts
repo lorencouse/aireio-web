@@ -73,3 +73,4 @@ export async function POST(request: NextRequest) {
       'Your password has been updated. You can now use your new password to log in.'
     )
   );
+}

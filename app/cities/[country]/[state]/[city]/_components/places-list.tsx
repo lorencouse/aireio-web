@@ -1,85 +1,17 @@
-'use client';
-import React, { useState, useEffect } from 'react';
-import PlaceCard from '@/components/places/place-card';
-import calcDistance from '@/utils/places/calcDistance';
+import React from 'react';
+import PlaceCard from '@/app/cities/[country]/[state]/[city]/_components/place-card';
 import { City, Place } from '@/utils/types';
-import useGetPlaces from '@/utils/hook/useGetPlaces';
-import { filterAndSortPlaces } from '@/utils/places/sortPlacesUtils';
-import { useSearchParams } from 'next/navigation';
+import calcDistance from '@/utils/places/calcDistance';
 
 const PlacesList = ({
-  city,
+  filteredPlaces,
   searchParams,
-  places
+  city
 }: {
+  filteredPlaces: Place[];
+  searchParams: URLSearchParams;
   city: City;
-  searchParams: { [key: string]: string | string[] | undefined };
-  places: Place[];
 }) => {
-  const { allPlaces, isLoading, loadPlaces, searchNewPlaces } = useGetPlaces(
-    city,
-    searchParams
-  );
-  const [filteredPlaces, setFilteredPlaces] = useState<Place[]>(places);
-  const [searchComplete, setSearchComplete] = useState(false);
-
-  // Load places only when city or place_type changes
-  useEffect(() => {
-    const fetchPlaces = async () => {
-      await loadPlaces(city, searchParams);
-    };
-    fetchPlaces();
-  }, [searchParams.place_type]);
-
-  // Update filtered places when search params or allPlaces change
-  useEffect(() => {
-    if (!allPlaces || allPlaces.length === 0) return;
-
-    const radius = searchParams.get('radius')
-      ? parseInt(searchParams.get('radius')!)
-      : 1000;
-    const lat = searchParams.get('lat')
-      ? parseFloat(searchParams.get('lat')!)
-      : city.lat;
-    const lng = searchParams.get('lng')
-      ? parseFloat(searchParams.get('lng')!)
-      : city.lng;
-    const type = searchParams.get('place_type') || 'cafe';
-
-    const sortMethod = searchParams.get('sort_method') || 'distance';
-    const sortOrder = searchParams.get('sort_order') || 'asc';
-
-    const filtered = filterAndSortPlaces(
-      allPlaces,
-      type,
-      sortMethod,
-      lat,
-      lng,
-      radius,
-      sortOrder as 'asc' | 'des'
-    );
-
-    if (filtered.length === 0 && !searchComplete) {
-      searchNewPlaces(city, searchParams);
-      const newFiltered = filterAndSortPlaces(
-        allPlaces,
-        type,
-        sortMethod,
-        lat,
-        lng,
-        radius,
-        sortOrder as 'asc' | 'des'
-      );
-
-      setFilteredPlaces(newFiltered);
-      setSearchComplete(true);
-    } else {
-      setFilteredPlaces(filtered);
-      setSearchComplete(false);
-      console.log('Filtered places:', filtered.length);
-    }
-  }, [allPlaces, searchParams]);
-
   return (
     <div className="flex flex-col items-end">
       <span className="text-lg font-bold pr-4 ">

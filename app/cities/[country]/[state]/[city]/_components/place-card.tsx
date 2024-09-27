@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useRouter } from 'next/navigation';
 import {
   Card,
@@ -9,8 +9,7 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
-import getSupabasePlacePhotoUrls from '@/utils/functions/places/getSupabasePlacePhotoUrl';
-import { uploadPlacePhotosToSupabase } from '@/utils/places/placesUtils';
+import { getPlacePhotoUrls } from '@/utils/functions/places/getPlacePhotoUrls';
 import { placeholderImage } from '@/utils/constants';
 
 interface PlaceCardProps {
@@ -19,23 +18,9 @@ interface PlaceCardProps {
 }
 
 const PlaceCard = ({ place, distance }: PlaceCardProps) => {
+  const photoUrls = getPlacePhotoUrls(place);
+
   const router = useRouter();
-  const [photoUrls, setPhotoUrls] = useState<string[]>([placeholderImage]);
-
-  const fetchPhotos = async () => {
-    const urls = await getSupabasePlacePhotoUrls(place.city_id, place.id);
-
-    if (urls.length === 0 || urls[0] === placeholderImage) {
-      const newUrls = await uploadPlacePhotosToSupabase(place);
-      setPhotoUrls(newUrls);
-    } else {
-      setPhotoUrls(urls);
-    }
-  };
-
-  useEffect(() => {
-    fetchPhotos();
-  }, []);
 
   return (
     <Card

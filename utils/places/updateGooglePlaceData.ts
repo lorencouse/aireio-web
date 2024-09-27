@@ -1,21 +1,27 @@
-// import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import axios from 'axios';
+'use server';
 import { createClient } from '../supabase/server';
 
 import convertGoogleAddress from '@/utils/places/convertGoogleAddress';
-import { uploadPlacePhotosToSupabase } from './placesUtils';
+import { uploadPlacePhotos } from './uploadPlacePhotos';
 
 export const updateGooglePlaceData = async (place: Place) => {
   const supabase = createClient();
   try {
-    const res = await axios.get(
+    const response = await fetch(
       `https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.google_id}&key=${process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY}`
     );
-    if (!res.status === 200) {
-      throw new Error('Network response was not ok');
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
-    const data = await res.data;
+
+    const data = await response.json();
+    if (!data.result) {
+      throw new Error('No result found in the API response');
+    }
+
     const googlePlace = data.result;
+
+    const originalPhotoRefs = place.photo_refs;
 
     // Delete cafe if google place does not have dine in
     if (!googlePlace.dine_in && place.type === 'cafe') {
@@ -41,15 +47,15 @@ export const updateGooglePlaceData = async (place: Place) => {
       googlePlace.address_components
     );
 
-    const updatedPlace: Partial<Place> = {
+    let updatedPlace: Partial<Place> = {
       ...place,
       name: googlePlace.name ?? place.name,
       lat: googlePlace.geometry?.location?.lat ?? place.lat,
       lng: googlePlace.geometry?.location?.lng ?? place.lng,
       check_date: new Date(),
-      business_status: googlePlace.business_status ?? place.business_status,
+      // business_status: googlePlace.business_status ?? place.business_status,
       photo_refs: googlePlace.photos
-        ? googlePlace.photos.slice(1, 5).map((photo) => photo.photo_reference)
+        ? googlePlace.photos.slice(1, 3).map((photo) => photo.photo_reference)
         : place.photo_refs,
       add_1: convertedAddress.add_1,
       add_2: convertedAddress.add_2,
@@ -64,9 +70,10 @@ export const updateGooglePlaceData = async (place: Place) => {
         googlePlace.formatted_address ?? place?.formatted_address,
 
       dine_in: googlePlace.dine_in ?? place.amenities?.dine_in ?? undefined,
-      wheelchair_accessible: googlePlace.wheelchair_accessible_entrance
-        ? 'yes'
-        : (place.amenities?.wheelchair_accessible ?? undefined),
+      wheelchair_accessible:
+        googlePlace.wheelchair_accessible_entrance ??
+        place.amenities?.wheelchair_accessible ??
+        undefined,
       serves_beer: googlePlace.serves_beer ?? place.serves_beer ?? undefined,
       serves_breakfast:
         googlePlace.serves_breakfast ?? place.serves_breakfast ?? undefined,
@@ -103,7 +110,14 @@ export const updateGooglePlaceData = async (place: Place) => {
         googlePlace.user_ratings_total ?? place?.rating_count ?? undefined
     };
 
-    // Update missing info with OSM data
+    if (originalPhotoRefs.length < 2) {
+      const photoNames = await uploadPlacePhotos(updatedPlace);
+      const placeWithPhotoNames = {
+        ...updatedPlace,
+        photo_names: photoNames
+      };
+      updatedPlace = placeWithPhotoNames;
+    }
 
     const { error } = await supabase
       .from('places')
@@ -115,8 +129,6 @@ export const updateGooglePlaceData = async (place: Place) => {
     }
 
     console.log('Place updated with Google Data successfully');
-
-    // await uploadPlacePhotosToSupabase(updatedPlace as Place);
 
     return updatedPlace as Place;
   } catch (error) {

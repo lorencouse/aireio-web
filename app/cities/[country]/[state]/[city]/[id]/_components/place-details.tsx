@@ -3,6 +3,9 @@ import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 
 import { Place } from '@/utils/types';
+import Amenity from './amenity';
+import { EmojiAmenity } from './emoji-amenity';
+import SocialLinks from './social-links';
 
 // Custom Icon component
 const Icon = ({ name, className }: { name: string; className?: string }) => {
@@ -52,110 +55,138 @@ const PlaceDetails = ({ place }: { place: Place }) => {
     ? new URL(place.website).hostname.replace('www.', '')
     : '';
 
-
-
-
   return (
     <Card>
-      <CardContent className="pt-6 text-lg ">
-        <div className="flex items-center space-x-2 mb-4">
-          <Icon
-            name={place.type === 'cafe' ? 'coffee' : 'library'}
-            className="w-5 h-5"
-          />
-          <span className="capitalize">{place.type}</span>
-        </div>
-
-        <div className="flex items-center space-x-2 mb-4">
-          <Icon name="map-pin" className="w-5 h-5" />
-          <div>
-            <span
-              className="hover:underline cursor-pointer"
-              variant="link"
-              onClick={() =>
-                handlePress(
-                  place.google_maps ||
-                    `https://www.google.com/maps/search/?api=1&query=${place.lat},${place.lon}`
-                )
-              }
-            >
-              <p>{place?.formatted_address}</p>
-            </span>
+      <CardContent className="pt-6 text-lg flex flex-row justify-between">
+        <div className="contact-info">
+          <div className="mb-8">
+            {(place.notes && place.notes.length > 0) ||
+              (place.description && place.description.length > 0 && (
+                <>
+                  <h3 className="underline font-extrabold mb-4">
+                    {place.name} Overview
+                  </h3>
+                  <p>{place.description}</p>
+                  <p>{place.note}</p>
+                </>
+              ))}
           </div>
-        </div>
-
-        {place?.phone && (
           <div className="flex items-center space-x-2 mb-4">
-            <Icon name="phone" className="w-5 h-5" />
-            <span
-              variant="link"
-              onClick={() => handlePress(`tel:${place.phone}`)}
-              className="hover:underline cursor-pointer"
-            >
-              {place.phone}
-            </span>
+            <Icon
+              name={place.type === 'cafe' ? 'coffee' : 'library'}
+              className="w-5 h-5"
+            />
+            <span className="capitalize">{place.type}</span>
           </div>
-        )}
 
-        {place?.website && (
           <div className="flex items-center space-x-2 mb-4">
-            <Icon name="globe" className="w-5 h-5" />
-            <span
-              variant="link"
-              onClick={() => handlePress(place.website)}
-              className="hover:underline cursor-pointer"
-            >
-              {websiteName}
-            </span>
+            <Icon name="map-pin" className="w-5 h-5" />
+            <div>
+              <span
+                className="hover:underline cursor-pointer"
+                variant="link"
+                onClick={() =>
+                  handlePress(
+                    place.google_maps ||
+                      `https://www.google.com/maps/search/?api=1&query=${place.lat},${place.lon}`
+                  )
+                }
+              >
+                <p>{place?.formatted_address}</p>
+              </span>
+            </div>
           </div>
-        )}
 
-        <div className="flex space-x-2 mb-4">
-          <Icon name="clock" className="w-5 h-5" />
-          {/* <p>{formattedOpeningHours}</p> */}
-          <div>
-            {place?.opening_hours ? (
-              <ul>
-                {place.opening_hours.map((day) => (
-                  <li key={day}>{day}</li>
-                ))}
-              </ul>
-            ) : (
-              <span>?</span>
-            )}
+          {place?.phone && (
+            <div className="flex items-center space-x-2 mb-4">
+              <Icon name="phone" className="w-5 h-5" />
+              <span
+                variant="link"
+                onClick={() => handlePress(`tel:${place.phone}`)}
+                className="hover:underline cursor-pointer"
+              >
+                {place.phone}
+              </span>
+            </div>
+          )}
+
+          {place?.website && (
+            <div className="flex items-center space-x-2 mb-4">
+              <Icon name="globe" className="w-5 h-5" />
+              <span
+                variant="link"
+                onClick={() => handlePress(place.website)}
+                className="hover:underline cursor-pointer"
+              >
+                {websiteName}
+              </span>
+            </div>
+          )}
+
+          <div className="flex space-x-2 mb-4">
+            <Icon name="clock" className="w-5 h-5" />
+            {/* <p>{formattedOpeningHours}</p> */}
+            <div>
+              {place?.opening_hours ? (
+                <ul>
+                  {place.opening_hours.map((day) => (
+                    <li key={day}>{day}</li>
+                  ))}
+                </ul>
+              ) : (
+                <span>?</span>
+              )}
+            </div>
           </div>
+
+          <SocialLinks place={place} />
         </div>
-
-        <div className="flex justify-between mt-4">
-          <span title="Internet Access">
-            🛜:{' '}
-            {place?.internet_access === 'yes' ||
-            place?.internet_access === 'wlan'
-              ? '✅'
-              : place?.internet_access === 'no'
-                ? '🚫'
-                : '🤔'}
-          </span>
-          <span title="Seating">
-            🪑:{' '}
-            {place?.outdoor_seating === 'yes'
-              ? '✅ Outdoor'
-              : place?.indoor_seating === 'yes'
-                ? '✅ Indoor'
-                : place?.outdoor_seating || place?.indoor_seating
-                  ? '🚫'
-                  : '🤔'}
-          </span>
-          <span title="Wheelchair Accessible">
-            ♿️:{' '}
-            {place?.wheelchair_accessible === 'yes'
-              ? '✅'
-              : place?.wheelchair_accessible === 'limited'
-                ? '⚠️'
-                : place?.wheelchair_accessible === 'no'
-                  ? '🚫'
-                  : '🤔'}
-          </span>
+        <div className="amenities flex flex-col mx-6 mt-4">
+          {(place.type === 'cafe' || place.type === 'restaurant') && (
+            <>
+              <p className="mb-6 text-2xl underline">This Location Serves</p>
+              <Amenity
+                name="Serves Vegetarian Food"
+                value={place.serves_vegetarian_food}
+                placeId={place.id}
+              />
+              <Amenity
+                name="Serves Vegan Food"
+                value={place.serves_vegan_food}
+                placeId={place.id}
+              />
+              <Amenity
+                name="Serves Beer"
+                value={place.serves_beer}
+                placeId={place.id}
+              />
+              <Amenity
+                name="Serves Wine"
+                value={place.serves_wine}
+                placeId={place.id}
+              />
+              <Amenity
+                name="Serves Breakfast"
+                value={place.serves_breakfast}
+                placeId={place.id}
+              />
+              <Amenity
+                name="Serves Brunch"
+                value={place.serves_brunch}
+                placeId={place.id}
+              />
+              <Amenity
+                name="Serves Lunch"
+                value={place.serves_lunch}
+                placeId={place.id}
+              />
+              <Amenity
+                name="Serves Dinner"
+                value={place.serves_dinner}
+                placeId={place.id}
+              />
+            </>
+          )}
         </div>
       </CardContent>
     </Card>

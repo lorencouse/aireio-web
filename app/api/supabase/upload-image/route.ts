@@ -1,11 +1,8 @@
 import useSupabase from '@/utils/hook/useSupabase';
-import { createClient } from '@supabase/supabase-js';
+import { createClient } from '@/utils/supabase/server';
 import { NextResponse } from 'next/server';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL as string,
-  process.env.SUPABASE_SERVICE_ROLE_KEY as string
-);
+const supabase = createClient();
 
 export async function POST(request: Request) {
   const { imageUrl, imgName, dir } = await request.json();

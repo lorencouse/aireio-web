@@ -2,14 +2,17 @@
 
 import React from 'react';
 import SegmentedTypePicker from './_components/segmented-type-picker';
-import RadiusSlider from './_components/radius-slider';
 import SortMethod from './_components/sort-method';
 import SortOrderPicker from './_components/sort-order-picker';
 import GoogleMap from './_components/google-map';
 import { useSearchParams } from 'next/navigation';
 import { Place, City } from '@/utils/types';
-import CityList from '@/components/homepage/city-list';
 import PlacesList from './_components/places-list';
+import { filterAndSortPlaces } from '@/utils/places/sortPlacesUtils';
+import { useEffect, useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { fetchNewPlaces } from './actions';
+import LoadingGrid from '@/components/general/loading-grid';
 
 export default function PlacesPageLayout({
   city,
@@ -19,6 +22,75 @@ export default function PlacesPageLayout({
   places;
 }) {
   const searchParams = useSearchParams();
+
+  const [filteredPlaces, setFilteredPlaces] = useState<Place[]>(places);
+  const [allPlaces, setAllPlaces] = useState<Place[]>(places);
+  const [isLoading, setIsLoading] = useState(false);
+  const [searchComplete, setSearchComplete] = useState(false);
+
+  const handleSearch = async () => {
+    const { type, radius, lat, lng, sortMethod, sortOrder } =
+      parseSearchParams();
+    const newPlaces = await fetchNewPlaces(city, type, radius, lat, lng);
+    const allNewPlaces = [...places, ...newPlaces];
+    setAllPlaces(allNewPlaces);
+    const newFiltered = filterAndSortPlaces(
+      allNewPlaces,
+      type,
+      sortMethod,
+      lat,
+      lng,
+      radius,
+      sortOrder as 'asc' | 'des'
+    );
+
+    setFilteredPlaces(newFiltered);
+    setSearchComplete(true);
+    setIsLoading(false);
+  };
+
+  const parseSearchParams = () => {
+    const type = searchParams.get('place_type') || 'cafe';
+    const radius = searchParams.get('radius')
+      ? searchParams.get('radius')
+      : '1000';
+    const lat = searchParams.get('lat')
+      ? searchParams.get('lat')
+      : city.lat.toString();
+    const lng = searchParams.get('lng')
+      ? searchParams.get('lng')
+      : city.lng.toString();
+    const sortMethod = searchParams.get('sort_method') || 'distance';
+    const sortOrder = searchParams.get('sort_order') || 'asc';
+    return { radius, lat, lng, type, sortMethod, sortOrder };
+  };
+
+  // Update filtered places when search params or allPlaces change
+  useEffect(() => {
+    if (!allPlaces || allPlaces.length === 0) return;
+
+    const { type, radius, lat, lng, sortMethod, sortOrder } = parseSearchParams();
+
+    const filtered = filterAndSortPlaces(
+      allPlaces,
+      type,
+      sortMethod,
+      lat,
+      lng,
+      radius,
+      sortOrder as 'asc' | 'des'
+    );
+
+    if (filtered.length === 0 && !searchComplete) {
+      setFilteredPlaces([]);
+      setIsLoading(true);
+      handleSearch();
+    } else {
+      setFilteredPlaces(filtered);
+      setSearchComplete(false);
+      console.log('Filtered places:', filtered.length);
+    }
+  }, [searchParams, allPlaces]);
 
   return (
     <>
@@ -31,6 +103,7 @@ export default function PlacesPageLayout({
           <SegmentedTypePicker searchParams={searchParams} />
           <div className="flex flex-row gap-4 mb-6 justify-between flex-wrap">
             <SortMethod searchParams={searchParams} />
+            <Button onClick={handleSearch}>Search</Button>
             <SortOrderPicker searchParams={searchParams} />
           </div>
         </div>
@@ -38,7 +111,15 @@ export default function PlacesPageLayout({
       <h1 className="text-4xl font-bold my-8 select-none">
         Workspaces in {city && city.name.replace(/-/g, ' ')}
       </h1>
-      <PlacesList city={city} searchParams={searchParams} places={places} />
+      {isLoading ? (
+        <LoadingGrid />
+      ) : 
+        <PlacesList
+          filteredPlaces={filteredPlaces}
+          searchParams={searchParams}
+          city={city}
+        />
+      }
     </>
   );
 }

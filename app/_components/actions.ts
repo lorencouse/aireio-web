@@ -13,17 +13,31 @@ export const fetchCity = async (city: City) => {
     const { data: upsertedCity, error: upsertError } = await supabase
       .from('cities')
       .upsert(city, {
+<<<<<<< HEAD
         onConflict: 'google_id'
+=======
+        onConflict: 'google_id',
+        returning: 'minimal'
+>>>>>>> c47d6cc654e702d214b853c8e29529eb92473b29
       })
       .select()
       .single();
 
+<<<<<<< HEAD
     // if (upsertError) {
     //   console.error('Error upserting city:', upsertError);
     //   throw new Error('Failed to upsert city');
     // }
 
     if (upsertError) {
+=======
+    if (upsertError) {
+      console.error('Error upserting city:', upsertError);
+      throw new Error('Failed to upsert city');
+    }
+
+    if (upsertedCity) {
+>>>>>>> c47d6cc654e702d214b853c8e29529eb92473b29
       const res = await fetch(
         `https://maps.googleapis.com/maps/api/place/details/json?place_id=${google_id}&fields=photos&key=${process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY}`
       );
@@ -55,7 +69,11 @@ export const fetchCity = async (city: City) => {
 
 const uploadCityPhoto = async (city: City) => {
   const supabase = createClient();
+<<<<<<< HEAD
   const maxWidth = 1200; // Define maxWidth here or as a constant at the top of the file
+=======
+  const maxWidth = 1200;
+>>>>>>> c47d6cc654e702d214b853c8e29529eb92473b29
 
   if (city.photo_ref) {
     const googlePhotoUrl = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=${maxWidth}&photoreference=${city.photo_ref}&key=${process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY}`;
