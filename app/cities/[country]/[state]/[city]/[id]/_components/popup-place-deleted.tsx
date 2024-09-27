@@ -1,4 +1,5 @@
 import React from 'react';
+import { useRouter } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -20,6 +21,7 @@ const PopupPlaceDeleted = ({
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
   cityId: string;
 }) => {
+  const router = useRouter();
   const handleCloseModal = () => {
     setShowModal(false);
     router.push(`/places?city_id=${cityId}`);

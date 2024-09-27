@@ -4,7 +4,6 @@ import { Card, CardContent } from '@/components/ui/card';
 
 import { Place } from '@/utils/types';
 import Amenity from './amenity';
-import { EmojiAmenity } from './emoji-amenity';
 import SocialLinks from './social-links';
 
 // Custom Icon component
@@ -60,7 +59,7 @@ const PlaceDetails = ({ place }: { place: Place }) => {
       <CardContent className="pt-6 text-lg flex flex-row justify-between">
         <div className="contact-info">
           <div className="mb-8">
-            {(place.notes && place.notes.length > 0) ||
+            {(place.note && place.note.length > 0) ||
               (place.description && place.description.length > 0 && (
                 <>
                   <h3 className="underline font-extrabold mb-4">
@@ -84,11 +83,10 @@ const PlaceDetails = ({ place }: { place: Place }) => {
             <div>
               <span
                 className="hover:underline cursor-pointer"
-                variant="link"
                 onClick={() =>
                   handlePress(
                     place.google_maps ||
-                      `https://www.google.com/maps/search/?api=1&query=${place.lat},${place.lon}`
+                      `https://www.google.com/maps/search/?api=1&query=${place.lat},${place.lng}`
                   )
                 }
               >
@@ -101,7 +99,6 @@ const PlaceDetails = ({ place }: { place: Place }) => {
             <div className="flex items-center space-x-2 mb-4">
               <Icon name="phone" className="w-5 h-5" />
               <span
-                variant="link"
                 onClick={() => handlePress(`tel:${place.phone}`)}
                 className="hover:underline cursor-pointer"
               >
@@ -114,8 +111,7 @@ const PlaceDetails = ({ place }: { place: Place }) => {
             <div className="flex items-center space-x-2 mb-4">
               <Icon name="globe" className="w-5 h-5" />
               <span
-                variant="link"
-                onClick={() => handlePress(place.website)}
+                onClick={() => handlePress(place.website ? place.website : '')}
                 className="hover:underline cursor-pointer"
               >
                 {websiteName}

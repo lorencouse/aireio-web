@@ -8,17 +8,17 @@ import {
   BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbPage,
-  BreadcrumbSeparator,
+  BreadcrumbSeparator
 } from '@/components/ui/breadcrumb';
 
-import type { Place } from '@/types';
+import { Place } from '@/utils/types';
 
 export default function PlaceBreadCrumb({ place }: { place: Place }) {
   return (
-    <Breadcrumb className='mb-8'>
+    <Breadcrumb className="mb-8">
       <BreadcrumbList>
         <BreadcrumbItem>
-          <BreadcrumbLink href='/'>Home</BreadcrumbLink>
+          <BreadcrumbLink href="/">Home</BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator>
           <Slash />
@@ -26,7 +26,7 @@ export default function PlaceBreadCrumb({ place }: { place: Place }) {
         <BreadcrumbItem>
           <span
             onClick={() => window.history.back()}
-            className='cursor-pointer'
+            className="cursor-pointer"
           >
             {place.city || place.state || 'Places'}
           </span>

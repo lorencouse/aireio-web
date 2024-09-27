@@ -8,10 +8,14 @@ export const SubmitUserPlaceData = async (
   value: boolean
 ): Promise<boolean> => {
   const supabase = createClient();
-  const user = await getUser(supabase);
+  const user = await getUser();
 
   if (!user) {
     console.error('User not authenticated');
+    return false;
+  }
+  if (!placeId || !amenityName || !value) {
+    console.error('Missing required parameters');
     return false;
   }
 
@@ -21,7 +25,7 @@ export const SubmitUserPlaceData = async (
   const upsertData: Partial<UserSubmittedPlaceDetails> = {
     place_id: placeId,
     user_id: user.id,
-    updated: new Date(),
+    // updated: new Date().toString(),
     [formattedAmenityName]: value // Dynamically updating the amenity field
   };
 

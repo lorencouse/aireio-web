@@ -7,7 +7,6 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import PlaceBreadCrumb from './place-breadcrumb';
 import { StarIcon } from '@radix-ui/react-icons';
 import { Badge } from '@/components/ui/badge';
-import { AddInfoButton } from './yes-no-button';
 import Amenity from './amenity';
 const PlaceOverviewCard = ({
   place,
@@ -75,13 +74,13 @@ const PlaceOverviewCard = ({
                 value={place.internet_access}
                 placeId={place.id}
               />
-              {place.internet_access === true && place.internet_password && (
+              {/* {place.internet_access === true && place.internet_password && (
                 <Amenity
                   name={'Wifi Password'}
                   value={place.internet_password}
                   placeId={place.id}
                 />
-              )}
+              )} */}
             </div>
           </div>
         </CardContent>

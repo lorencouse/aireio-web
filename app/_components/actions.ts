@@ -5,39 +5,52 @@ import { redirect } from 'next/navigation';
 import uploadImageToSupabase from '@/utils/functions/places/uploadImageToSupabase';
 import { City } from '@/utils/types';
 
-export const fetchCity = async (city: City) => {
+export const fetchCity = async (city: Partial<City>) => {
   const supabase = createClient();
-  const { name, country_code, state, google_id } = city;
+  const {
+    name,
+    country,
+    country_code,
+    state,
+    state_code,
+    google_id,
+    lat,
+    lng
+  } = city;
+
+  if (
+    !name ||
+    !country_code ||
+    !state ||
+    !google_id ||
+    lat === undefined ||
+    lng === undefined
+  ) {
+    throw new Error('Missing required fields for city');
+  }
 
   try {
     const { data: upsertedCity, error: upsertError } = await supabase
       .from('cities')
-      .upsert(city, {
-<<<<<<< HEAD
-        onConflict: 'google_id'
-=======
-        onConflict: 'google_id',
-        returning: 'minimal'
->>>>>>> c47d6cc654e702d214b853c8e29529eb92473b29
-      })
+      .upsert(
+        {
+          name,
+          lat,
+          lng,
+          country,
+          country_code,
+          state,
+          state_code,
+          google_id
+        },
+        {
+          onConflict: 'google_id'
+        }
+      )
       .select()
       .single();
 
-<<<<<<< HEAD
-    // if (upsertError) {
-    //   console.error('Error upserting city:', upsertError);
-    //   throw new Error('Failed to upsert city');
-    // }
-
     if (upsertError) {
-=======
-    if (upsertError) {
-      console.error('Error upserting city:', upsertError);
-      throw new Error('Failed to upsert city');
-    }
-
-    if (upsertedCity) {
->>>>>>> c47d6cc654e702d214b853c8e29529eb92473b29
       const res = await fetch(
         `https://maps.googleapis.com/maps/api/place/details/json?place_id=${google_id}&fields=photos&key=${process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY}`
       );
@@ -51,13 +64,13 @@ export const fetchCity = async (city: City) => {
 
       const photoRef = data.result?.photos?.[0]?.photo_reference || '';
       console.log('Photo reference:', photoRef);
-
-      const completeCity = {
-        ...city,
-        id: upsertedCity.id,
-        photo_ref: photoRef
-      };
-      await uploadCityPhoto(completeCity);
+      if (upsertedCity) {
+        const completeCity: City = {
+          ...(upsertedCity as City),
+          photo_ref: photoRef
+        };
+        await uploadCityPhoto(completeCity);
+      }
     }
 
     redirect(`/cities/${country_code}/${state}/${name}`);
@@ -69,15 +82,12 @@ export const fetchCity = async (city: City) => {
 
 const uploadCityPhoto = async (city: City) => {
   const supabase = createClient();
-<<<<<<< HEAD
-  const maxWidth = 1200; // Define maxWidth here or as a constant at the top of the file
-=======
   const maxWidth = 1200;
->>>>>>> c47d6cc654e702d214b853c8e29529eb92473b29
 
   if (city.photo_ref) {
     const googlePhotoUrl = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=${maxWidth}&photoreference=${city.photo_ref}&key=${process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY}`;
     const imgName = `${city.country_code}_${city.state}_${city.name}.jpg`;
+    const googleId = city.google_id || '';
 
     try {
       const success = await uploadImageToSupabase(
@@ -90,7 +100,7 @@ const uploadCityPhoto = async (city: City) => {
         const { error: updateError } = await supabase
           .from('cities')
           .update({ photo_ref: imgName })
-          .eq('id', city.id);
+          .eq('google_id', googleId);
 
         if (updateError) throw updateError;
 

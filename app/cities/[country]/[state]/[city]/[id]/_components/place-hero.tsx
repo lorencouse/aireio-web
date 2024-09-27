@@ -3,7 +3,7 @@ import React from 'react';
 
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 
-import { Place } from '@/types/place';
+import { Place } from '@/utils/types';
 
 import { placeholderImage } from '@/utils/constants';
 
