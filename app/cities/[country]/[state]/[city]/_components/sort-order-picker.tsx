@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import Link from 'next/link';
 import useUpdateUrlQuery from '@/utils/hook/useUpdateUrlQuery';
+import { getParamValue } from '@/utils/functions/getParamValue';
 
 interface SortOrderPickerProps {
   searchParams: { [key: string]: string | string[] | undefined };
@@ -20,7 +21,7 @@ interface SortOrderPickerProps {
 
 const SortOrderPicker: React.FC<SortOrderPickerProps> = ({ searchParams }) => {
   const sortOrders = ['asc', 'des'];
-  const sortOrderParams = (searchParams.get('sort_order') as string) || 'asc';
+  const sortOrderParams = getParamValue('sort_order', searchParams) || 'asc';
   const [sortOrder, setSortOrder] = useState(sortOrderParams);
   const { updateUrlQuery } = useUpdateUrlQuery();
 

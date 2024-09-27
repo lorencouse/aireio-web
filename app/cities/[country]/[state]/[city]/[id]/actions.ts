@@ -2,6 +2,7 @@
 import { UserSubmittedPlaceDetails } from '@/utils/types';
 import { createClient } from '@/utils/supabase/server';
 import { getUser } from '@/utils/supabase/queries';
+
 export const SubmitUserPlaceData = async (
   placeId: string,
   amenityName: string,
@@ -14,7 +15,7 @@ export const SubmitUserPlaceData = async (
     console.error('User not authenticated');
     return false;
   }
-  if (!placeId || !amenityName || !value) {
+  if (!placeId || !amenityName || typeof value !== 'boolean') {
     console.error('Missing required parameters');
     return false;
   }
@@ -22,18 +23,23 @@ export const SubmitUserPlaceData = async (
   const formattedAmenityName = amenityName.replace(/\s+/g, '_').toLowerCase();
 
   // Prepare the data to be upserted
-  const upsertData: Partial<UserSubmittedPlaceDetails> = {
+  const upsertData: {
+    place_id: string;
+    user_id: string;
+    updated: string;
+    [key: string]: string | boolean;
+  } = {
     place_id: placeId,
     user_id: user.id,
-    // updated: new Date().toString(),
-    [formattedAmenityName]: value // Dynamically updating the amenity field
+    [formattedAmenityName]: value,
+    updated: new Date().toISOString()
   };
 
   // Attempt to upsert the data
   const { error } = await supabase
     .from('user_submitted_place_details')
     .upsert(upsertData, {
-      onConflict: ['place_id', 'user_id'] // Ensure both columns are checked for conflicts
+      onConflict: 'place_id,user_id'
     });
 
   if (error) {

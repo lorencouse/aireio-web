@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/card';
 import { getPlacePhotoUrls } from '@/utils/functions/places/getPlacePhotoUrls';
 import { placeholderImage } from '@/utils/constants';
+import { Place } from '@/utils/types';
 
 interface PlaceCardProps {
   place: Place;

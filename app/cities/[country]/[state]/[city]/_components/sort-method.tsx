@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import Link from 'next/link';
 import useUpdateUrlQuery from '@/utils/hook/useUpdateUrlQuery';
+import { getParamValue } from '@/utils/functions/getParamValue';
 
 interface SortMethodProps {
   // sortMethod: string;
@@ -24,7 +25,7 @@ const SortMethod: React.FC<SortMethodProps> = ({
   searchParams
 }) => {
   const sortMethods = ['distance', 'rating', 'rating-count', 'price'];
-  const sortMethodParams = searchParams.get('sort_method') || 'distance';
+  const sortMethodParams = getParamValue('sort_method', searchParams) || 'distance';
 
   const [sortMethod, setSortMethod] = useState(sortMethodParams);
 

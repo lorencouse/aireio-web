@@ -2,6 +2,7 @@
 
 import { createClient } from '@/utils/supabase/server';
 import { uploadPlacePhotos } from '@/utils/places/uploadPlacePhotos';
+import { City, Place, GooglePlace } from '@/utils/types';
 
 export async function getCity(cityName: string) {
   const supabase = createClient();
@@ -72,7 +73,7 @@ export const fetchNewPlaces = async (
   radius: string,
   lat: string,
   lng: string
-): Promise<GooglePlace[]> => {
+) => {
   const params = new URLSearchParams({
     type,
     lat,
@@ -135,14 +136,14 @@ export const createNewPlaces = async (
     }
     const supabase = createClient();
 
-    const newPlaces: Omit<Place, 'id'>[] = places.map((place: GooglePlace) => ({
+    const newPlaces: Partial<Place>[] = places.map((place) => ({
       name: place.name,
       city_id: city.id,
       google_id: place.place_id,
       lat: place.geometry.location.lat,
       lng: place.geometry.location.lng,
       type,
-      add_1: place.formatted_address || place.vicinity,
+      add_1: place.vicinity,
       city: city.name,
       state: city.state,
       country: city.country,

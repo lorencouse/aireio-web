@@ -110,7 +110,7 @@ export const updateGooglePlaceData = async (place: Place) => {
         googlePlace.user_ratings_total ?? place?.rating_count ?? undefined
     };
 
-    if (originalPhotoRefs.length < 2) {
+    if (originalPhotoRefs.length < 2 || !updatedPlace.photo_names.length) {
       const photoNames = await uploadPlacePhotos(updatedPlace);
       const placeWithPhotoNames = {
         ...updatedPlace,

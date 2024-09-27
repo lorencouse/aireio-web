@@ -1,10 +1,14 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import useUpdateUrlQuery from '@/utils/hook/useUpdateUrlQuery';
-import RadiusSlider from './radius-slider';
+import { City } from '@/utils/types';
+import { getParamValue } from '@/utils/functions/getParamValue';
 
 interface MapWithDraggableMarkerProps {
   searchParams: { [key: string]: string | string[] | undefined };
-  city: City;
+  city: {
+    lat: string;
+    lng: string;
+  };
 }
 
 const GoogleMap: React.FC<MapWithDraggableMarkerProps> = ({
@@ -18,11 +22,18 @@ const GoogleMap: React.FC<MapWithDraggableMarkerProps> = ({
     null
   );
   const circleRef = useRef<google.maps.Circle | null>(null);
-  const initialLat = parseFloat(searchParams.get('lat') || city.lat || '0');
-  const initialLng = parseFloat(searchParams.get('lng') || city.lng || '0');
-  const initialRadius = parseFloat(searchParams.get('radius') || '1000');
-  const [center, setCenter] = useState({ lat: initialLat, lng: initialLng });
 
+  const initialLat = parseFloat(
+    getParamValue('lat', searchParams) || city.lat || '0'
+  );
+  const initialLng = parseFloat(
+    getParamValue('lng', searchParams) || city.lng || '0'
+  );
+  const initialRadius = parseInt(
+    getParamValue('radius', searchParams) || '1000'
+  );
+
+  const [center, setCenter] = useState({ lat: initialLat, lng: initialLng });
   const [zoom, setZoom] = useState(14);
   const [radius, setRadius] = useState(initialRadius);
   const initialCenter = useRef({ lat: initialLat, lng: initialLng });
@@ -148,9 +159,6 @@ const GoogleMap: React.FC<MapWithDraggableMarkerProps> = ({
         ],
         searchParams
       );
-      // updateUrlQuery('lat', center.lat, searchParams);
-      // updateUrlQuery('lng', center.lng, searchParams);
-      // updateUrlQuery('radius', radius, searchParams);
     };
 
     initMap();
@@ -187,7 +195,7 @@ const GoogleMap: React.FC<MapWithDraggableMarkerProps> = ({
           onChange={handleRadiusChange}
           className="w-full"
         />
-        <span className="ml-2">{parseInt(radius) / 1000} km</span>
+        <span className="ml-2">{radius / 1000} km</span>
       </div>
     </div>
   );
