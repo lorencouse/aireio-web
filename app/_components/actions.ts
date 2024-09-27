@@ -30,9 +30,9 @@ export const fetchCity = async (city: Partial<City>) => {
   }
 
   try {
-    const { data: upsertedCity, error: upsertError } = await supabase
+    const { data: upsertedCity, error: insertError } = await supabase
       .from('cities')
-      .upsert(
+      .insert(
         {
           name,
           lat,
@@ -50,7 +50,7 @@ export const fetchCity = async (city: Partial<City>) => {
       .select()
       .single();
 
-    if (upsertError) {
+    if (!insertError) {
       const res = await fetch(
         `https://maps.googleapis.com/maps/api/place/details/json?place_id=${google_id}&fields=photos&key=${process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY}`
       );
