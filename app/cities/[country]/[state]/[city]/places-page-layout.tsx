@@ -13,6 +13,8 @@ import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { fetchNewPlaces } from './actions';
 import LoadingGrid from '@/components/general/loading-grid';
+import LoadingPlace from './[id]/_components/loading-place';
+import CityHero from './_components/city-hero';
 
 export default function PlacesPageLayout({
   city,
@@ -26,6 +28,7 @@ export default function PlacesPageLayout({
   const [filteredPlaces, setFilteredPlaces] = useState<Place[]>(places);
   const [allPlaces, setAllPlaces] = useState<Place[]>(places);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingPlace, setIsLoadingPlace] = useState(false);
   const [searchComplete, setSearchComplete] = useState(false);
 
   const handleSearch = async () => {
@@ -69,7 +72,8 @@ export default function PlacesPageLayout({
   useEffect(() => {
     if (!allPlaces || allPlaces.length === 0) return;
 
-    const { type, radius, lat, lng, sortMethod, sortOrder } = parseSearchParams();
+    const { type, radius, lat, lng, sortMethod, sortOrder } =
+      parseSearchParams();
 
     const filtered = filterAndSortPlaces(
       allPlaces,
@@ -92,8 +96,18 @@ export default function PlacesPageLayout({
     }
   }, [searchParams, allPlaces]);
 
+  if (isLoadingPlace) {
+    return <LoadingPlace />;
+  }
+
   return (
     <>
+      <CityHero
+        city={city.name}
+        state={city.state}
+        country={city.country}
+        countryCode={city.country_code}
+      />
       <div className="grid lg:grid-cols-2 w-full mt-[1rem] p-3">
         <div className="city-map lg:mx-0 sm:mx-12">
           <GoogleMap searchParams={searchParams} city={city} />
@@ -113,13 +127,14 @@ export default function PlacesPageLayout({
       </h1>
       {isLoading ? (
         <LoadingGrid />
-      ) : 
+      ) : (
         <PlacesList
           filteredPlaces={filteredPlaces}
           searchParams={searchParams}
           city={city}
+          setIsLoadingPlace={setIsLoadingPlace}
         />
-      }
+      )}
     </>
   );
 }

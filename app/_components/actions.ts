@@ -20,8 +20,10 @@ export const fetchCity = async (city: Partial<City>) => {
 
   if (
     !name ||
+    !country ||
     !country_code ||
     !state ||
+    !state_code ||
     !google_id ||
     lat === undefined ||
     lng === undefined
@@ -30,23 +32,18 @@ export const fetchCity = async (city: Partial<City>) => {
   }
 
   try {
-    const { data: upsertedCity, error: insertError } = await supabase
+    const { data: insertedCity, error: insertError } = await supabase
       .from('cities')
-      .insert(
-        {
-          name,
-          lat,
-          lng,
-          country,
-          country_code,
-          state,
-          state_code,
-          google_id
-        },
-        {
-          onConflict: 'google_id'
-        }
-      )
+      .insert({
+        name,
+        lat,
+        lng,
+        country,
+        country_code,
+        state,
+        state_code,
+        google_id
+      })
       .select()
       .single();
 
@@ -64,9 +61,9 @@ export const fetchCity = async (city: Partial<City>) => {
 
       const photoRef = data.result?.photos?.[0]?.photo_reference || '';
       console.log('Photo reference:', photoRef);
-      if (upsertedCity) {
+      if (insertedCity) {
         const completeCity: City = {
-          ...(upsertedCity as City),
+          ...(insertedCity as City),
           photo_ref: photoRef
         };
         await uploadCityPhoto(completeCity);

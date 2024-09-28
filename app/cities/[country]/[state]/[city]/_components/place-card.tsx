@@ -16,21 +16,27 @@ import { Place } from '@/utils/types';
 interface PlaceCardProps {
   place: Place;
   distance: number;
+  setIsLoadingPlace: (isLoadingPlace: boolean) => void;
 }
 
-const PlaceCard = ({ place, distance }: PlaceCardProps) => {
+const PlaceCard = ({ place, distance, setIsLoadingPlace }: PlaceCardProps) => {
   const photoUrls = getPlacePhotoUrls(place);
 
   const router = useRouter();
+  const handleClick = () => {
+    window.scrollTo(0, 0);
+    setIsLoadingPlace(true);
+
+    // Scroll to top of page
+    router.push(
+      `/cities/${place.country_code}/${place.state}/${place.city}/${place.id}`
+    );
+  };
 
   return (
     <Card
       className="w-96 hover:scale-105 transition-transform duration-200 m-4 cursor-pointer"
-      onClick={() =>
-        router.push(
-          `/cities/${place.country_code}/${place.state}/${place.city}/${place.id}`
-        )
-      }
+      onClick={handleClick}
     >
       <div className="relative w-full h-52">
         <Image

@@ -6,11 +6,13 @@ import calcDistance from '@/utils/places/calcDistance';
 const PlacesList = ({
   filteredPlaces,
   searchParams,
-  city
+  city,
+  setIsLoadingPlace
 }: {
   filteredPlaces: Place[];
   searchParams: URLSearchParams;
   city: City;
+  setIsLoadingPlace: (isLoadingPlace: boolean) => void;
 }) => {
   return (
     <div className="flex flex-col items-end">
@@ -33,6 +35,7 @@ const PlacesList = ({
                 },
                 { lat: place.lat, lng: place.lng }
               )}
+              setIsLoadingPlace={setIsLoadingPlace}
               key={place.id}
             />
           ))
