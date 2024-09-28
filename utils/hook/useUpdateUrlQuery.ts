@@ -1,4 +1,5 @@
 import { useRouter, usePathname } from 'next/navigation';
+import { ReadonlyURLSearchParams } from 'next/navigation';
 
 const useUpdateUrlQuery = () => {
   const router = useRouter();
@@ -7,7 +8,7 @@ const useUpdateUrlQuery = () => {
   const updateUrlQuery = (
     name: string,
     value: string,
-    searchParams: { [key: string]: string | string[] | undefined }
+    searchParams: ReadonlyURLSearchParams
   ): void => {
     const params = new URLSearchParams(searchParams as Record<string, string>);
     params.set(name, value);
@@ -17,9 +18,9 @@ const useUpdateUrlQuery = () => {
 
   const updateUrlQueries = (
     updates: { name: string; value: string }[],
-    searchParams: { [key: string]: string | string[] | undefined }
+    searchParams: ReadonlyURLSearchParams
   ): void => {
-    const params = new URLSearchParams(searchParams as Record<string, string>);
+    const params = new URLSearchParams(searchParams.toString());
     updates.forEach(({ name, value }) => {
       params.set(name, value);
     });

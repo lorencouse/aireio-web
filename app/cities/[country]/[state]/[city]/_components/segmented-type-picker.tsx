@@ -7,10 +7,10 @@ import { Briefcase, Coffee, Library } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 import useUpdateUrlQuery from '@/utils/hook/useUpdateUrlQuery';
-import { getParamValue } from '@/utils/functions/getParamValue';
+import { ReadonlyURLSearchParams } from 'next/navigation';
 
 interface SegmentedTypePickerProps {
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: ReadonlyURLSearchParams;
 }
 
 export default function SegmentedTypePicker({
@@ -21,7 +21,7 @@ export default function SegmentedTypePicker({
     { value: 'library', icon: Library, label: 'Library' },
     { value: 'coworking', icon: Briefcase, label: 'Coworking' }
   ];
-  const placeTypeParams = (getParamValue('place_type', searchParams) as string) || 'cafe';
+  const placeTypeParams = searchParams.get('place_type') || 'cafe';
   const [placeType, setPlaceType] = useState(placeTypeParams);
 
   const { updateUrlQuery } = useUpdateUrlQuery();

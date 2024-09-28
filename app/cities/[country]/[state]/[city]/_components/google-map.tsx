@@ -2,9 +2,12 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import useUpdateUrlQuery from '@/utils/hook/useUpdateUrlQuery';
 import { City } from '@/utils/types';
 import { getParamValue } from '@/utils/functions/getParamValue';
+import { ReadonlyURLSearchParams } from 'next/navigation';
+
+// import { useSearchParams } from 'next/navigation';
 
 interface MapWithDraggableMarkerProps {
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: ReadonlyURLSearchParams;
   city: {
     lat: string;
     lng: string;
@@ -22,16 +25,10 @@ const GoogleMap: React.FC<MapWithDraggableMarkerProps> = ({
     null
   );
   const circleRef = useRef<google.maps.Circle | null>(null);
-
-  const initialLat = parseFloat(
-    getParamValue('lat', searchParams) || city.lat || '0'
-  );
-  const initialLng = parseFloat(
-    getParamValue('lng', searchParams) || city.lng || '0'
-  );
-  const initialRadius = parseInt(
-    getParamValue('radius', searchParams) || '1000'
-  );
+  // const searchParams = useSearchParams();
+  const initialLat = parseFloat(searchParams?.get('lat') ?? city.lat ?? '0');
+  const initialLng = parseFloat(searchParams?.get('lng') ?? city.lng ?? '0');
+  const initialRadius = parseInt(searchParams?.get('radius') ?? '1000');
 
   const [center, setCenter] = useState({ lat: initialLat, lng: initialLng });
   const [zoom, setZoom] = useState(14);
@@ -173,7 +170,6 @@ const GoogleMap: React.FC<MapWithDraggableMarkerProps> = ({
   const handleRadiusChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newRadius = parseInt(event.target.value, 10);
     setRadius(newRadius);
-    // updateUrlQuery('radius', newRadius, searchParams);
     updateMapElements();
   };
 

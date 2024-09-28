@@ -4,12 +4,15 @@ import { createClient } from '@/utils/supabase/server';
 import { uploadPlacePhotos } from '@/utils/places/uploadPlacePhotos';
 import { City, Place, GooglePlace } from '@/utils/types';
 
-export async function getCity(cityName: string) {
+export async function getCity(params: any) {
   const supabase = createClient();
+  const { country, state, city: name } = params;
   const { data: city, error } = await supabase
     .from('cities')
     .select('*')
-    .eq('name', cityName)
+    .eq('name', name)
+    .eq('country_code', country)
+    .eq('state', state)
     .single();
 
   if (error) {
@@ -24,8 +27,9 @@ export async function getCity(cityName: string) {
   return city;
 }
 
-export async function getPlaces(city: City) {
+export async function getPlaces(city: City, params: any) {
   let places: Place[] = [];
+  const { place_type, radius, lat, lng } = params;
 
   try {
     places = await fetchExistingPlaces(city.id);
@@ -33,10 +37,10 @@ export async function getPlaces(city: City) {
     if (places.length === 0) {
       places = await fetchNewPlaces(
         city,
-        'cafe',
-        '1000',
-        city.lat.toString(),
-        city.lng.toString()
+        place_type || 'cafe',
+        radius || '1000',
+        lat || city.lat.toString(),
+        lng || city.lng.toString()
       );
     }
   } catch (error) {
@@ -136,36 +140,33 @@ export const createNewPlaces = async (
     }
     const supabase = createClient();
 
-    const newPlaces: Partial<Place>[] = places.map((place) => ({
+    const newPlaces: Omit<Place, 'id'>[] = places.map((place) => ({
       name: place.name,
       city_id: city.id,
       google_id: place.place_id,
       lat: place.geometry.location.lat,
       lng: place.geometry.location.lng,
       type,
-      add_1: place.vicinity,
+      add_1: place.vicinity || '',
       city: city.name,
-      state: city.state,
-      country: city.country,
-      country_code: city.country_code,
-      rating_score: place.rating,
-      rating_count: place.user_ratings_total,
-      price_level: place.price_level,
+      state: city.state || '',
+      country: city.country || '',
+      country_code: city.country_code || '',
+      rating_score: place.rating || undefined,
+      rating_count: place.user_ratings_total || undefined,
+      price_level: place.price_level || undefined,
       photo_refs: place.photos ? [place.photos[0].photo_reference] : [],
-      photo_names: [] // Initialize with an empty array
+      photo_names: [],
+      deleted: false
     }));
 
-    // console.log(`Inserting ${newPlaces.length} new places`);
     const { data: insertedPlaces, error } = await supabase
       .from('places')
-      .upsert(newPlaces, {
-        onConflict: 'google_id',
-        ignoreDuplicates: false
-      })
+      .insert(newPlaces)
       .select();
 
     if (error) {
-      console.error('Error in upsert operation:', error);
+      console.error('Error in insert operation:', error);
       throw error;
     }
 
@@ -174,21 +175,32 @@ export const createNewPlaces = async (
       return [];
     }
 
-    // Use Promise.all to handle all uploadPlacePhotos operations concurrently
     const insertedPlacesWithPhotos = await Promise.all(
       insertedPlaces.map(async (place) => {
         const updatedPhotoNames = await uploadPlacePhotos(place);
 
         const updatedPlace = {
           ...place,
-          photo_names: [...place.photo_names, ...updatedPhotoNames]
+          photo_names: [
+            ...(Array.isArray(place.photo_names) ? place.photo_names : []),
+            ...updatedPhotoNames
+          ]
         };
 
-        return updatedPlace || place; // Return the updated place or the original if update returns null
+        return updatedPlace;
       })
     );
 
-    return insertedPlacesWithPhotos;
+    // Type assertion to convert null to undefined for relevant properties
+    return insertedPlacesWithPhotos.map((place) => {
+      const placeWithUndefined: Place = Object.fromEntries(
+        Object.entries(place).map(([key, value]) => [
+          key,
+          value === null ? undefined : value
+        ])
+      ) as Place;
+      return placeWithUndefined;
+    });
   } catch (error) {
     console.error('Error in createNewPlaces:', error);
     throw error;

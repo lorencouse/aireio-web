@@ -5,13 +5,13 @@ import { getCity, getPlaces } from './actions';
 export default async function Places({
   params
 }: {
-  params: { country: string; state: string; city: string };
+  params: { country: string; state: string; city: string; place_type?: string; radius?: string; lat?: string; lng?: string };
 }) {
-  const city = await getCity(params.city);
+  const city = await getCity(params);
 
 
 
-  const places = await getPlaces(city);
+  const places = await getPlaces(city, params);
 
   return (
     <div className="flex flex-col justify-center items-center w-full mt-[1rem] p-3">
