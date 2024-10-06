@@ -6,6 +6,7 @@ import { signInWithEmail } from '@/utils/auth-helpers/server';
 import { handleRequest } from '@/utils/auth-helpers/client';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { Loader2 } from 'lucide-react';
 
 // Define prop type with allowPassword boolean
 interface EmailSignInProps {
@@ -29,7 +30,7 @@ export default function EmailSignIn({
   };
 
   return (
-    <div className="my-8">
+    <div className="m-8">
       <form
         noValidate={true}
         className="mb-4"
@@ -50,13 +51,18 @@ export default function EmailSignIn({
             />
           </div>
           <Button
-            variant="slim"
+            variant="outline"
             type="submit"
             className="mt-1"
-            loading={isSubmitting}
             disabled={disableButton}
           >
-            Sign in
+            {isSubmitting ? (
+              <>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" /> Signing in
+              </>
+            ) : (
+              'Sign in'
+            )}
           </Button>
         </div>
       </form>

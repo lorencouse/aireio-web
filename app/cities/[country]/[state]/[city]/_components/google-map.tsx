@@ -8,15 +8,15 @@ import { ReadonlyURLSearchParams } from 'next/navigation';
 
 interface MapWithDraggableMarkerProps {
   searchParams: ReadonlyURLSearchParams;
-  city: {
-    lat: string;
-    lng: string;
-  };
+
+  lat: string;
+  lng: string;
 }
 
 const GoogleMap: React.FC<MapWithDraggableMarkerProps> = ({
   searchParams,
-  city
+  lat,
+  lng
 }) => {
   const { updateUrlQueries } = useUpdateUrlQuery();
   const mapRef = useRef<HTMLDivElement | null>(null);
@@ -26,8 +26,8 @@ const GoogleMap: React.FC<MapWithDraggableMarkerProps> = ({
   );
   const circleRef = useRef<google.maps.Circle | null>(null);
   // const searchParams = useSearchParams();
-  const initialLat = parseFloat(searchParams?.get('lat') ?? city.lat ?? '0');
-  const initialLng = parseFloat(searchParams?.get('lng') ?? city.lng ?? '0');
+  const initialLat = parseFloat(searchParams?.get('lat') ?? lat ?? '0');
+  const initialLng = parseFloat(searchParams?.get('lng') ?? lng ?? '0');
   const initialRadius = parseInt(searchParams?.get('radius') ?? '1000');
 
   const [center, setCenter] = useState({ lat: initialLat, lng: initialLng });
@@ -148,14 +148,11 @@ const GoogleMap: React.FC<MapWithDraggableMarkerProps> = ({
       }
 
       updateMapElements();
-      updateUrlQueries(
-        [
-          { name: 'lat', value: center.lat.toString() },
-          { name: 'lng', value: center.lng.toString() },
-          { name: 'radius', value: radius.toString() }
-        ],
-        searchParams
-      );
+      updateUrlQueries([
+        { name: 'lat', value: center.lat.toString() },
+        { name: 'lng', value: center.lng.toString() },
+        { name: 'radius', value: radius.toString() }
+      ]);
     };
 
     initMap();

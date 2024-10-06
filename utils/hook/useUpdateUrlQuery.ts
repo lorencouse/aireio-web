@@ -1,24 +1,19 @@
-import { useRouter, usePathname } from 'next/navigation';
-import { ReadonlyURLSearchParams } from 'next/navigation';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 
 const useUpdateUrlQuery = () => {
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
 
-  const updateUrlQuery = (
-    name: string,
-    value: string,
-    searchParams: ReadonlyURLSearchParams
-  ): void => {
-    const params = new URLSearchParams(searchParams as Record<string, string>);
+  const updateUrlQuery = (name: string, value: string): void => {
+    const params = new URLSearchParams(searchParams.toString());
     params.set(name, value);
     const newUrl = `${pathname}?${params.toString()}`;
     router.replace(newUrl, { scroll: false });
   };
 
   const updateUrlQueries = (
-    updates: { name: string; value: string }[],
-    searchParams: ReadonlyURLSearchParams
+    updates: { name: string; value: string }[]
   ): void => {
     const params = new URLSearchParams(searchParams.toString());
     updates.forEach(({ name, value }) => {

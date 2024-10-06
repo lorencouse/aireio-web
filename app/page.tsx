@@ -1,11 +1,8 @@
 import { Suspense } from 'react';
 
-import useSupabase from '@/utils/hook/useSupabase';
-
 import HomeLayout from './home-layout';
 
-import { City } from '@/types/place';
-
+import { City } from '@/utils/types';
 import { createClient } from '@/utils/supabase/server';
 import LoadingGrid from '@/components/general/loading-grid';
 

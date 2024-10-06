@@ -28,7 +28,7 @@ export default function SegmentedTypePicker({
 
   const handlePlaceTypeChange = (value: string) => {
     setPlaceType(value);
-    updateUrlQuery('place_type', value, searchParams);
+    updateUrlQuery('place_type', value);
   };
 
   return (

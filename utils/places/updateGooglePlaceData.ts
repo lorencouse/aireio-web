@@ -3,6 +3,7 @@ import { createClient } from '../supabase/server';
 
 import convertGoogleAddress from '@/utils/places/convertGoogleAddress';
 import { uploadPlacePhotos } from './uploadPlacePhotos';
+import { Place } from '../types';
 
 export const updateGooglePlaceData = async (place: Place) => {
   const supabase = createClient();

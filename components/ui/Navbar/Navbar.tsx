@@ -1,10 +1,9 @@
 import s from './Navbar.module.css';
-import { createClient } from '@/utils/supabase/server';
 import Navlinks from './Navlinks';
 import { getUser } from '@/utils/supabase/queries';
 import { Dialog, DialogClose } from '@radix-ui/react-dialog';
 import { HamburgerMenuIcon } from '@radix-ui/react-icons';
-import { cn } from '@/utils/cn';
+import { cn } from '@/lib/cn';
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -28,9 +27,7 @@ import Image from 'next/image';
 import { UserProfile } from '@/components/user-profile';
 
 export default async function Navbar() {
-  const supabase = createClient();
-  const user = await getUser(supabase);
-
+  const user = await getUser();
 
   const menuItems = [
     {

@@ -7,6 +7,7 @@ import { signUp } from '@/utils/auth-helpers/server';
 import { handleRequest } from '@/utils/auth-helpers/client';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { Loader2 } from 'lucide-react';
 
 // Define prop type with allowEmail boolean
 interface SignUpProps {
@@ -25,7 +26,7 @@ export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
   };
 
   return (
-    <div className="my-8">
+    <div className="m-8">
       <form
         noValidate={true}
         className="mb-4"
@@ -55,11 +56,14 @@ export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
             />
           </div>
           <Button
-            variant="slim"
+            variant="outline"
             type="submit"
             className="mt-1"
-            loading={isSubmitting}
+            disabled={isSubmitting}
           >
+            {isSubmitting ? (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            ) : null}
             Sign up
           </Button>
         </div>

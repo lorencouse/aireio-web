@@ -7,6 +7,7 @@ import { Github } from 'lucide-react';
 import { Google } from '@/components/icons/Google';
 import { Icons } from '@/components/icons/Icons';
 import { useState } from 'react';
+import { Loader2 } from 'lucide-react';
 
 type OAuthProviders = {
   name: Provider;
@@ -24,7 +25,7 @@ export default function OauthSignIn() {
     {
       name: 'google',
       displayName: 'Google',
-      icon: <Google className="h-5 w-5" />
+      icon: <Google />
     }
     /* Add desired OAuth providers here */
   ];
@@ -37,7 +38,7 @@ export default function OauthSignIn() {
   };
 
   return (
-    <div className="mt-8">
+    <div className="m-4">
       {oAuthProviders.map((provider) => (
         <form
           key={provider.name}
@@ -46,11 +47,15 @@ export default function OauthSignIn() {
         >
           <input type="hidden" name="provider" value={provider.name} />
           <Button
-            variant="slim"
+            variant="outline"
             type="submit"
             className="w-full rounded-md shadow-lg"
-            loading={isSubmitting}
+            disabled={isSubmitting}
+            // loading={isSubmitting}
           >
+            {isSubmitting ? (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            ) : null}
             <span className="mr-2">{provider.icon}</span>
             <span>{provider.displayName}</span>
           </Button>

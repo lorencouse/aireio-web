@@ -7,10 +7,10 @@ import {
   FieldPath,
   FieldValues,
   FormProvider,
-  useFormContext,
+  useFormContext
 } from 'react-hook-form';
 
-import { cn } from '@/utils/cn';
+import { cn } from '@/lib/cn';
 
 import { Label } from '@/components/ui/label';
 
@@ -18,18 +18,18 @@ const Form = FormProvider;
 
 type FormFieldContextValue<
   TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
 > = {
   name: TName;
 };
 
 const FormFieldContext = React.createContext<FormFieldContextValue>(
-  {} as FormFieldContextValue,
+  {} as FormFieldContextValue
 );
 
 const FormField = <
   TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
 >({
   ...props
 }: ControllerProps<TFieldValues, TName>) => {
@@ -59,7 +59,7 @@ const useFormField = () => {
     formItemId: `${id}-form-item`,
     formDescriptionId: `${id}-form-item-description`,
     formMessageId: `${id}-form-item-message`,
-    ...fieldState,
+    ...fieldState
   };
 };
 
@@ -68,7 +68,7 @@ type FormItemContextValue = {
 };
 
 const FormItemContext = React.createContext<FormItemContextValue>(
-  {} as FormItemContextValue,
+  {} as FormItemContextValue
 );
 
 const FormItem = React.forwardRef<
@@ -174,5 +174,5 @@ export {
   FormItem,
   FormLabel,
   FormMessage,
-  useFormField,
+  useFormField
 };

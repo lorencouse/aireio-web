@@ -2,17 +2,17 @@ export type City = {
   id: string;
   name: string;
   google_id: string;
-  osm_id?: string;
+  osm_id: string | null;
   lat: number;
   lng: number;
-  state?: string;
-  state_code?: string;
-  country?: string;
-  country_code?: string;
-  photo_ref?: string;
-  created_at: string;
-  updated_at: string;
-  deleted: boolean;
+  state: string | null;
+  state_code: string | null;
+  country: string | null;
+  country_code: string | null;
+  photo_ref: string | null;
+  created_at: string | null;
+  updated_at: string | null;
+  deleted: boolean | null;
 };
 
 export type Place = {

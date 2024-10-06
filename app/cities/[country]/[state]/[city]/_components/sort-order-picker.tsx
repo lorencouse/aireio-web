@@ -26,14 +26,17 @@ const SortOrderPicker: React.FC<SortOrderPickerProps> = ({ searchParams }) => {
   const { updateUrlQuery } = useUpdateUrlQuery();
 
   const handleSortOrderChange = (value: string) => {
-    updateUrlQuery('sort_order', value, searchParams);
+    updateUrlQuery('sort_order', value);
     setSortOrder(value);
   };
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="capitalize">
+        <Button
+          variant="outline"
+          className="capitalize bg-background text-foreground"
+        >
           {`Order: ${sortOrder}`}
         </Button>
       </DropdownMenuTrigger>

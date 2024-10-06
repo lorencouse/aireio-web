@@ -4,7 +4,7 @@ import { createClient } from '@/utils/supabase/server';
 import { uploadPlacePhotos } from '@/utils/places/uploadPlacePhotos';
 import { City, Place, GooglePlace } from '@/utils/types';
 
-export async function getCity(params: any) {
+export async function getCity(params: any): Promise<City> {
   const supabase = createClient();
   const { country, state, city: name } = params;
   const { data: city, error } = await supabase
@@ -77,7 +77,7 @@ export const fetchNewPlaces = async (
   radius: string,
   lat: string,
   lng: string
-) => {
+): Promise<Place[]> => {
   const params = new URLSearchParams({
     type,
     lat,

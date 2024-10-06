@@ -20,21 +20,21 @@ import {
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from '@/components/ui/use-toast';
-import { UserProfile } from '@/components/user-profile';
-import { cn } from '@/utils/cn';
+import { cn } from '@/lib/cn';
+import { UserProfile } from '@/utils/types';
 
 const profileFormSchema = z.object({
   username: z.string().min(2).max(30),
   email: z.string().email(),
   full_name: z.string().min(2).max(50),
-  bio: z.string().max(160).optional(),
-  websites: z
-    .array(
-      z.object({
-        value: z.string().url({ message: 'Please enter a valid URL.' })
-      })
-    )
-    .optional()
+  bio: z.string().max(160).optional()
+  // websites: z
+  //   .array(
+  //     z.object({
+  //       value: z.string().url({ message: 'Please enter a valid URL.' })
+  //     })
+  //   )
+  //   .optional()
 });
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
@@ -52,18 +52,18 @@ export function ContactInfoForm({
       username: userProfile?.username || '',
       email: userProfile?.email || '',
       full_name: userProfile?.full_name || '',
-      bio: userProfile?.bio || '',
-      websites: userProfile?.websites || []
+      bio: userProfile?.bio || ''
+      // websites: userProfile?.websites || []
     },
     mode: 'onChange'
   });
 
-  const { fields, append } = useFieldArray({
-    name: 'urls',
-    control: form.control
-  });
+  // const { fields, append } = useFieldArray({
+  //   name: 'urls',
+  //   control: form.control
+  // });
 
-  console.log({ userProfile });
+  // console.log({ userProfile });
 
   return (
     <Form {...form}>
@@ -129,7 +129,7 @@ export function ContactInfoForm({
             </FormItem>
           )}
         />
-        <div>
+        {/* <div>
           {fields.map((field, index) => (
             <FormField
               control={form.control}
@@ -160,7 +160,7 @@ export function ContactInfoForm({
           >
             Add URL
           </Button>
-        </div>
+        </div> */}
         <Button type="submit" disabled={loading}>
           {loading ? 'Updating...' : 'Update Profile'}
         </Button>

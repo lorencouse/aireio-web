@@ -4,13 +4,13 @@ import LoadingGrid from '@/components/general/loading-grid';
 import CityList from './_components/city-list';
 import GooglePlacesAutocomplete from './_components/google-places-search-autocomplete';
 
-import { City } from '@/types/place';
+import { City } from '@/utils/types';
 
-interface HomeLayoutProps {
+export default function HomeLayout({
+  initialCities
+}: {
   initialCities: City[];
-}
-
-export default function HomeLayout({ initialCities }: HomeLayoutProps) {
+}) {
   return (
     <div className="flex flex-col justify-center items-center w-full mt-[1rem] p-3 ">
       <h1 className="text-3xl font-bold mb-12 select-none">

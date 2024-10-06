@@ -32,14 +32,17 @@ const SortMethod: React.FC<SortMethodProps> = ({
   const { updateUrlQuery } = useUpdateUrlQuery();
 
   const handleSortMethodChange = (value: string) => {
-    updateUrlQuery('sort_method', value, searchParams);
+    updateUrlQuery('sort_method', value);
     setSortMethod(value);
   };
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="capitalize">
+        <Button
+          variant="outline"
+          className="capitalize text-foreground bg-background"
+        >
           {`Sort by: ${sortMethod}`}
         </Button>
       </DropdownMenuTrigger>

@@ -11,20 +11,24 @@ export const filterAndSortPlaces = (
   sortOrder: 'asc' | 'des'
 ) => {
   const descending = sortOrder === 'des';
-  const coordinates = { lat: lat, lng: lng };
+  const coordinates = { lat: parseFloat(lat), lng: parseFloat(lng) };
 
   console.log('filterAndSortPlaces:', coordinates, radius);
 
   const placesByType = filterByType(places, type);
-  const filteredPlaces = filterByRadius(placesByType, coordinates, radius);
+  const filteredPlaces = filterByRadius(
+    placesByType,
+    coordinates,
+    parseInt(radius)
+  );
 
   return sortPlaces(filteredPlaces, sortMethod, coordinates, descending);
 };
 
 export const filterByRadius = (
   places: Place[],
-  coordinates: { lat: string; lng: string },
-  radius: string
+  coordinates: { lat: number; lng: number },
+  radius: number
 ) => {
   const radiusVal = radius / 1000;
   return places.filter((place) => {

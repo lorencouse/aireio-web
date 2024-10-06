@@ -18,8 +18,6 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 
-import config from '@/config';
-
 export function UserProfile({ user }: any) {
   const router = useRouter();
 

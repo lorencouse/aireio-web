@@ -6,6 +6,7 @@ import { requestPasswordUpdate } from '@/utils/auth-helpers/server';
 import { handleRequest } from '@/utils/auth-helpers/client';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { Loader2 } from 'lucide-react';
 
 // Define prop type with allowEmail boolean
 interface ForgotPasswordProps {
@@ -29,7 +30,7 @@ export default function ForgotPassword({
   };
 
   return (
-    <div className="my-8">
+    <div className="m-8">
       <form
         noValidate={true}
         className="mb-4"
@@ -50,12 +51,14 @@ export default function ForgotPassword({
             />
           </div>
           <Button
-            variant="slim"
+            variant="outline"
             type="submit"
             className="mt-1"
-            loading={isSubmitting}
             disabled={disableButton}
           >
+            {isSubmitting ? (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            ) : null}
             Send Email
           </Button>
         </div>

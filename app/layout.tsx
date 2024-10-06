@@ -9,8 +9,6 @@ import { getURL } from '@/utils/helpers';
 import 'styles/main.css';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Comfortaa } from 'next/font/google';
-import { AuthProvider } from '@/utils/context/useAuth';
-import { createClient } from '@/utils/supabase/server';
 import { getUser } from '@/utils/supabase/queries';
 
 const title = 'aireio';
@@ -32,12 +30,10 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: PropsWithChildren) {
-  const supabase = createClient();
-  const user = await getUser(supabase);
+  const user = await getUser();
   return (
     <html lang="en" className={comfortaa.className}>
       <body className="bg-backgroud">
-        {/* <AuthProvider user={user} > */}
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -56,7 +52,6 @@ export default async function RootLayout({ children }: PropsWithChildren) {
             <Toaster />
           </Suspense>
         </ThemeProvider>
-        {/* </AuthProvider> */}
       </body>
     </html>
   );

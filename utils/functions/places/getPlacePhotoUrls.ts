@@ -1,4 +1,4 @@
-import { placeholderImage } from './../../constants';
+import { placeholderImage } from '../../constants';
 import { Place } from '@/utils/types';
 
 export const getPlacePhotoUrls = (place: Place): string[] => {

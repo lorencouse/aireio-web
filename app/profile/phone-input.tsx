@@ -1,11 +1,7 @@
 import { CheckIcon, ChevronsUpDown } from 'lucide-react';
-
 import * as React from 'react';
-
 import * as RPNInput from 'react-phone-number-input';
-
 import flags from 'react-phone-number-input/flags';
-
 import { Button } from '@/components/ui/button';
 import {
   Command,
@@ -21,8 +17,7 @@ import {
   PopoverContent,
   PopoverTrigger
 } from '@/components/ui/popover';
-
-import { cn } from '@/utils/cn';
+import { cn } from '@/lib/cn';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 type PhoneInputProps = Omit<
@@ -50,9 +45,9 @@ const PhoneInput: React.ForwardRefExoticComponent<PhoneInputProps> =
            * when a valid phone number is not entered. To prevent this,
            * the value is coerced to an empty string.
            *
-           * @param {E164Number | undefined} value - The entered value
+           * @param {RPNInput.Value} value - The entered value
            */
-          onChange={(value) => onChange?.(value || '')}
+          onChange={(value: RPNInput.Value) => onChange?.(value)}
           {...props}
         />
       );

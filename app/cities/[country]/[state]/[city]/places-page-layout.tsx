@@ -21,7 +21,7 @@ export default function PlacesPageLayout({
   places
 }: {
   city: City;
-  places;
+  places: Place[];
 }) {
   const searchParams = useSearchParams();
 
@@ -54,18 +54,12 @@ export default function PlacesPageLayout({
 
   const parseSearchParams = () => {
     const type = searchParams.get('place_type') || 'cafe';
-    const radius = searchParams.get('radius')
-      ? searchParams.get('radius')
-      : '1000';
-    const lat = searchParams.get('lat')
-      ? searchParams.get('lat')
-      : city.lat.toString();
-    const lng = searchParams.get('lng')
-      ? searchParams.get('lng')
-      : city.lng.toString();
+    const radius = searchParams.get('radius') || '1000';
+    const lat = searchParams.get('lat') || city.lat.toString();
+    const lng = searchParams.get('lng') || city.lng.toString();
     const sortMethod = searchParams.get('sort_method') || 'distance';
     const sortOrder = searchParams.get('sort_order') || 'asc';
-    return { radius, lat, lng, type, sortMethod, sortOrder };
+    return { type, radius, lat, lng, sortMethod, sortOrder };
   };
 
   // Update filtered places when search params or allPlaces change
@@ -103,14 +97,18 @@ export default function PlacesPageLayout({
   return (
     <>
       <CityHero
-        city={city.name}
-        state={city.state}
-        country={city.country}
-        countryCode={city.country_code}
+        city={city.name || ''}
+        state={city.state || ''}
+        country={city.country || ''}
+        countryCode={city.country_code || ''}
       />
       <div className="grid lg:grid-cols-2 w-full mt-[1rem] p-3">
         <div className="city-map lg:mx-0 sm:mx-12">
-          <GoogleMap searchParams={searchParams} city={city} />
+          <GoogleMap
+            searchParams={searchParams}
+            lat={city.lat.toString()}
+            lng={city.lng.toString()}
+          />
         </div>
         <div className="city-filters flex flex-col p-10">
           <span className="text-lg font-bold">Filter by:</span>
