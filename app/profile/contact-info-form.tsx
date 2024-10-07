@@ -20,7 +20,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from '@/components/ui/use-toast';
-import { cn } from '@/lib/cn';
+import { cn } from '@/utils/cn';
 import { UserProfile } from '@/utils/types';
 
 const profileFormSchema = z.object({

@@ -6,7 +6,7 @@ import { format } from 'date-fns';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
-import { cn } from '@/lib/cn';
+import { cn } from '@/utils/cn';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import {

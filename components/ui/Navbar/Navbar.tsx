@@ -3,7 +3,7 @@ import Navlinks from './Navlinks';
 import { getUser } from '@/utils/supabase/queries';
 import { Dialog, DialogClose } from '@radix-ui/react-dialog';
 import { HamburgerMenuIcon } from '@radix-ui/react-icons';
-import { cn } from '@/lib/cn';
+import { cn } from '@/utils/cn';
 import {
   NavigationMenu,
   NavigationMenuContent,
