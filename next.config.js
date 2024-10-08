@@ -1,7 +1,11 @@
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true'
+});
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   eslint: {
-    dirs: ['src'],
+    dirs: ['src']
   },
 
   reactStrictMode: true,
@@ -11,8 +15,8 @@ const nextConfig = {
     domains: [
       'maps.googleapis.com',
       'aireio.com',
-      process.env.NEXT_PUBLIC_SUPABASE_URL?.replace('https://', ''),
-    ].filter(Boolean),
+      process.env.NEXT_PUBLIC_SUPABASE_URL?.replace('https://', '')
+    ].filter(Boolean)
   },
 
   webpack(config) {
@@ -24,7 +28,7 @@ const nextConfig = {
       {
         ...fileLoaderRule,
         test: /\.svg$/i,
-        resourceQuery: /url/, // *.svg?url
+        resourceQuery: /url/ // *.svg?url
       },
       {
         test: /\.svg$/i,
@@ -33,15 +37,18 @@ const nextConfig = {
         loader: '@svgr/webpack',
         options: {
           dimensions: false,
-          titleProp: true,
-        },
+          titleProp: true
+        }
       }
     );
 
     fileLoaderRule.exclude = /\.svg$/i;
 
     return config;
-  },
+  }
+
+  // Add any additional configurations here
 };
 
-module.exports = nextConfig;
+// Wrap the config with withBundleAnalyzer
+module.exports = withBundleAnalyzer(nextConfig);

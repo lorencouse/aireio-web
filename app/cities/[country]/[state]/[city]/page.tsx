@@ -1,3 +1,5 @@
+// /app/cities/[country]/[state]/[city]/page.tsx
+
 import { createClient } from '@/utils/supabase/server';
 import PlacesPageLayout from './places-page-layout';
 import { getCity, getPlaces } from './actions';
