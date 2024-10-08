@@ -2,13 +2,16 @@
 
 import { createClient } from '@/utils/supabase/server';
 import uploadImageToSupabase from '@/utils/functions/places/uploadImageToSupabase';
+import { Place } from '../types';
 
-export const uploadPlacePhotos = async (place: Place): Promise<string[]> => {
+export const uploadPlacePhotos = async (
+  place: Partial<Place>
+): Promise<string[]> => {
   const supabase = createClient();
   const photoRefs = place.photo_refs;
   if (!photoRefs || photoRefs.length === 0) {
     console.log('No photos found for place', place.name);
-    return place.photo_names;
+    return place.photo_names || [];
   }
 
   const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY;
@@ -34,16 +37,11 @@ export const uploadPlacePhotos = async (place: Place): Promise<string[]> => {
         );
 
         if (uploadSuccess) {
-          // console.log(
-          //   `Place photo uploaded to Supabase: ${formattedImageName}`
-          // );
           return formattedImageName;
         } else {
-          // console.error(`Failed to upload photo: ${formattedImageName}`);
           return null;
         }
       } catch (error) {
-        // console.error('Error uploading photo:', error);
         return null;
       }
     })
@@ -51,8 +49,11 @@ export const uploadPlacePhotos = async (place: Place): Promise<string[]> => {
 
   newPhotoNames = uploadResults.filter((name): name is string => name !== null);
 
-  if (newPhotoNames.length > 0) {
-    const allPhotoNames = [...place.photo_names, ...newPhotoNames];
+  if (newPhotoNames.length > 0 && place.id) {
+    const existingPhotoNames = Array.isArray(place.photo_names)
+      ? place.photo_names
+      : [];
+    const allPhotoNames = [...existingPhotoNames, ...newPhotoNames];
 
     // Insert new Image names
     const { error } = await supabase
@@ -62,15 +63,11 @@ export const uploadPlacePhotos = async (place: Place): Promise<string[]> => {
       .single();
 
     if (error) {
-      // console.error('Error updating photo_names in database:', error);
-
-      return place.photo_names;
+      return existingPhotoNames;
     } else {
-      // console.log(`Updated photo_names for place: ${place.name}`);
       return allPhotoNames;
     }
   }
 
-  // console.log(`Finished uploading photos for place: ${place.name}`);
-  return place.photo_names;
+  return Array.isArray(place.photo_names) ? place.photo_names : [];
 };

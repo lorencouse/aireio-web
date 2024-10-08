@@ -1,21 +1,20 @@
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import axios from 'axios';
+import { createClient } from '../supabase/server';
+import { Place } from '../types';
 
-import { Database } from '@/types/supabase';
 import calcDistance from './calcDistance';
 
-function convertStringToBool(
-  value: string | boolean | undefined
-): boolean | undefined {
+function convertStringToBool(value: string | boolean | null): boolean | null {
   if (typeof value === 'boolean') return value;
-  if (value === undefined) return undefined;
+  if (value === null) return null;
   return value.toLowerCase() === 'yes';
 }
 
 const updateOsmPlaceData = async (place: Place) => {
   const { lat, lng, type } = place;
   const osmData = await fetchOSMDetails(lng, lat, type);
-  const supabase = createClientComponentClient<Database>();
+  const supabase = createClient();
 
   if (!osmData) {
     console.log('No matching OSM data found');
@@ -25,35 +24,35 @@ const updateOsmPlaceData = async (place: Place) => {
   try {
     const updatedPlace: Place = {
       ...place,
-      oms_id: osmData.id?.toString(),
+      osm_id: osmData.id?.toString(),
       add_1:
-        place.add_1 === undefined || place.add_1 === ''
+        place.add_1 === null || place.add_1 === ''
           ? `${osmData.tags['addr:housenumber'] || ''} ${
               osmData.tags['addr:street'] || ''
             }`.trim() || place.add_1
           : place.add_1,
       level:
-        place.level === undefined || place.level === ''
+        place.level === null || place.level === ''
           ? osmData.tags.level || place.level
           : place.level,
       city:
-        place.city === undefined || place.city === ''
+        place.city === null || place.city === ''
           ? osmData.tags['addr:city'] || place.city
           : place.city,
       state:
-        place.state === undefined || place.state === ''
+        place.state === null || place.state === ''
           ? osmData.tags['addr:state'] || place.state
           : place.state,
       postal_code:
-        place.postal_code === undefined || place.postal_code === ''
+        place.postal_code === null || place.postal_code === ''
           ? osmData.tags['addr:postcode'] || place.postal_code
           : place.postal_code,
       phone:
-        place.phone === undefined || place.phone === ''
+        place.phone === null || place.phone === ''
           ? osmData.tags.phone || place.phone
           : place.phone,
       website:
-        place.website === undefined || place.website === ''
+        place.website === null || place.website === ''
           ? osmData.tags.website || place.website
           : place.website,
       facebook: osmData.tags['contact:facebook'] || place.facebook,
@@ -102,7 +101,7 @@ const updateOsmPlaceData = async (place: Place) => {
       cost_coffee: osmData.tags['cost:coffee'] || place.cost_coffee,
       note: osmData.tags.note || place.note,
       description:
-        place.description === undefined || place.description === ''
+        place.description === null || place.description === ''
           ? osmData.tags.description || place.description
           : place.description
     };
@@ -131,7 +130,7 @@ export default updateOsmPlaceData;
 const fetchOSMDetails = async (
   longitude: number,
   latitude: number,
-  type: 'cafe' | 'library' | 'coworking'
+  type: string
 ) => {
   try {
     let amenityType = type;
@@ -163,25 +162,24 @@ const fetchOSMDetails = async (
     // Sort results by distance and get the closest match
     const elements = response.data.elements;
     if (elements.length > 0) {
-      const sortedElements = elements.sort((a, b) => {
-        const distA = calcDistance(
-          { lat: latitude, lng: longitude },
-          { lat: a.lat, lng: a.lng }
-        );
-        const distB = calcDistance(
-          { lat: latitude, lng: longitude },
-          { lat: b.lat, lng: b.lng }
-        );
-        return distA - distB;
-      });
+      const sortedElements = elements.sort(
+        (a: { lat: number; lng: number }, b: { lat: number; lng: number }) => {
+          const distA = calcDistance(
+            { lat: latitude, lng: longitude },
+            { lat: a.lat, lng: a.lng }
+          );
+          const distB = calcDistance(
+            { lat: latitude, lng: longitude },
+            { lat: b.lat, lng: b.lng }
+          );
+          return distA - distB;
+        }
+      );
       return sortedElements[0]; // Return the closest match
     }
     return null; // No match found
   } catch (error) {
-    console.error(
-      'Error fetching OSM data:',
-      error.response?.data || error.message
-    );
+    console.error('Error fetching OSM data:', error);
     return null;
   }
 };

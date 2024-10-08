@@ -3,6 +3,7 @@
 import { createClient } from '@/utils/supabase/server';
 import { uploadPlacePhotos } from '@/utils/places/uploadPlacePhotos';
 import { City, Place, GooglePlace } from '@/utils/types';
+import { Database } from '@/types_db';
 
 export async function getCity(params: any): Promise<City> {
   const supabase = createClient();
@@ -140,26 +141,29 @@ export const createNewPlaces = async (
     }
     const supabase = createClient();
 
-    const newPlaces: Omit<Place, 'id'>[] = places.map((place) => ({
+    type PlaceInsert = Database['public']['Tables']['places']['Insert'];
+
+    const newPlaces: PlaceInsert[] = places.map((place) => ({
       name: place.name,
       city_id: city.id,
       google_id: place.place_id,
       lat: place.geometry.location.lat,
       lng: place.geometry.location.lng,
-      type,
-      add_1: place.vicinity || '',
+      type: type,
+      add_1: place.vicinity || null,
       city: city.name,
-      state: city.state || '',
-      country: city.country || '',
-      country_code: city.country_code || '',
-      rating_score: place.rating || undefined,
-      rating_count: place.user_ratings_total || undefined,
-      price_level: place.price_level || undefined,
-      photo_refs: place.photos ? [place.photos[0].photo_reference] : [],
-      photo_names: [],
+      state: city.state || null,
+      country: city.country || null,
+      country_code: city.country_code || null,
+      rating_score: place.rating || null,
+      rating_count: place.user_ratings_total || null,
+      price_level: place.price_level || null,
+      photo_refs: place.photos ? [place.photos[0].photo_reference] : null,
       deleted: false
+      // Only include fields you have data for
     }));
 
+    // Then use this in your insert operation
     const { data: insertedPlaces, error } = await supabase
       .from('places')
       .insert(newPlaces)

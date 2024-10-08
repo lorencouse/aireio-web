@@ -7,31 +7,6 @@ export type Json =
   | Json[]
 
 export type Database = {
-  graphql_public: {
-    Tables: {
-      [_ in never]: never
-    }
-    Views: {
-      [_ in never]: never
-    }
-    Functions: {
-      graphql: {
-        Args: {
-          operationName?: string
-          query?: string
-          variables?: Json
-          extensions?: Json
-        }
-        Returns: Json
-      }
-    }
-    Enums: {
-      [_ in never]: never
-    }
-    CompositeTypes: {
-      [_ in never]: never
-    }
-  }
   public: {
     Tables: {
       cities: {
@@ -39,7 +14,7 @@ export type Database = {
           country: string | null
           country_code: string | null
           created_at: string | null
-          deleted: boolean | null
+          deleted: boolean
           google_id: string
           id: string
           lat: number
@@ -55,7 +30,7 @@ export type Database = {
           country?: string | null
           country_code?: string | null
           created_at?: string | null
-          deleted?: boolean | null
+          deleted?: boolean
           google_id: string
           id?: string
           lat: number
@@ -71,7 +46,7 @@ export type Database = {
           country?: string | null
           country_code?: string | null
           created_at?: string | null
-          deleted?: boolean | null
+          deleted?: boolean
           google_id?: string
           id?: string
           lat?: number
@@ -91,7 +66,7 @@ export type Database = {
           add_2: string | null
           brand: string | null
           brand_wikidata: string | null
-          check_date: string | null
+          check_date: Date | null
           city: string | null
           city_id: string | null
           cost_coffee: string | null
@@ -118,8 +93,8 @@ export type Database = {
           mastodon: string | null
           name: string
           note: string | null
-          oms_id: string | null
           opening_hours: string[] | null
+          osm_id: string | null
           outdoor_seating: boolean | null
           parking: boolean | null
           parking_fee: boolean | null
@@ -154,7 +129,7 @@ export type Database = {
           add_2?: string | null
           brand?: string | null
           brand_wikidata?: string | null
-          check_date?: string | null
+          check_date?: Date | null
           city?: string | null
           city_id?: string | null
           cost_coffee?: string | null
@@ -181,8 +156,8 @@ export type Database = {
           mastodon?: string | null
           name: string
           note?: string | null
-          oms_id?: string | null
           opening_hours?: string[] | null
+          osm_id?: string | null
           outdoor_seating?: boolean | null
           parking?: boolean | null
           parking_fee?: boolean | null
@@ -217,7 +192,7 @@ export type Database = {
           add_2?: string | null
           brand?: string | null
           brand_wikidata?: string | null
-          check_date?: string | null
+          check_date?: Date | null
           city?: string | null
           city_id?: string | null
           cost_coffee?: string | null
@@ -244,8 +219,8 @@ export type Database = {
           mastodon?: string | null
           name?: string
           note?: string | null
-          oms_id?: string | null
           opening_hours?: string[] | null
+          osm_id?: string | null
           outdoor_seating?: boolean | null
           parking?: boolean | null
           parking_fee?: boolean | null

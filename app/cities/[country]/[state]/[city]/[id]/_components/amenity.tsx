@@ -16,7 +16,7 @@ export default function Amenity({
   placeId
 }: {
   name: string;
-  value: boolean | undefined;
+  value: boolean | null;
   placeId: string;
 }) {
   const [buttonValue, setButtonValue] = useState<boolean | null>(null);

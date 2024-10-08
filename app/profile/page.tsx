@@ -7,6 +7,10 @@ import { getUser, getUserProfile } from '@/utils/supabase/queries';
 export default async function ContactInfoPage() {
   const userProfile = await getUserProfile();
 
+  if (!userProfile) {
+    return null;
+  }
+
   return (
     <div className="space-y-6">
       <div>

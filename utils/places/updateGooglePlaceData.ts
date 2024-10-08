@@ -56,7 +56,9 @@ export const updateGooglePlaceData = async (place: Place) => {
       check_date: new Date(),
       // business_status: googlePlace.business_status ?? place.business_status,
       photo_refs: googlePlace.photos
-        ? googlePlace.photos.slice(1, 3).map((photo) => photo.photo_reference)
+        ? googlePlace.photos
+            .slice(1, 3)
+            .map((photo: { photo_reference: string }) => photo.photo_reference)
         : place.photo_refs,
       add_1: convertedAddress.add_1,
       add_2: convertedAddress.add_2,
@@ -70,48 +72,46 @@ export const updateGooglePlaceData = async (place: Place) => {
       formatted_address:
         googlePlace.formatted_address ?? place?.formatted_address,
 
-      dine_in: googlePlace.dine_in ?? place.amenities?.dine_in ?? undefined,
+      dine_in: googlePlace.dine_in ?? place?.dine_in ?? null,
       wheelchair_accessible:
         googlePlace.wheelchair_accessible_entrance ??
-        place.amenities?.wheelchair_accessible ??
-        undefined,
-      serves_beer: googlePlace.serves_beer ?? place.serves_beer ?? undefined,
+        place?.wheelchair_accessible ??
+        null,
+      serves_beer: googlePlace.serves_beer ?? place.serves_beer ?? null,
       serves_breakfast:
-        googlePlace.serves_breakfast ?? place.serves_breakfast ?? undefined,
-      serves_brunch:
-        googlePlace.serves_brunch ?? place.serves_brunch ?? undefined,
-      serves_dinner:
-        googlePlace.serves_dinner ?? place.serves_dinner ?? undefined,
-      serves_lunch: googlePlace.serves_lunch ?? place.serves_lunch ?? undefined,
+        googlePlace.serves_breakfast ?? place.serves_breakfast ?? null,
+      serves_brunch: googlePlace.serves_brunch ?? place.serves_brunch ?? null,
+      serves_dinner: googlePlace.serves_dinner ?? place.serves_dinner ?? null,
+      serves_lunch: googlePlace.serves_lunch ?? place.serves_lunch ?? null,
       serves_vegetarian_food:
         googlePlace.serves_vegetarian_food ??
         place.serves_vegetarian_food ??
-        undefined,
-      serves_wine: googlePlace.serves_wine ?? place.serves_wine ?? undefined,
+        null,
+      serves_wine: googlePlace.serves_wine ?? place.serves_wine ?? null,
 
       phone:
         googlePlace.formatted_phone_number ??
         googlePlace.international_phone_number ??
         place.phone ??
-        undefined,
-      website: googlePlace.website ?? place.website ?? undefined,
-      google_maps: googlePlace.url ?? place.google_maps ?? undefined,
+        null,
+      website: googlePlace.website ?? place.website ?? null,
+      google_maps: googlePlace.url ?? place.google_maps ?? null,
       opening_hours:
-        googlePlace.opening_hours?.weekday_text ??
-        place?.opening_hours ??
-        undefined,
-      price_level: googlePlace.price_level ?? place?.price_level ?? undefined,
+        googlePlace.opening_hours?.weekday_text ?? place?.opening_hours ?? null,
+      price_level: googlePlace.price_level ?? place?.price_level ?? null,
       description:
-        googlePlace.editorial_summary?.overview ??
-        place?.description ??
-        undefined,
+        googlePlace.editorial_summary?.overview ?? place?.description ?? null,
 
-      rating_score: googlePlace.rating ?? place?.rating_score ?? undefined,
+      rating_score: googlePlace.rating ?? place?.rating_score ?? null,
       rating_count:
-        googlePlace.user_ratings_total ?? place?.rating_count ?? undefined
+        googlePlace.user_ratings_total ?? place?.rating_count ?? null
     };
 
-    if (originalPhotoRefs.length < 2 || !updatedPlace.photo_names.length) {
+    if (
+      !originalPhotoRefs ||
+      originalPhotoRefs.length < 2 ||
+      !updatedPlace.photo_names?.length
+    ) {
       const photoNames = await uploadPlacePhotos(updatedPlace);
       const placeWithPhotoNames = {
         ...updatedPlace,
