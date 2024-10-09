@@ -55,7 +55,7 @@ const PlaceDetails = ({ place }: { place: Place }) => {
     : '';
 
   return (
-    <Card>
+    <Card className="bg-background text-foreground">
       <CardContent className="pt-6 text-lg flex flex-row justify-between">
         <div className="contact-info">
           <div className="mb-8">

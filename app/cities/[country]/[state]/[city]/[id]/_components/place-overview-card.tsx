@@ -17,7 +17,7 @@ const PlaceOverviewCard = ({
 }) => {
   return (
     <div>
-      <Card className="mb-8">
+      <Card className="mb-8 bg-background text-foreground">
         <CardContent className="flex flex-col md:flex-row p-6">
           <div className="w-full md:w-1/4 flex justify-center items-center mb-4 md:mb-0">
             {photoUrls.length > 0 ? (

@@ -46,6 +46,8 @@ const Gallery = ({ photos }: { photos: string[] }) => {
             className="object-cover rounded-lg cursor-pointer"
             onClick={() => setIsFullscreenOpen(true)}
             loading="lazy"
+            placeHolder="blur"
+            blurDataURL="/images/logo.png"
           />
         </CarouselItem>
       )),
@@ -71,6 +73,8 @@ const Gallery = ({ photos }: { photos: string[] }) => {
             sizes="(max-width: 768px) 20vw, 10vw"
             alt={`Carousel Thumbnail Image ${index + 1}`}
             loading="lazy"
+            placeHolder="blur"
+            blurDataURL="/images/logo.png"
           />
         </CarouselItem>
       )),

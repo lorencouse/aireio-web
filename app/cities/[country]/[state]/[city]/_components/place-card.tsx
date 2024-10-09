@@ -35,7 +35,7 @@ const PlaceCard = ({ place, distance, setIsLoadingPlace }: PlaceCardProps) => {
 
   return (
     <Card
-      className="w-96 hover:scale-105 transition-transform duration-200 m-4 cursor-pointer"
+      className="w-96 hover:scale-105 transition-transform duration-200 m-4 cursor-pointer bg-background text-foreground"
       onClick={handleClick}
     >
       <div className="relative w-full h-52">
@@ -46,8 +46,9 @@ const PlaceCard = ({ place, distance, setIsLoadingPlace }: PlaceCardProps) => {
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           style={{ objectFit: 'cover', objectPosition: 'center' }}
           className="rounded-t-md"
-          priority={true}
-          loading="eager"
+          loading="lazy"
+          placeHolder="blur"
+          blurDataURL="/images/logo.png"
         />
       </div>
       <CardHeader>

@@ -25,6 +25,9 @@ const CityCard: React.FC<CityCardProps> = ({ city }) => {
             fill
             sizes="(max-width: 768px) 100vw, 384px"
             style={{ objectFit: 'cover' }}
+            loading="lazy"
+            placeHolder="blur"
+            blurDataURL="/images/logo.png"
           />
         ) : (
           <Avatar className="w-24 h-24">

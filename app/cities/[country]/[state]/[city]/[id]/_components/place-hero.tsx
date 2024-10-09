@@ -23,7 +23,9 @@ const PlaceHero: React.FC<PlaceHeroProps> = ({ place, photoUrl }) => {
           width={1200}
           height={600}
           className="object-cover w-full h-full"
-          priority
+          loading="lazy"
+          placeHolder="blur"
+          blurDataURL="/images/logo.png"
         />
       ) : (
         <Avatar className="w-24 h-24">

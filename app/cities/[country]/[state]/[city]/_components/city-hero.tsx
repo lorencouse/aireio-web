@@ -23,7 +23,9 @@ export default function CityHero({
         alt={`${city || 'City'}, ${country || 'Country'} cityscape`}
         fill
         style={{ objectFit: 'cover' }}
-        priority
+        loading="lazy"
+        placeHolder="blur"
+        blurDataURL="/images/logo.png"
       />
       <div className="absolute inset-0 bg-black bg-opacity-40 flex flex-col items-center justify-center gap-6">
         <h1 className="text-white text-4xl md:text-6xl font-bold text-center px-4 text-shadow-lg select-none">

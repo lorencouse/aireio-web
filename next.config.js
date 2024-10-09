@@ -1,7 +1,6 @@
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true'
 });
-const CompressionPlugin = require('compression-webpack-plugin');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -21,19 +20,8 @@ const nextConfig = {
     ].filter(Boolean)
   },
 
-  webpack(config) {
-    // Enable Gzip compression for Webpack bundles
-    config.plugins.push(
-      new CompressionPlugin({
-        filename: '[path].gz[query]',
-        algorithm: 'gzip',
-        test: /\.(js|css|html|svg)$/,
-        threshold: 10240,
-        minRatio: 0.8
-      })
-    );
-
-    // SVG handling configuration (unchanged)
+  webpack(config, { isServer }) {
+    // SVG handling configuration
     const fileLoaderRule = config.module.rules.find((rule) =>
       rule.test?.test?.('.svg')
     );
@@ -57,6 +45,30 @@ const nextConfig = {
     );
 
     fileLoaderRule.exclude = /\.svg$/i;
+
+    // Add any other Webpack optimizations here
+    if (!isServer) {
+      config.optimization.splitChunks = {
+        chunks: 'all',
+        minSize: 20000,
+        maxSize: 244000,
+        minChunks: 1,
+        maxAsyncRequests: 30,
+        maxInitialRequests: 30,
+        cacheGroups: {
+          defaultVendors: {
+            test: /[\\/]node_modules[\\/]/,
+            priority: -10,
+            reuseExistingChunk: true
+          },
+          default: {
+            minChunks: 2,
+            priority: -20,
+            reuseExistingChunk: true
+          }
+        }
+      };
+    }
 
     return config;
   },
