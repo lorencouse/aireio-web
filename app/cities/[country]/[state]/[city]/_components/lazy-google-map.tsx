@@ -4,7 +4,7 @@ import { ReadonlyURLSearchParams } from 'next/navigation';
 
 const GoogleMap = dynamic(() => import('./google-map'), {
   loading: () => <div>Loading map...</div>,
-  ssr: false // This component only renders client-side
+  ssr: false
 });
 
 interface LazyGoogleMapProps {

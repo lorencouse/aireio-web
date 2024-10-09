@@ -1,6 +1,7 @@
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true'
 });
+const CompressionPlugin = require('compression-webpack-plugin');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -21,6 +22,17 @@ const nextConfig = {
   },
 
   webpack(config) {
+    // Enable Gzip compression for Webpack bundles
+    config.plugins.push(
+      new CompressionPlugin({
+        filename: '[path].gz[query]',
+        algorithm: 'gzip',
+        test: /\.(js|css|html|svg)$/,
+        threshold: 10240,
+        minRatio: 0.8
+      })
+    );
+
     // SVG handling configuration (unchanged)
     const fileLoaderRule = config.module.rules.find((rule) =>
       rule.test?.test?.('.svg')
