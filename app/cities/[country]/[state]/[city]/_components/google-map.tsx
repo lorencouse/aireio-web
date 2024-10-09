@@ -85,20 +85,20 @@ const GoogleMap: React.FC<MapWithDraggableMarkerProps> = ({
     }
   }, [center, radius, calculateZoom, setCenter]);
 
-  const loadGoogleMapsAPI = () => {
+  const loadGoogleMapsAPI = useCallback(() => {
+    if (typeof window.google !== 'undefined') {
+      return Promise.resolve();
+    }
+
     return new Promise<void>((resolve) => {
-      if (typeof window.google === 'undefined') {
-        const script = document.createElement('script');
-        script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY}&libraries=places`;
-        script.async = true;
-        script.defer = true;
-        document.head.appendChild(script);
-        script.onload = () => resolve();
-      } else {
-        resolve();
-      }
+      const script = document.createElement('script');
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY}&libraries=places`;
+      script.async = true;
+      script.defer = true;
+      script.onload = () => resolve();
+      document.head.appendChild(script);
     });
-  };
+  }, []);
 
   useEffect(() => {
     const initMap = async () => {
@@ -162,7 +162,15 @@ const GoogleMap: React.FC<MapWithDraggableMarkerProps> = ({
         google.maps.event.clearInstanceListeners(mapInstanceRef.current);
       }
     };
-  }, [updateMapElements, zoom, constrainPosition, setCenter, center, radius]);
+  }, [
+    loadGoogleMapsAPI,
+    updateMapElements,
+    zoom,
+    constrainPosition,
+    setCenter,
+    center,
+    radius
+  ]);
 
   const handleRadiusChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newRadius = parseInt(event.target.value, 10);

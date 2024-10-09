@@ -4,7 +4,8 @@ import React from 'react';
 import SegmentedTypePicker from './_components/segmented-type-picker';
 import SortMethod from './_components/sort-method';
 import SortOrderPicker from './_components/sort-order-picker';
-import GoogleMap from './_components/google-map';
+// import GoogleMap from './_components/google-map';
+import LazyGoogleMap from './_components/lazy-google-map';
 import { useSearchParams } from 'next/navigation';
 import { Place, City } from '@/utils/types';
 import PlacesList from './_components/places-list';
@@ -104,7 +105,7 @@ export default function PlacesPageLayout({
       />
       <div className="grid lg:grid-cols-2 w-full mt-[1rem] p-3">
         <div className="city-map lg:mx-0 sm:mx-12">
-          <GoogleMap
+          <LazyGoogleMap
             searchParams={searchParams}
             lat={city.lat.toString()}
             lng={city.lng.toString()}

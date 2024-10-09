@@ -1,5 +1,4 @@
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import axios from 'axios';
 import { createClient } from '../supabase/server';
 import { Place } from '../types';
 
@@ -133,10 +132,7 @@ const fetchOSMDetails = async (
   type: string
 ) => {
   try {
-    let amenityType = type;
-    if (type === 'coworking') {
-      amenityType = 'coworking_space';
-    }
+    let amenityType = type === 'coworking' ? 'coworking_space' : type;
 
     const query = `
       [out:json];
@@ -153,24 +149,31 @@ const fetchOSMDetails = async (
     const encodedQuery = encodeURIComponent(query.trim());
     const url = `https://overpass-api.de/api/interpreter?data=${encodedQuery}`;
 
-    const response = await axios.get(url, {
+    const response = await fetch(url, {
+      method: 'GET',
       headers: {
         'User-Agent': 'YourApp/1.0'
       }
     });
 
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+
     // Sort results by distance and get the closest match
-    const elements = response.data.elements;
+    const elements = data.elements;
     if (elements.length > 0) {
       const sortedElements = elements.sort(
-        (a: { lat: number; lng: number }, b: { lat: number; lng: number }) => {
+        (a: { lat: number; lon: number }, b: { lat: number; lon: number }) => {
           const distA = calcDistance(
             { lat: latitude, lng: longitude },
-            { lat: a.lat, lng: a.lng }
+            { lat: a.lat, lng: a.lon }
           );
           const distB = calcDistance(
             { lat: latitude, lng: longitude },
-            { lat: b.lat, lng: b.lng }
+            { lat: b.lat, lng: b.lon }
           );
           return distA - distB;
         }
