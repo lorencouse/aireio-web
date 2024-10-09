@@ -24,7 +24,7 @@ const PlaceHero: React.FC<PlaceHeroProps> = ({ place, photoUrl }) => {
           height={600}
           className="object-cover w-full h-full"
           loading="lazy"
-          placeHolder="blur"
+          placeholder="blur"
           blurDataURL="/images/logo.png"
         />
       ) : (

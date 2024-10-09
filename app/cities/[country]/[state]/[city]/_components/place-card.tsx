@@ -47,7 +47,7 @@ const PlaceCard = ({ place, distance, setIsLoadingPlace }: PlaceCardProps) => {
           style={{ objectFit: 'cover', objectPosition: 'center' }}
           className="rounded-t-md"
           loading="lazy"
-          placeHolder="blur"
+          placeholder="blur"
           blurDataURL="/images/logo.png"
         />
       </div>

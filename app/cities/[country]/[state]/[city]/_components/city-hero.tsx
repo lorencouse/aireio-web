@@ -24,7 +24,7 @@ export default function CityHero({
         fill
         style={{ objectFit: 'cover' }}
         loading="lazy"
-        placeHolder="blur"
+        placeholder="blur"
         blurDataURL="/images/logo.png"
       />
       <div className="absolute inset-0 bg-black bg-opacity-40 flex flex-col items-center justify-center gap-6">
