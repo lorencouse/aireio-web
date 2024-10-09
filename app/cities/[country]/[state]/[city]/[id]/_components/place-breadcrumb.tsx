@@ -1,6 +1,6 @@
 'use client';
 
-import { Slash } from 'lucide-react';
+// import { Slash } from 'lucide-react';
 
 import {
   Breadcrumb,
@@ -20,9 +20,7 @@ export default function PlaceBreadCrumb({ place }: { place: Place }) {
         <BreadcrumbItem>
           <BreadcrumbLink href="/">Home</BreadcrumbLink>
         </BreadcrumbItem>
-        <BreadcrumbSeparator>
-          <Slash />
-        </BreadcrumbSeparator>
+        <BreadcrumbSeparator>/</BreadcrumbSeparator>
         <BreadcrumbItem>
           <span
             onClick={() => window.history.back()}
@@ -31,9 +29,7 @@ export default function PlaceBreadCrumb({ place }: { place: Place }) {
             {place.city || place.state || 'Places'}
           </span>
         </BreadcrumbItem>
-        <BreadcrumbSeparator>
-          <Slash />
-        </BreadcrumbSeparator>
+        <BreadcrumbSeparator>/</BreadcrumbSeparator>
         <BreadcrumbItem>
           <BreadcrumbPage>{place.name}</BreadcrumbPage>
         </BreadcrumbItem>

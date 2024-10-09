@@ -2,7 +2,7 @@ import s from './Navbar.module.css';
 import Navlinks from './Navlinks';
 import { getUser } from '@/utils/supabase/queries';
 import { Dialog, DialogClose } from '@radix-ui/react-dialog';
-import { HamburgerMenuIcon } from '@radix-ui/react-icons';
+import { Menu } from 'lucide-react';
 import { cn } from '@/utils/cn';
 import {
   NavigationMenu,
@@ -48,7 +48,7 @@ export default async function Navbar() {
               aria-label="Open menu"
               asChild
             >
-              <HamburgerMenuIcon />
+              <Menu className="h-4 w-4" />
             </Button>
           </SheetTrigger>
           <SheetContent side="left">

@@ -5,7 +5,7 @@ import Gallery from './image-gallery';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 
 import PlaceBreadCrumb from './place-breadcrumb';
-import { StarIcon } from '@radix-ui/react-icons';
+// import { StarIcon } from '@radix-ui/react-icons';
 import { Badge } from '@/components/ui/badge';
 import Amenity from './amenity';
 const PlaceOverviewCard = ({
@@ -33,7 +33,7 @@ const PlaceOverviewCard = ({
 
             {place.rating_score && (
               <div className="flex items-center mb-2">
-                <StarIcon className="w-4 h-4 mr-1" />
+                <span>✭</span>
                 <span>
                   {place.rating_score} ({place.rating_count})
                 </span>
