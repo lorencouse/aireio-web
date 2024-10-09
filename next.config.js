@@ -12,6 +12,7 @@ const nextConfig = {
   swcMinify: true,
 
   images: {
+    unoptimized: true, // This disables Next.js Image Optimization
     domains: [
       'maps.googleapis.com',
       'aireio.com',
@@ -20,6 +21,7 @@ const nextConfig = {
   },
 
   webpack(config) {
+    // SVG handling configuration (unchanged)
     const fileLoaderRule = config.module.rules.find((rule) =>
       rule.test?.test?.('.svg')
     );
@@ -45,9 +47,12 @@ const nextConfig = {
     fileLoaderRule.exclude = /\.svg$/i;
 
     return config;
-  }
+  },
 
-  // Add any additional configurations here
+  // Add this for Cloudflare Pages compatibility
+  experimental: {
+    outputFileTracingRoot: undefined
+  }
 };
 
 // Wrap the config with withBundleAnalyzer
