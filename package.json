@@ -5,6 +5,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "pages:build": "npx @cloudflare/next-on-pages",
+    "preview": "npm run pages:build && wrangler pages dev",
+    "deploy": "npm run pages:build && wrangler pages deploy",
     "supabase:start": "pnpm dlx supabase start",
     "supabase:stop": "pnpm dlx supabase stop",
     "supabase:status": "pnpm dlx supabase status",
@@ -63,6 +66,7 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
+    "@cloudflare/next-on-pages": "^1.13.5",
     "@types/node": "latest",
     "@types/react": "^18.3.11",
     "@types/react-dom": "^18.3.0",
@@ -70,6 +74,7 @@
     "eslint": "^8.57.1",
     "eslint-config-next": "latest",
     "eslint-config-prettier": "latest",
+    "eslint-plugin-next-on-pages": "^1.13.5",
     "eslint-plugin-react": "latest",
     "eslint-plugin-tailwindcss": "latest",
     "postcss": "^8.4.47",

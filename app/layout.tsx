@@ -12,6 +12,8 @@ import { ThemeProvider } from '@/components/theme-provider';
 import { Comfortaa } from 'next/font/google';
 import { getUser } from '@/utils/supabase/queries';
 
+export const runtime = 'edge';
+
 const title = 'aireio';
 const description = 'Find your workspace for the day.';
 

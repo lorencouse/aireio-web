@@ -1,3 +1,5 @@
+'use server';
+
 import { Suspense } from 'react';
 
 import HomeLayout from './home-layout';
@@ -5,6 +7,9 @@ import HomeLayout from './home-layout';
 import { City } from '@/utils/types';
 import { createClient } from '@/utils/supabase/server';
 import LoadingGrid from '@/components/general/loading-grid';
+
+
+
 
 async function getCities(): Promise<City[]> {
   // This line opts out of caching for this data fetch
