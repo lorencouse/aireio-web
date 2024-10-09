@@ -17,7 +17,7 @@ import { ReadonlyURLSearchParams } from 'next/navigation';
 
 interface SortMethodProps {
   // sortMethod: string;
-  searchParams: ReadonlyURLSearchParams;
+  searchParams: ReadonlyURLSearchParams | null;
 }
 
 const SortMethod: React.FC<SortMethodProps> = ({
@@ -25,7 +25,7 @@ const SortMethod: React.FC<SortMethodProps> = ({
   searchParams
 }) => {
   const sortMethods = ['distance', 'rating', 'rating-count', 'price'];
-  const sortMethodParams = searchParams.get('sort_method') || 'distance';
+  const sortMethodParams = searchParams?.get('sort_method') || 'distance';
 
   const [sortMethod, setSortMethod] = useState(sortMethodParams);
 

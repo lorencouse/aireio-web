@@ -44,7 +44,7 @@ export default function Navlinks({ user }: NavlinksProps) {
         {user ? (
           <>
             <form onSubmit={(e) => handleRequest(e, SignOut, router)}>
-              <input type="hidden" name="pathName" value={usePathname()} />
+              {/* <input type="hidden" name="pathName" value={usePathname()} /> */}
               <button type="submit" className={s.link}>
                 Sign out
               </button>

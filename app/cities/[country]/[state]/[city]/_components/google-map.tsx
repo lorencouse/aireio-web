@@ -7,8 +7,7 @@ import { ReadonlyURLSearchParams } from 'next/navigation';
 // import { useSearchParams } from 'next/navigation';
 
 interface MapWithDraggableMarkerProps {
-  searchParams: ReadonlyURLSearchParams;
-
+  searchParams: ReadonlyURLSearchParams | null;
   lat: string;
   lng: string;
 }

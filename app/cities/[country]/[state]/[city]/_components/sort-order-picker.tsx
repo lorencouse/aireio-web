@@ -16,12 +16,12 @@ import useUpdateUrlQuery from '@/utils/hook/useUpdateUrlQuery';
 import { ReadonlyURLSearchParams } from 'next/navigation';
 
 interface SortOrderPickerProps {
-  searchParams: ReadonlyURLSearchParams;
+  searchParams: ReadonlyURLSearchParams | null;
 }
 
 const SortOrderPicker: React.FC<SortOrderPickerProps> = ({ searchParams }) => {
   const sortOrders = ['asc', 'des'];
-  const sortOrderParams = searchParams.get('sort_order') || 'asc';
+  const sortOrderParams = searchParams?.get('sort_order') || 'asc';
   const [sortOrder, setSortOrder] = useState(sortOrderParams);
   const { updateUrlQuery } = useUpdateUrlQuery();
 

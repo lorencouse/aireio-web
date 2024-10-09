@@ -54,12 +54,12 @@ export default function PlacesPageLayout({
   };
 
   const parseSearchParams = () => {
-    const type = searchParams.get('place_type') || 'cafe';
-    const radius = searchParams.get('radius') || '1000';
-    const lat = searchParams.get('lat') || city.lat.toString();
-    const lng = searchParams.get('lng') || city.lng.toString();
-    const sortMethod = searchParams.get('sort_method') || 'distance';
-    const sortOrder = searchParams.get('sort_order') || 'asc';
+    const type = searchParams?.get('place_type') || 'cafe';
+    const radius = searchParams?.get('radius') || '1000';
+    const lat = searchParams?.get('lat') || city.lat.toString();
+    const lng = searchParams?.get('lng') || city.lng.toString();
+    const sortMethod = searchParams?.get('sort_method') || 'distance';
+    const sortOrder = searchParams?.get('sort_order') || 'asc';
     return { type, radius, lat, lng, sortMethod, sortOrder };
   };
 

@@ -15,10 +15,10 @@
     "supabase:generate-migration": "pnpm dlx supabase db diff | pnpm dlx supabase migration new",
     "supabase:generate-seed": "pnpm dlx supabase db dump --data-only -f supabase/seed.sql",
     "supabase:push": "pnpm dlx supabase db push",
-    "supabase:pull": "pnpm dlx supabase db pull"
+    "supabase:pull": "pnpm dlx supabase db pull",
+    "analyze": "ANALYZE=true next build"
   },
   "dependencies": {
-    "@hookform/resolvers": "^3.9.0",
     "@next/bundle-analyzer": "^14.2.15",
     "@radix-ui/react-accordion": "^1.2.1",
     "@radix-ui/react-avatar": "^1.1.1",
@@ -44,11 +44,11 @@
     "@supabase/auth-helpers-nextjs": "^0.10.0",
     "@supabase/ssr": "latest",
     "@supabase/supabase-js": "^2.45.4",
+    "ajv": "^8.17.1",
     "class-variance-authority": "^0.7.0",
     "classnames": "^2.5.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
-    "date-fns": "^3.6.0",
     "dotenv-cli": "^7.4.2",
     "embla-carousel-react": "^8.3.0",
     "lucide-react": "latest",
@@ -57,14 +57,11 @@
     "react": "^18.3.1",
     "react-day-picker": "^8.10.1",
     "react-dom": "^18.3.1",
-    "react-hook-form": "^7.53.0",
     "react-merge-refs": "^2.1.1",
-    "react-phone-number-input": "^3.4.8",
     "sonner": "^1.5.0",
     "tailwind-merge": "^2.5.3",
     "tailwindcss": "^3.4.13",
-    "tailwindcss-animate": "^1.0.7",
-    "zod": "^3.23.8"
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@types/node": "latest",

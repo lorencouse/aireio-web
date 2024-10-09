@@ -8,7 +8,7 @@ const GoogleMap = dynamic(() => import('./google-map'), {
 });
 
 interface LazyGoogleMapProps {
-  searchParams: ReadonlyURLSearchParams;
+  searchParams: ReadonlyURLSearchParams | null;
   lat: string;
   lng: string;
 }

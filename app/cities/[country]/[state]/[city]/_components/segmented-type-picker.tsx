@@ -10,7 +10,7 @@ import useUpdateUrlQuery from '@/utils/hook/useUpdateUrlQuery';
 import { ReadonlyURLSearchParams } from 'next/navigation';
 
 interface SegmentedTypePickerProps {
-  searchParams: ReadonlyURLSearchParams;
+  searchParams: ReadonlyURLSearchParams | null;
 }
 
 export default function SegmentedTypePicker({
@@ -21,7 +21,7 @@ export default function SegmentedTypePicker({
     { value: 'library', icon: Library, label: 'Library' },
     { value: 'coworking', icon: Briefcase, label: 'Coworking' }
   ];
-  const placeTypeParams = searchParams.get('place_type') || 'cafe';
+  const placeTypeParams = searchParams?.get('place_type') || 'cafe';
   const [placeType, setPlaceType] = useState(placeTypeParams);
 
   const { updateUrlQuery } = useUpdateUrlQuery();
