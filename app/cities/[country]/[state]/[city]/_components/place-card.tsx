@@ -16,7 +16,7 @@ const PlaceCard = ({ place, distance, setIsLoadingPlace }: PlaceCardProps) => {
 
   const router = useRouter();
 
-  const getTypeIcon = (type) => {
+  const getTypeIcon = (type: string) => {
     switch (type) {
       case 'cafe':
         return <Coffee size={16} className="mr-1" />;
