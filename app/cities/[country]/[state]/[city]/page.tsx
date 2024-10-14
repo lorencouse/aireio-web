@@ -23,7 +23,7 @@ export default async function Places({
   const places = await getPlaces(city, params);
 
   return (
-    <div className="flex flex-col justify-center items-center w-full mt-[1rem] p-3">
+    <div className="flex flex-col justify-center items-center w-full mt-[1rem]">
       <PlacesPageLayout city={city} places={places} />
     </div>
   );

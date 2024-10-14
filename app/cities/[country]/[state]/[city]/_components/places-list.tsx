@@ -19,7 +19,7 @@ const PlacesList = ({
       <span className="text-lg font-bold pr-4 ">
         Showing {filteredPlaces.length} Places
       </span>
-      <div className="grid xl:grid-cols-3 lg:grid-cols-2 gap-4">
+      <div className="grid xl:grid-cols-3 lg:grid-cols-2 gap-6 mt-4">
         {filteredPlaces.length > 0 ? (
           filteredPlaces.map((place) => (
             <PlaceCard

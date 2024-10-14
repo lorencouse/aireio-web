@@ -103,7 +103,7 @@ export default function PlacesPageLayout({
         country={city.country || ''}
         countryCode={city.country_code || ''}
       />
-      <div className="grid lg:grid-cols-2 w-full mt-[1rem] p-3">
+      <div className="grid lg:grid-cols-2 w-full">
         <div className="city-map lg:mx-0 sm:mx-12">
           <LazyGoogleMap
             searchParams={searchParams}
@@ -111,8 +111,8 @@ export default function PlacesPageLayout({
             lng={city.lng.toString()}
           />
         </div>
-        <div className="city-filters flex flex-col p-10">
-          <span className="text-lg font-bold">Filter by:</span>
+        <div className="city-filters flex flex-col p-4 md:p-10">
+          <span className="text-lg font-bold border-t pt-6">Filter by:</span>
           <SegmentedTypePicker searchParams={searchParams} />
           <div className="flex flex-row gap-4 mb-6 justify-between flex-wrap">
             <SortMethod searchParams={searchParams} />
@@ -121,7 +121,7 @@ export default function PlacesPageLayout({
           </div>
         </div>
       </div>
-      <h1 className="text-4xl font-bold my-8 select-none">
+      <h1 className="text-4xl font-bold m-8 border-t pt-6 select-none text-center leading-normal w-full">
         Workspaces in {city && city.name.replace(/-/g, ' ')}
       </h1>
       {isLoading ? (

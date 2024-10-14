@@ -179,7 +179,7 @@ const GoogleMap: React.FC<MapWithDraggableMarkerProps> = ({
 
   return (
     <div>
-      <div ref={mapRef} style={{ height: '400px', width: '100%' }} />
+      <div ref={mapRef} className="w-full md:h-96 h-64" />
       {/* radius slider */}
       <div className="flex items-center mt-4 mx-4">
         <label htmlFor="radius" className="mr-2">

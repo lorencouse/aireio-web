@@ -17,7 +17,7 @@ const CityCard: React.FC<CityCardProps> = ({ city }) => {
   const cityName = city.name ? city.name.replace(/-/g, ' ') : '';
   return (
     <Link href={`/cities/${city.country_code}/${city.state}/${city.name}`}>
-      <div className="relative w-96 h-64 cursor-pointer rounded-lg overflow-hidden shadow-md m-4 hover:scale-105 duration-200">
+      <div className="relative md:w-96 w-80 md:h-64 h-52 cursor-pointer rounded-lg overflow-hidden shadow-md md:m-4 hover:scale-105 duration-200">
         {imageUrl ? (
           <Image
             src={imageUrl || '/images/logo.png'}
@@ -28,7 +28,6 @@ const CityCard: React.FC<CityCardProps> = ({ city }) => {
             loading="lazy"
             placeholder="blur"
             blurDataURL="/images/logo.png"
-          
           />
         ) : (
           <Avatar className="w-24 h-24">

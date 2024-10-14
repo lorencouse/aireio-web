@@ -19,7 +19,7 @@ export default function SegmentedTypePicker({
   const placeTypes = [
     { value: 'cafe', icon: Coffee, label: 'Cafe' },
     { value: 'library', icon: Library, label: 'Library' },
-    { value: 'coworking', icon: Briefcase, label: 'Coworking' }
+    { value: 'coworking', icon: Briefcase, label: 'Cowork' }
   ];
   const placeTypeParams = searchParams?.get('place_type') || 'cafe';
   const [placeType, setPlaceType] = useState(placeTypeParams);

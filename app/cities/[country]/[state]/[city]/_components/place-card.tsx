@@ -1,18 +1,10 @@
 import Image from 'next/image';
 import React from 'react';
 import { useRouter } from 'next/navigation';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle
-} from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { getPlacePhotoUrls } from '@/utils/functions/places/getPlacePhotoUrls';
-import { placeholderImage } from '@/utils/constants';
 import { Place } from '@/utils/types';
-
+import { MapPin, Coffee, BookOpen, Building, Star } from 'lucide-react';
 interface PlaceCardProps {
   place: Place;
   distance: number;
@@ -23,6 +15,19 @@ const PlaceCard = ({ place, distance, setIsLoadingPlace }: PlaceCardProps) => {
   const photoUrls = getPlacePhotoUrls(place);
 
   const router = useRouter();
+
+  const getTypeIcon = (type) => {
+    switch (type) {
+      case 'cafe':
+        return <Coffee size={16} className="mr-1" />;
+      case 'library':
+        return <BookOpen size={16} className="mr-1" />;
+      case 'coworking':
+        return <Building size={16} className="mr-1" />;
+      default:
+        return null;
+    }
+  };
   const handleClick = () => {
     window.scrollTo(0, 0);
     setIsLoadingPlace(true);
@@ -35,55 +40,56 @@ const PlaceCard = ({ place, distance, setIsLoadingPlace }: PlaceCardProps) => {
 
   return (
     <Card
-      className="w-96 hover:scale-105 transition-transform duration-200 m-4 cursor-pointer bg-background text-foreground"
+      className="md:w-96 w-80 hover:scale-105 transition-transform duration-200 cursor-pointer bg-background text-foreground relative overflow-hidden"
       onClick={handleClick}
     >
-      <div className="relative w-full h-52">
+      <div className="relative w-full md:h-64 h-52">
         <Image
           src={photoUrls[0]}
           alt={place.name}
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           style={{ objectFit: 'cover', objectPosition: 'center' }}
-          className="rounded-t-md"
+          className="rounded-md"
           loading="lazy"
           placeholder="blur"
           blurDataURL="/images/logo.png"
         />
-      </div>
-      <CardHeader>
-        <CardTitle className="text-xl">{place.name}</CardTitle>
-        <CardDescription className="flex items-center">
-          {place.add_1}
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <p>
-          Type: <span className="font-bold capitalize">{place.type}</span>
-        </p>
-      </CardContent>
-      <CardFooter className="flex justify-between items-end">
-        {place.type === 'cafe' && (
-          <div>
-            <span className="font-bold">Price: </span>
-            {place.price_level ? (
-              Array.from({ length: place.price_level }, (_, i) => (
-                <span key={i}>$</span>
-              ))
-            ) : (
-              <span>?</span>
+        <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent flex flex-col justify-end p-4 text-white">
+          <h3 className="text-xl font-bold mb-2">{place.name}</h3>
+          <div className="flex items-center text-sm mb-1">
+            <MapPin size={16} className="mr-1" />
+            <span>{place.add_1}</span>
+          </div>
+          <div className="flex items-center text-sm mb-1">
+            {getTypeIcon(place.type)}
+            <span className="capitalize">{place.type}</span>
+          </div>
+          <div className="flex justify-between items-center text-sm">
+            {place.type === 'cafe' && (
+              <div className="flex items-center">
+                {/* <DollarSign size={16} className="mr-1" /> */}
+                {place.price_level ? (
+                  Array.from({ length: place.price_level }, (_, i) => (
+                    <span key={i}>$</span>
+                  ))
+                ) : (
+                  <span>?</span>
+                )}
+              </div>
             )}
+            {place.rating_score && (
+              <div className="flex items-center">
+                <Star size={16} className="mr-1" />
+                <span>
+                  {place.rating_score} ({place.rating_count})
+                </span>
+              </div>
+            )}
+            <div>{distance.toFixed(1)} km</div>
           </div>
-        )}
-        {place.rating_score ? (
-          <div className="text-sm">
-            {place.rating_score} ⭐ ({place.rating_count})
-          </div>
-        ) : (
-          <div className="text-sm"></div>
-        )}
-        <div className="text-sm">{distance.toFixed(1)} km</div>
-      </CardFooter>
+        </div>
+      </div>
     </Card>
   );
 };
