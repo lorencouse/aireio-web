@@ -4,13 +4,11 @@ import { Metadata } from 'next';
 import Footer from '@/components/ui/Footer';
 import Navbar from '@/components/ui/Navbar';
 // import { Toaster } from '@/components/ui/Toasts/toaster';
-import LoadingGrid from '@/components/general/loading-grid';
-import { PropsWithChildren, Suspense } from 'react';
+import { PropsWithChildren } from 'react';
 import { getURL } from '@/utils/helpers';
 import 'styles/main.css';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Comfortaa } from 'next/font/google';
-import { getUser } from '@/utils/supabase/queries';
 
 export const runtime = 'edge';
 
@@ -33,7 +31,6 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: PropsWithChildren) {
-  const user = await getUser();
   return (
     <html lang="en" className={comfortaa.className}>
       <body className="bg-backgroud">
@@ -46,7 +43,7 @@ export default async function RootLayout({ children }: PropsWithChildren) {
           <Navbar />
           <main
             id="skip"
-            className="min-h-[calc(100dvh-4rem)] md:min-h[calc(100dvh-5rem)] mt-20"
+            className="min-h-[calc(100dvh-4rem)] md:min-h[calc(100dvh-5rem)] mt-10 max-w-7xl mx-auto"
           >
             {children}
           </main>

@@ -56,13 +56,13 @@ const PlaceDetails = ({ place }: { place: Place }) => {
 
   return (
     <Card className="bg-background text-foreground">
-      <CardContent className="pt-6 text-lg flex flex-row justify-between">
+      <CardContent className="pt-6 text-lg flex flex-row flex-wrap justify-between gap-8">
         <div className="contact-info">
           <div className="mb-8">
             {(place.note && place.note.length > 0) ||
               (place.description && place.description.length > 0 && (
                 <>
-                  <h3 className="underline font-extrabold mb-4">
+                  <h3 className=" font-extrabold mb-4 text-2xl">
                     {place.name} Overview
                   </h3>
                   <p>{place.description}</p>
@@ -137,7 +137,7 @@ const PlaceDetails = ({ place }: { place: Place }) => {
 
           <SocialLinks place={place} />
         </div>
-        <div className="amenities flex flex-col mx-6 mt-4">
+        <div className="amenities flex flex-col mt-4">
           {(place.type === 'cafe' || place.type === 'restaurant') && (
             <>
               <p className="mb-6 text-2xl underline">This Location Serves</p>

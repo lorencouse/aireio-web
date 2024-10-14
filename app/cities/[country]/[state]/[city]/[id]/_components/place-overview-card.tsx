@@ -6,7 +6,6 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 
 import PlaceBreadCrumb from './place-breadcrumb';
 // import { StarIcon } from '@radix-ui/react-icons';
-import { Badge } from '@/components/ui/badge';
 import Amenity from './amenity';
 const PlaceOverviewCard = ({
   place,

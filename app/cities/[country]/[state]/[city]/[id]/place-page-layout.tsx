@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import PlaceHero from './_components/place-hero';
 import PlaceOverviewCard from './_components/place-overview-card';
 import PlaceDetails from './_components/place-details';
@@ -11,7 +10,6 @@ import { getPlacePhotoUrls } from '@/utils/functions/places/getPlacePhotoUrls';
 import LoadingPlace from './_components/loading-place';
 const PlacePageLayout = ({ place }: { place: Place }) => {
   const [showModal, setShowModal] = useState(false);
-  const router = useRouter();
   const photoUrls = getPlacePhotoUrls(place);
 
   if (!place) return <LoadingPlace />;

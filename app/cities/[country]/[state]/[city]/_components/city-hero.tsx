@@ -17,7 +17,7 @@ export default function CityHero({
 }: CityHeroProps) {
   const imageUrl = getSupabaseCityPhotoUrl(city, state, countryCode);
   return (
-    <div className="relative w-full h-[50vh] min-h-[400px]">
+    <div className="relative w-full md:h-[50vh] min-h-[250px]">
       <Image
         src={imageUrl || placeholderImage}
         alt={`${city || 'City'}, ${country || 'Country'} cityscape`}
