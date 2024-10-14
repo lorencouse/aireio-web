@@ -18,6 +18,11 @@ module.exports = {
       textShadow: {
         DEFAULT: '2px 2px 4px rgba(0, 0, 0, 0.5)'
       },
+      textOverlineOffset: {
+        0: '0px',
+        1: '1px',
+        2: '2px'
+      },
       colors: {
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',

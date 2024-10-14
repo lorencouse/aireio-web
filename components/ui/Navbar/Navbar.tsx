@@ -1,4 +1,3 @@
-import s from './Navbar.module.css';
 import { getUser } from '@/utils/supabase/queries';
 import { Dialog, DialogClose } from '@radix-ui/react-dialog';
 import { Menu } from 'lucide-react';
@@ -81,10 +80,11 @@ export default async function Navbar() {
 
         <Link href="/" className="flex items-center" aria-label="Home">
           <Image
-            src="/images/logo.png"
+            src="/images/aireio-logo-full.jpg"
             alt="Aireio logo"
-            width={30}
+            width={100}
             height={30}
+            className="rounded-sm"
           />
           <span className="sr-only">Home</span>
         </Link>
@@ -96,10 +96,11 @@ export default async function Navbar() {
         <NavigationMenuList className="flex gap-3 w-full justify-between items-center">
           <Link href="/" className="pl-2 flex items-center" aria-label="Home">
             <Image
-              src="/images/logo.png"
+              src="/images/aireio-logo-full.jpg"
               alt="Aireio logo"
-              width={30}
+              width={100}
               height={30}
+              className="rounded-sm"
             />
             <span className="sr-only">Home</span>
           </Link>

@@ -12,13 +12,15 @@ export default function HomeLayout({
   initialCities: City[];
 }) {
   return (
-    <div className="flex flex-col justify-center items-center w-full mt-10 ">
-      <h1 className="text-3xl font-bold my-12 select-none">
-        Find Your Work Space
-      </h1>
+    <div className="">
+      <div className="home-hero flex flex-col justify-center items-center w-full mt-10">
+        <h1 className="text-3xl font-bold my-12 select-none">
+          Find Your Work Space
+        </h1>
 
-      <div className="flex flex-row">
-        <GooglePlacesAutocomplete />
+        <div className="flex flex-row">
+          <GooglePlacesAutocomplete />
+        </div>
       </div>
 
       <div className="mt-4">
