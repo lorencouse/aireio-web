@@ -12,8 +12,8 @@ export default function HomeLayout({
   initialCities: City[];
 }) {
   return (
-    <div className="flex flex-col justify-center items-center w-full mt-[1rem] p-3 ">
-      <h1 className="text-3xl font-bold mb-12 select-none">
+    <div className="flex flex-col justify-center items-center w-full mt-10 ">
+      <h1 className="text-3xl font-bold my-12 select-none">
         Find Your Work Space
       </h1>
 
@@ -22,8 +22,8 @@ export default function HomeLayout({
       </div>
 
       <div className="mt-4">
-        <h3 className="text-lg font-bold select-none ml-4 mb-4">Top Cities:</h3>
-        <hr className="mb-4" />
+        <hr className="mt-10" />
+        <h3 className="text-lg font-bold select-none ml-4 my-4">Top Cities:</h3>
 
         {initialCities.length === 0 ? (
           <LoadingGrid />

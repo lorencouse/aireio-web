@@ -38,7 +38,7 @@ const PlaceHero: React.FC<PlaceHeroProps> = ({ place, photoUrl }) => {
         </h1>
         <span className="text-white text-lg md:text-xl font-bold text-center px-4 text-shadow-lg select-none">
           {`${place.city || place.state || ''}, 
-          ${place.country}`}
+          ${place.country || place.country_code || ''}`}
         </span>
       </div>
     </div>

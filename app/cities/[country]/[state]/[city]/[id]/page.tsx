@@ -52,7 +52,7 @@ export default async function PlacePage({
   }
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="place-page">
       <Suspense fallback={<LoadingPlace />}>
         <PlacePageLayout place={updatedPlace} />
       </Suspense>
