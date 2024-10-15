@@ -2,9 +2,7 @@
 
 import { LogOut, Settings, User } from 'lucide-react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { SignOut } from '@/utils/auth-helpers/server';
-import { handleRequest } from '@/utils/auth-helpers/client';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
@@ -19,17 +17,18 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 export function UserProfile({ user }: any) {
-  const router = useRouter();
-
-  // if (!config?.auth?.enabled) {
-  //   router.back();
-  // }
-  // const { user } = useUser();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild className="w-[2.25rem] h-[2.25rem]">
         <Avatar>
-          <AvatarImage src={user?.imageUrl} alt="User Profile" />
+          <AvatarImage
+            src={
+              user.user_metadata?.avatar_url ||
+              user.user_metadata?.picture ||
+              ''
+            }
+            alt="User Profile"
+          />
           <AvatarFallback></AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>

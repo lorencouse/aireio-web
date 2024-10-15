@@ -583,3 +583,55 @@
         },
 
 
+        // Supabase Google Auth
+        {
+  id: 'e77753aa-bf93-4b42-b4fa-47cdf81633da',
+  aud: 'authenticated',
+  role: 'authenticated',
+  email: 'couselm@gmail.com',
+  email_confirmed_at: '2024-08-29T02:44:59.687459Z',
+  phone: '',
+  confirmed_at: '2024-08-29T02:44:59.687459Z',
+  last_sign_in_at: '2024-10-15T06:48:42.170996Z',
+  app_metadata: { provider: 'google', providers: [ 'google' ] },
+  user_metadata: {
+  avatar_url: 'https://lh3.googleusercontent.com/a/ACg8ocIfBreeiP6d3zYMBmt5a2sLYTGltGbO8xeOTSBJOYgTTE7tH5Q1=s96-c',
+  email: 'couselm@gmail.com',
+  email_verified: true,
+  full_name: 'Loren Couse',
+  iss: 'https://accounts.google.com',
+  name: 'Loren Couse',
+  phone_verified: false,
+  picture: 'https://lh3.googleusercontent.com/a/ACg8ocIfBreeiP6d3zYMBmt5a2sLYTGltGbO8xeOTSBJOYgTTE7tH5Q1=s96-c',
+  provider_id: '115856638032753531757',
+  sub: '115856638032753531757'
+},
+  identities: [
+  {
+  identity_id: 'd80811da-e546-4650-9e8c-1a1b71a80d92',
+  id: '115856638032753531757',
+  user_id: 'e77753aa-bf93-4b42-b4fa-47cdf81633da',
+  identity_data: {
+  avatar_url: 'https://lh3.googleusercontent.com/a/ACg8ocIfBreeiP6d3zYMBmt5a2sLYTGltGbO8xeOTSBJOYgTTE7tH5Q1=s96-c',
+  email: 'couselm@gmail.com',
+  email_verified: true,
+  full_name: 'Loren Couse',
+  iss: 'https://accounts.google.com',
+  name: 'Loren Couse',
+  phone_verified: false,
+  picture: 'https://lh3.googleusercontent.com/a/ACg8ocIfBreeiP6d3zYMBmt5a2sLYTGltGbO8xeOTSBJOYgTTE7tH5Q1=s96-c',
+  provider_id: '115856638032753531757',
+  sub: '115856638032753531757'
+},
+  provider: 'google',
+  last_sign_in_at: '2024-08-29T02:44:59.679743Z',
+  created_at: '2024-08-29T02:44:59.679794Z',
+  updated_at: '2024-10-15T06:48:41.518882Z',
+  email: 'couselm@gmail.com'
+}
+],
+  created_at: '2024-08-29T02:44:59.67466Z',
+  updated_at: '2024-10-15T06:48:42.174948Z',
+  is_anonymous: false
+}
+

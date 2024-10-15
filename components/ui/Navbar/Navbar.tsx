@@ -21,6 +21,7 @@ import { UserProfile } from '@/components/user-profile';
 
 export default async function Navbar() {
   const user = await getUser();
+  console.log(user);
 
   const menuItems = [
     {
