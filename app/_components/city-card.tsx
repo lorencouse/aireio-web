@@ -35,10 +35,10 @@ const CityCard: React.FC<CityCardProps> = ({ city }) => {
           </Avatar>
         )}
         <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center flex-col">
-          <h3 className="text-white text-4xl font-bold text-center text-shadow select-none mb-1">
+          <h3 className="text-white capitalize text-4xl font-bold text-center text-shadow select-none mb-1">
             {cityName}
           </h3>
-          <h4 className="text-white text-lg font-bold text-center text-shadow select-none">
+          <h4 className="text-white capitalize text-lg font-bold text-center text-shadow select-none">
             {city.country}
           </h4>
         </div>

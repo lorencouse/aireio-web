@@ -15,10 +15,16 @@ import { Place } from '@/utils/types';
 
 export default function PlaceBreadCrumb({ place }: { place: Place }) {
   return (
-    <Breadcrumb className="mb-8">
+    <Breadcrumb className="mb-8 capitalize">
       <BreadcrumbList>
         <BreadcrumbItem>
           <BreadcrumbLink href="/">Home</BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbSeparator>/</BreadcrumbSeparator>
+        <BreadcrumbItem>
+          <BreadcrumbLink href={`/cities/${place.country_code}`}>
+            {place.country_code || 'Country'}
+          </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator>/</BreadcrumbSeparator>
         <BreadcrumbItem>

@@ -68,7 +68,7 @@ export const updateGooglePlaceData = async (place: Place) => {
       county: convertedAddress.county,
       state: convertedAddress.state,
       postal_code: convertedAddress.postcode,
-      country: convertedAddress.county,
+      country: convertedAddress.country,
       formatted_address:
         googlePlace.formatted_address ?? place?.formatted_address,
 

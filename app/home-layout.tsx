@@ -13,15 +13,7 @@ export default function HomeLayout({
 }) {
   return (
     <div className="aireio-home">
-      {/* <div className="home-hero flex flex-col justify-center items-center w-full mt-10">
-        <h1 className="text-3xl font-bold my-12 select-none">
-          Find Your Work Space
-        </h1>
 
-        <div className="flex flex-row">
-          <GooglePlacesAutocomplete />
-        </div>
-      </div> */}
 
       <HomeHero />
       <div className="flex flex-col items-center mt-4 ">

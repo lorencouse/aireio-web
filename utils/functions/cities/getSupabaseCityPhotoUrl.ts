@@ -1,5 +1,3 @@
-import React from 'react';
-
 export const getSupabaseCityPhotoUrl = (
   city: string,
   state: string,

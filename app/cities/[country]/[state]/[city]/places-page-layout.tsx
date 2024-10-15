@@ -16,6 +16,7 @@ import { fetchNewPlaces } from './actions';
 import LoadingGrid from '@/components/general/loading-grid';
 import LoadingPlace from './[id]/_components/loading-place';
 import CityHero from './_components/city-hero';
+import CityBreadCrumb from './_components/city-breadcrumbs';
 
 export default function PlacesPageLayout({
   city,
@@ -97,13 +98,7 @@ export default function PlacesPageLayout({
 
   return (
     <>
-      <CityHero
-        // city={city.name || ''}
-        // state={city.state || ''}
-        // country={city.country || ''}
-        // countryCode={city.country_code || ''}
-        city={city}
-      />
+      <CityHero city={city} />
       <div className="grid lg:grid-cols-2 w-full">
         <div className="city-map lg:mx-0 sm:mx-12">
           <LazyGoogleMap
@@ -113,6 +108,7 @@ export default function PlacesPageLayout({
           />
         </div>
         <div className="city-filters flex flex-col p-4 md:p-10">
+          <CityBreadCrumb city={city} />
           <span className="text-lg font-bold border-t pt-6">Filter by:</span>
           <SegmentedTypePicker searchParams={searchParams} />
           <div className="flex flex-row gap-4 mb-6 justify-between flex-wrap">
