@@ -98,10 +98,11 @@ export default function PlacesPageLayout({
   return (
     <>
       <CityHero
-        city={city.name || ''}
-        state={city.state || ''}
-        country={city.country || ''}
-        countryCode={city.country_code || ''}
+        // city={city.name || ''}
+        // state={city.state || ''}
+        // country={city.country || ''}
+        // countryCode={city.country_code || ''}
+        city={city}
       />
       <div className="grid lg:grid-cols-2 w-full">
         <div className="city-map lg:mx-0 sm:mx-12">
@@ -122,7 +123,10 @@ export default function PlacesPageLayout({
         </div>
       </div>
       <h1 className="text-4xl font-bold m-8 border-t pt-6 select-none text-center leading-normal w-full">
-        Workspaces in {city && city.name.replace(/-/g, ' ')}
+        Workspaces in{' '}
+        <span className="capitalize">
+          {city && city.name.replace(/-/g, ' ')}
+        </span>
       </h1>
       {isLoading ? (
         <LoadingGrid />

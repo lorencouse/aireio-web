@@ -5,6 +5,46 @@ import { redirect } from 'next/navigation';
 import uploadImageToSupabase from '@/utils/functions/places/uploadImageToSupabase';
 import { City } from '@/utils/types';
 
+const normalizeString = (str: string | null): string => {
+  if (!str) return '';
+
+  const accentMap: { [key: string]: string } = {
+    á: 'a',
+    à: 'a',
+    â: 'a',
+    ä: 'a',
+    ã: 'a',
+    å: 'a',
+    é: 'e',
+    è: 'e',
+    ê: 'e',
+    ë: 'e',
+    í: 'i',
+    ì: 'i',
+    î: 'i',
+    ï: 'i',
+    ó: 'o',
+    ò: 'o',
+    ô: 'o',
+    ö: 'o',
+    õ: 'o',
+    ú: 'u',
+    ù: 'u',
+    û: 'u',
+    ü: 'u',
+    ñ: 'n',
+    ç: 'c',
+    ß: 'ss',
+    ÿ: 'y'
+  };
+
+  return str
+    .toLowerCase()
+    .replace(/[^\u0000-\u007E]/g, (char) => accentMap[char] || char)
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+};
+
 export const fetchCity = async (city: Partial<City>) => {
   const supabase = createClient();
   const {
@@ -31,16 +71,20 @@ export const fetchCity = async (city: Partial<City>) => {
     throw new Error('Missing required fields for city');
   }
 
+  const normalizedName = normalizeString(name);
+  const normalizedState = normalizeString(state);
+  const normalizedCountry = normalizeString(country);
+
   try {
     const { data: insertedCity, error: insertError } = await supabase
       .from('cities')
       .insert({
-        name,
+        name: normalizedName,
         lat,
         lng,
-        country,
+        country: normalizedCountry,
         country_code,
-        state,
+        state: normalizedState,
         state_code,
         google_id
       })
@@ -70,7 +114,7 @@ export const fetchCity = async (city: Partial<City>) => {
       }
     }
 
-    redirect(`/cities/${country_code}/${state}/${name}`);
+    redirect(`/cities/${country_code}/${normalizedState}/${normalizedName}`);
   } catch (error) {
     console.error('Unexpected error in fetchCity:', error);
     throw error;
@@ -80,10 +124,13 @@ export const fetchCity = async (city: Partial<City>) => {
 const uploadCityPhoto = async (city: City) => {
   const supabase = createClient();
   const maxWidth = 1200;
+  const normalizedName = normalizeString(city.name);
+  const normalizedState = normalizeString(city.state);
 
   if (city.photo_ref) {
     const googlePhotoUrl = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=${maxWidth}&photoreference=${city.photo_ref}&key=${process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY}`;
-    const imgName = `${city.country_code}_${city.state}_${city.name}.jpg`;
+
+    const imgName = `${city.country_code}_${normalizedState}_${normalizedName}.jpg`;
     const googleId = city.google_id || '';
 
     try {
@@ -108,7 +155,7 @@ const uploadCityPhoto = async (city: City) => {
     }
   }
 
-  redirect(`/cities/${city.country_code}/${city.state}/${city.name}`);
+  redirect(`/cities/${city.country_code}/${normalizedState}/${normalizedName}`);
 };
 
 export default fetchCity;
