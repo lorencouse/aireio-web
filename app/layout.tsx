@@ -48,9 +48,6 @@ export default async function RootLayout({ children }: PropsWithChildren) {
             {children}
           </main>
           <Footer />
-          {/* <Suspense>
-            <LoadingGrid />
-          </Suspense> */}
         </ThemeProvider>
       </body>
     </html>

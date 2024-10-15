@@ -2,11 +2,10 @@
 
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm, useFieldArray } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import * as z from 'zod';
-
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -19,8 +18,6 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { toast } from '@/components/ui/use-toast';
-import { cn } from '@/utils/cn';
 import { UserProfile } from '@/utils/types';
 
 const profileFormSchema = z.object({
@@ -28,13 +25,6 @@ const profileFormSchema = z.object({
   email: z.string().email(),
   full_name: z.string().min(2).max(50),
   bio: z.string().max(160).optional()
-  // websites: z
-  //   .array(
-  //     z.object({
-  //       value: z.string().url({ message: 'Please enter a valid URL.' })
-  //     })
-  //   )
-  //   .optional()
 });
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
@@ -53,17 +43,9 @@ export function ContactInfoForm({
       email: userProfile?.email || '',
       full_name: userProfile?.full_name || '',
       bio: userProfile?.bio || ''
-      // websites: userProfile?.websites || []
     },
     mode: 'onChange'
   });
-
-  // const { fields, append } = useFieldArray({
-  //   name: 'urls',
-  //   control: form.control
-  // });
-
-  // console.log({ userProfile });
 
   return (
     <Form {...form}>

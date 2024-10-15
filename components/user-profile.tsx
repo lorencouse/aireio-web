@@ -25,7 +25,7 @@ export function UserProfile({ user }: any) {
             src={
               user.user_metadata?.avatar_url ||
               user.user_metadata?.picture ||
-              ''
+              '/images/logo.png'
             }
             alt="User Profile"
           />

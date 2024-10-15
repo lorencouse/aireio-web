@@ -2,8 +2,7 @@
 
 import { Separator } from '@/components/ui/separator';
 import { ContactInfoForm } from './contact-info-form';
-import { getUser, getUserProfile } from '@/utils/supabase/queries';
-import { Database } from '@/types_db';
+import { getUserProfile } from '@/utils/supabase/queries';
 
 export default async function ContactInfoPage() {
   const userProfile = await getUserProfile();

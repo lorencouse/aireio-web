@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import Image from 'next/image';
+import { getUser, getUserProfile } from '@/utils/supabase/queries';
 
 import { Separator } from '@/components/ui/separator';
 import { SidebarNav } from './components/sidebar-nav';
@@ -36,11 +37,36 @@ interface SettingsLayoutProps {
   children: React.ReactNode;
 }
 
-export default function SettingsLayout({ children }: SettingsLayoutProps) {
+export default async function SettingsLayout({
+  children
+}: SettingsLayoutProps) {
+  const user = await getUser();
+  const profile = await getUserProfile(user.id);
+  const name =
+    profile?.full_name ||
+    profile?.username ||
+    user.email ||
+    user.user_metadata?.full_name ||
+    '';
+  const avartarUrl =
+    profile?.avatar_url ||
+    user.user_metadata?.avatar_url ||
+    user.user_metadata?.picture ||
+    '/images/logo.png';
 
   return (
     <>
       <div className=" space-y-6 p-10 pb-16 md:block">
+        <div className="welcome-box flex flex-row gap-4 items-center ">
+          <Image
+            src={avartarUrl}
+            alt="Avatar"
+            width={150}
+            height={150}
+            className="h-16 w-16 rounded-full"
+          />
+          <span>Hello, {name}</span>
+        </div>
         <div className="space-y-0.5">
           <h2 className="text-2xl font-bold tracking-tight">Settings</h2>
           <p className="text-muted-foreground">
