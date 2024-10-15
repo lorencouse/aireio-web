@@ -1,8 +1,6 @@
 // /app/cities/[country]/[state]/[city]/page.tsx
-
-import { createClient } from '@/utils/supabase/server';
 import PlacesPageLayout from './places-page-layout';
-import { getCity, getPlaces } from './actions';
+import { getCity, getPlaces, fetchExistingPlaces } from './actions';
 import { City } from '@/utils/types';
 
 export default async function Places({
@@ -20,7 +18,7 @@ export default async function Places({
 }) {
   const city: City = await getCity(params);
 
-  const places = await getPlaces(city, params);
+  const places = await fetchExistingPlaces(city.id);
 
   return (
     <div className="flex flex-col justify-center items-center w-full mt-[1rem]">

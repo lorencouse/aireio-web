@@ -40,19 +40,10 @@ interface SettingsLayoutProps {
 export default async function SettingsLayout({
   children
 }: SettingsLayoutProps) {
-  const user = await getUser();
-  const profile = await getUserProfile(user.id);
-  const name =
-    profile?.full_name ||
-    profile?.username ||
-    user.email ||
-    user.user_metadata?.full_name ||
-    '';
-  const avartarUrl =
-    profile?.avatar_url ||
-    user.user_metadata?.avatar_url ||
-    user.user_metadata?.picture ||
-    '/images/logo.png';
+  // const user = await getUser();
+  const profile = await getUserProfile();
+  const name = profile?.full_name || profile?.username || '';
+  const avartarUrl = profile?.avatar_url || '/images/logo.png';
 
   return (
     <>

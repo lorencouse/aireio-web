@@ -66,7 +66,7 @@ export default function PlacesPageLayout({
 
   // Update filtered places when search params or allPlaces change
   useEffect(() => {
-    if (!allPlaces || allPlaces.length === 0) return;
+    // if (!allPlaces || allPlaces.length === 0) return;
 
     const { type, radius, lat, lng, sortMethod, sortOrder } =
       parseSearchParams();
