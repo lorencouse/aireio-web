@@ -24,8 +24,8 @@ export default async function CountryPage({
 }: {
   params: { country: string; state: string };
 }) {
-  const { country, state } = params;
-  const cities: City[] = await getCities(country, state);
+  const { country } = params;
+  const cities: City[] = await getCities(country);
 
   return (
     <div className="flex flex-col justify-center items-center w-full mt-[1rem]">
