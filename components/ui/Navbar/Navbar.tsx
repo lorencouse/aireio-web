@@ -44,15 +44,18 @@ export default async function Navbar() {
               <Menu className="h-4 w-4" />
             </Button>
           </SheetTrigger>
-          <SheetContent side="left">
+          <SheetContent side="left" className="bg-background text-foreground">
             <SheetHeader>
-              <SheetTitle>aireio™</SheetTitle>
+              <SheetTitle className="text-foreground">aireio™</SheetTitle>
             </SheetHeader>
             <div className="flex flex-col space-y-3 mt-[1rem]">
               {menuItems.map((item) => (
                 <DialogClose asChild key={item.title}>
                   <Link href={item.href} legacyBehavior passHref>
-                    <Button variant="outline" className="w-full">
+                    <Button
+                      variant="outline"
+                      className="w-full bg-background text-foreground"
+                    >
                       {item.title}
                     </Button>
                   </Link>
@@ -61,7 +64,10 @@ export default async function Navbar() {
               {user ? (
                 <DialogClose asChild>
                   <Link href="/profile" legacyBehavior passHref>
-                    <Button variant="outline" className="w-full">
+                    <Button
+                      variant="outline"
+                      className="w-full bg-background text-foreground"
+                    >
                       Profile
                     </Button>
                   </Link>
@@ -69,7 +75,10 @@ export default async function Navbar() {
               ) : (
                 <DialogClose asChild>
                   <Link href="/signin" legacyBehavior passHref>
-                    <Button variant="outline" className="w-full">
+                    <Button
+                      variant="outline"
+                      className="w-full bg-background text-foreground"
+                    >
                       Sign In
                     </Button>
                   </Link>

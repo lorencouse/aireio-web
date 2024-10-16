@@ -37,6 +37,8 @@ export function ContactInfoForm({
   userProfile: UserProfile | null;
 }) {
   const [loading, setLoading] = useState(false);
+  const [buttonText, setButtonText] = useState('Update');
+  const [error, setError] = useState<string | null>(null);
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
@@ -54,7 +56,17 @@ export function ContactInfoForm({
 
   const onSubmit = async (data: ProfileFormValues) => {
     setLoading(true);
-    await updateUserProfile(data);
+    setButtonText('Updating...');
+    const { message: error } = await updateUserProfile(data);
+    if (error) {
+      setButtonText('Error Updating');
+      setLoading(false);
+      setError(error);
+      setTimeout(() => setButtonText('Update'), 3000);
+      return;
+    }
+    setButtonText('Success!');
+    setTimeout(() => setButtonText('Update'), 2000);
     setLoading(false);
   };
 
@@ -150,8 +162,9 @@ export function ContactInfoForm({
         />
         {/* Add other form fields as needed */}
         <Button type="submit" disabled={loading}>
-          {loading ? 'Updating...' : 'Update Profile'}
+          {buttonText}
         </Button>
+        {error && <span className="text-red-500">{error}</span>}
       </form>
     </Form>
   );

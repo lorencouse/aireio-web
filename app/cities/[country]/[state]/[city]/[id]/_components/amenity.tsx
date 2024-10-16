@@ -7,8 +7,8 @@ import {
   PopoverContent,
   PopoverTrigger
 } from '@/components/ui/popover';
-import { getUser } from '@/utils/supabase/queries';
 import { SubmitUserPlaceData } from '../actions';
+import Link from 'next/link';
 
 export default function Amenity({
   name,
@@ -21,26 +21,29 @@ export default function Amenity({
 }) {
   const [buttonValue, setButtonValue] = useState<boolean | null>(null);
   const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [isAuthError, setIsAuthError] = useState(false);
 
-  const handleTrueClick = async () => {
-    if (buttonValue === true) {
-      setButtonValue(null);
+  const handleClick = async (newValue: boolean) => {
+    setButtonValue(newValue);
+    const { success, error, authError } = await SubmitUserPlaceData(
+      placeId,
+      name,
+      newValue
+    );
+
+    if (success) {
+      setSubmitted(true);
+      setError(null);
+      setIsAuthError(false);
+      setError('Success!');
     } else {
-      setButtonValue(true);
-      const success = await SubmitUserPlaceData(placeId, name, true);
-
-      if (success) {
-        setSubmitted(true);
+      setError(error || 'Failed to submit data');
+      setIsAuthError(!!authError);
+      if (authError) {
+        // Optionally, you can redirect to login page here
+        // router.push('/login')
       }
-    }
-  };
-
-  const handleFalseClick = async () => {
-    if (buttonValue === false) {
-      setButtonValue(null);
-    } else {
-      setButtonValue(false);
-      const success = await SubmitUserPlaceData(placeId, name, false);
     }
   };
 
@@ -62,7 +65,7 @@ export default function Amenity({
               <Button
                 variant={buttonValue === true ? 'default' : 'outline'}
                 size="icon"
-                onClick={handleTrueClick}
+                onClick={() => handleClick(true)}
                 disabled={submitted}
               >
                 <span
@@ -76,7 +79,7 @@ export default function Amenity({
               <Button
                 variant={buttonValue === false ? 'default' : 'outline'}
                 size="icon"
-                onClick={handleFalseClick}
+                onClick={() => handleClick(false)}
                 disabled={submitted}
               >
                 <span
@@ -88,6 +91,12 @@ export default function Amenity({
                 </span>
               </Button>
             </div>
+            {error && <p className="text-red-500 mt-2">{error}</p>}
+            {isAuthError && (
+              <p className="mt-2">
+                Please <Link href="/signin">Log in</Link> to submit details
+              </p>
+            )}
           </PopoverContent>
         </Popover>
       </p>

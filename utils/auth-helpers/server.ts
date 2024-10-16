@@ -313,12 +313,17 @@ export async function updateEmail(formData: FormData) {
   }
 }
 
-export async function updateUserProfile(formData: Partial<UserProfile>) {
+export async function updateUserProfile(
+  formData: Partial<UserProfile>
+): Promise<{
+  data: UserProfile | null;
+  message: string;
+}> {
   const supabase = createClient();
   const user = await supabase.auth.getUser();
 
   if (!user.data.user) {
-    throw new Error('No user found');
+    return { data: null, message: 'User not authenticated' };
   }
 
   const { error, data } = await supabase
@@ -336,8 +341,8 @@ export async function updateUserProfile(formData: Partial<UserProfile>) {
     .select();
 
   if (error) {
-    throw new Error(`Failed to update profile: ${error.message}`);
+    return { data: null, message: error.message };
   }
 
-  return data;
+  return { data: null, message: 'Success!' };
 }

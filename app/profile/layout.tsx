@@ -55,7 +55,7 @@ export default async function SettingsLayout({
             height={150}
             className="h-16 w-16 rounded-full"
           />
-          <span>Hello, {name}</span>
+          <span className="capitalize text-xl">Hello, {name}</span>
         </div>
         <div className="space-y-0.5">
           <h2 className="text-2xl font-bold tracking-tight">Settings</h2>
