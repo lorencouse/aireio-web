@@ -15,6 +15,7 @@ const CityCard: React.FC<CityCardProps> = ({ city }) => {
     city!.country_code ? city.country_code : ''
   );
   const cityName = city.name ? city.name.replace(/-/g, ' ') : '';
+  const countryName = city.country ? city.country.replace(/-/g, ' ') : '';
   return (
     <Link href={`/cities/${city.country_code}/${city.state}/${city.name}`}>
       <div className="relative md:w-96 w-80 md:h-64 h-52 cursor-pointer rounded-lg overflow-hidden shadow-md md:m-4 hover:scale-105 duration-200">
@@ -39,7 +40,7 @@ const CityCard: React.FC<CityCardProps> = ({ city }) => {
             {cityName}
           </h3>
           <h4 className="text-white capitalize text-lg font-bold text-center text-shadow select-none">
-            {city.country}
+            {countryName}
           </h4>
         </div>
       </div>

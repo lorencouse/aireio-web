@@ -1,37 +1,77 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { signUp } from '@/utils/auth-helpers/server';
-import { handleRequest } from '@/utils/auth-helpers/client';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
-// Define prop type with allowEmail boolean
 interface SignUpProps {
   allowEmail: boolean;
   redirectMethod: string;
 }
 
 export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
-  const router = redirectMethod === 'client' ? useRouter() : null;
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [message, setMessage] = useState<{
+    type: 'error' | 'success';
+    content: string;
+  } | null>(null);
+
+  useEffect(() => {
+    const errorParam = searchParams.get('error');
+    const errorDescription = searchParams.get('error_description');
+    if (errorParam && errorDescription) {
+      setMessage({
+        type: 'error',
+        content: decodeURIComponent(errorDescription)
+      });
+    }
+  }, [searchParams]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    setIsSubmitting(true); // Disable the button while the request is being handled
-    await handleRequest(e, signUp, router);
-    setIsSubmitting(false);
+    e.preventDefault();
+    setIsSubmitting(true);
+    setMessage(null);
+
+    const formData = new FormData(e.currentTarget);
+    try {
+      const result = await signUp(formData);
+      if (result.success) {
+        setMessage({ type: 'success', content: result.message });
+        // if (redirectMethod === 'client' && result.redirectPath) {
+        //   setTimeout(() => {
+        //     router.push(result.redirectPath);
+        //   }, 3000);
+        // }
+      } else {
+        setMessage({ type: 'error', content: result.message });
+      }
+    } catch (err) {
+      setMessage({
+        type: 'error',
+        content: 'An unexpected error occurred. Please try again.'
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <div className="m-8">
-      <form
-        noValidate={true}
-        className="mb-4"
-        onSubmit={(e) => handleSubmit(e)}
-      >
+      {message && (
+        <Alert
+          variant={message.type === 'error' ? 'destructive' : 'default'}
+          className="mb-4"
+        >
+          <AlertDescription>{message.content}</AlertDescription>
+        </Alert>
+      )}
+      <form noValidate={true} className="mb-4" onSubmit={handleSubmit}>
         <div className="grid gap-2">
           <div className="grid gap-1">
             <label htmlFor="email">Email</label>

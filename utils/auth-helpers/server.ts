@@ -168,14 +168,15 @@ export async function signUp(formData: FormData) {
 
   const email = String(formData.get('email')).trim();
   const password = String(formData.get('password')).trim();
-  let redirectPath: string;
+  let result: { success: boolean; message: string; redirectPath: string };
 
   if (!isValidEmail(email)) {
-    redirectPath = getErrorRedirect(
-      '/signin/signup',
-      'Invalid email address.',
-      'Please try again.'
-    );
+    result = {
+      success: false,
+      message: 'Invalid email address. Please try again.',
+      redirectPath: '/signin/signup'
+    };
+    return result;
   }
 
   const supabase = createClient();
@@ -188,42 +189,44 @@ export async function signUp(formData: FormData) {
   });
 
   if (error) {
-    redirectPath = getErrorRedirect(
-      '/signin/signup',
-      'Sign up failed.',
-      error.message
-    );
+    result = {
+      success: false,
+      message: `Sign up failed. ${error.message}`,
+      redirectPath: '/signin/signup'
+    };
   } else if (data.session) {
-    redirectPath = getStatusRedirect(
-      '/profile',
-      'Success!',
-      'You are now signed in.'
-    );
+    result = {
+      success: true,
+      message: 'Success! You are now signed in.',
+      redirectPath: '/profile'
+    };
   } else if (
     data.user &&
     data.user.identities &&
     data.user.identities.length == 0
   ) {
-    redirectPath = getErrorRedirect(
-      '/signin/signup',
-      'Sign up failed.',
-      'There is already an account associated with this email address. Try resetting your password.'
-    );
+    result = {
+      success: false,
+      message:
+        'Sign up failed. There is already an account associated with this email address. Try resetting your password.',
+      redirectPath: '/signin/signup'
+    };
   } else if (data.user) {
-    redirectPath = getStatusRedirect(
-      '/profile',
-      'Success!',
-      'Please check your email for a confirmation link. You may now close this tab.'
-    );
+    result = {
+      success: true,
+      message:
+        'Success! Please check your email for a confirmation link. You may now close this tab.',
+      redirectPath: '/profile'
+    };
   } else {
-    redirectPath = getErrorRedirect(
-      '/signin',
-      'Hmm... Something went wrong.',
-      'You could not be signed up.'
-    );
+    result = {
+      success: false,
+      message: 'Hmm... Something went wrong. You could not be signed up.',
+      redirectPath: '/signin'
+    };
   }
 
-  return redirectPath;
+  return result;
 }
 
 export async function updatePassword(formData: FormData) {

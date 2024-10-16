@@ -7,12 +7,12 @@ const HomeHero = () => {
       <Image
         src="/images/aireio-find-new-cities.jpg"
         alt="Aireio - Find new cities"
-        layout="fill"
-        objectFit="cover"
+        fill
+        style={{ objectFit: 'cover' }}
         quality={100}
       />
       <div className="absolute inset-0 bg-black bg-opacity-50" />
-      <div className="relative z-10 flex flex-col justify-center items-center w-full h-full">
+      <div className="relative z-2 flex flex-col justify-center items-center w-full h-full">
         <h1 className="text-4xl font-bold mb-8 text-white select-none">
           Find Your Work Space
         </h1>

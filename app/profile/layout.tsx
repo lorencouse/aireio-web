@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import Image from 'next/image';
-import { getUser, getUserProfile } from '@/utils/supabase/queries';
+import { getUserProfile } from '@/utils/supabase/queries';
 
 import { Separator } from '@/components/ui/separator';
 import { SidebarNav } from './components/sidebar-nav';
@@ -40,7 +40,6 @@ interface SettingsLayoutProps {
 export default async function SettingsLayout({
   children
 }: SettingsLayoutProps) {
-  // const user = await getUser();
   const profile = await getUserProfile();
   const name = profile?.full_name || profile?.username || '';
   const avartarUrl = profile?.avatar_url || '/images/logo.png';

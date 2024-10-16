@@ -3,12 +3,12 @@
 import { Metadata } from 'next';
 import Footer from '@/components/ui/Footer';
 import Navbar from '@/components/ui/Navbar';
-// import { Toaster } from '@/components/ui/Toasts/toaster';
 import { PropsWithChildren } from 'react';
 import { getURL } from '@/utils/helpers';
 import 'styles/main.css';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Comfortaa } from 'next/font/google';
+
 
 export const runtime = 'edge';
 
@@ -31,24 +31,29 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: PropsWithChildren) {
+  // const user = await getUser();
+  // const profile = await getUserProfile(user);
+
   return (
     <html lang="en" className={comfortaa.className}>
       <body className="bg-backgroud">
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <Navbar />
-          <main
-            id="skip"
-            className="min-h-[calc(100dvh-4rem)] md:min-h[calc(100dvh-5rem)] mt-16 mb-10 max-w-7xl mx-auto"
+        {/* <UserProvider user={user} profile={profile}> */}
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
           >
-            {children}
-          </main>
-          <Footer />
-        </ThemeProvider>
+            <Navbar />
+            <main
+              id="skip"
+              className="min-h-[calc(100dvh-4rem)] md:min-h[calc(100dvh-5rem)] mt-16 mb-10 max-w-7xl mx-auto"
+            >
+              {children}
+            </main>
+            <Footer />
+          </ThemeProvider>
+        {/* </UserProvider> */}
       </body>
     </html>
   );

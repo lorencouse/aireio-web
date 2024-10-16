@@ -54,7 +54,7 @@ export async function getPlaces(city: City, params: any) {
 
 export const fetchExistingPlaces = async (cityId: string): Promise<Place[]> => {
   const supabase = createClient();
-  const { data, error, count } = await supabase
+  const { data, error } = await supabase
     .from('places')
     .select('*')
     .eq('city_id', cityId);

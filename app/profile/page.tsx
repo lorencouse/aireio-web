@@ -2,14 +2,14 @@
 
 import { Separator } from '@/components/ui/separator';
 import { ContactInfoForm } from './contact-info-form';
-import { getUserProfile } from '@/utils/supabase/queries';
+import { UserProfile } from '@/utils/types';
 
-export default async function ContactInfoPage() {
-  const userProfile = await getUserProfile();
+export default async function ContactInfoPage(profile: UserProfile | null) {
+  // const userProfile = await getUserProfile();
 
-  if (!userProfile) {
-    return null;
-  }
+  // if (!userProfile) {
+  //   return null;
+  // }
 
   return (
     <div className="space-y-6">
@@ -20,7 +20,7 @@ export default async function ContactInfoPage() {
         </p>
       </div>
       <Separator />
-      <ContactInfoForm userProfile={userProfile} />
+      <ContactInfoForm userProfile={profile} />
     </div>
   );
 }
