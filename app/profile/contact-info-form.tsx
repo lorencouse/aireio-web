@@ -34,7 +34,15 @@ export function ContactInfoForm({
 }: {
   userProfile: UserProfile | null;
 }) {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+
+  const handleFormSubmit = async (data: ProfileFormValues) => {
+    
+    setLoading(true);
+    console.log(data);
+    setTimeout(() => {}, 2000);
+    setLoading(false);
+  };
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
@@ -143,7 +151,7 @@ export function ContactInfoForm({
             Add URL
           </Button>
         </div> */}
-        <Button type="submit" disabled={loading}>
+        <Button type="submit" disabled={loading} onClick={handleFormSubmit}>
           {loading ? 'Updating...' : 'Update Profile'}
         </Button>
       </form>

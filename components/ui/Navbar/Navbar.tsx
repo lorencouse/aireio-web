@@ -1,5 +1,5 @@
 'use server';
-import { getUser } from '@/utils/supabase/queries';
+import { getUserProfile } from '@/utils/supabase/queries';
 import { Dialog, DialogClose } from '@radix-ui/react-dialog';
 import { Menu } from 'lucide-react';
 import {
@@ -21,7 +21,7 @@ import Image from 'next/image';
 import { UserProfile } from '@/components/user-profile';
 
 export default async function Navbar() {
-  const user = await getUser();
+  const user = await getUserProfile();
 
   const menuItems = [
     {

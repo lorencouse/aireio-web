@@ -15,18 +15,15 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
+import { UserProfile, UserProfile } from '@/utils/types';
 
-export function UserProfile({ user }: any) {
+export function UserProfile({ user }: UserProfile) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild className="w-[2.25rem] h-[2.25rem]">
         <Avatar>
           <AvatarImage
-            src={
-              user.user_metadata?.avatar_url ||
-              user.user_metadata?.picture ||
-              '/images/logo.png'
-            }
+            src={user.avatar_url || '/images/logo.png'}
             alt="User Profile"
           />
           <AvatarFallback></AvatarFallback>
