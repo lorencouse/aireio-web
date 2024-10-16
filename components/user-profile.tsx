@@ -15,9 +15,9 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import { UserProfile, UserProfile } from '@/utils/types';
+import { UserProfile as UserProfileType } from '@/utils/types';
 
-export function UserProfile({ user }: UserProfile) {
+export function UserProfile({ user }: { user: UserProfileType }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild className="w-[2.25rem] h-[2.25rem]">

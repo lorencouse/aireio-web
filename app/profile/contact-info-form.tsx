@@ -1,5 +1,3 @@
-// app/profile/contact-info-form.tsx
-
 'use client';
 
 import { useState } from 'react';
@@ -19,12 +17,16 @@ import {
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { UserProfile } from '@/utils/types';
+import { updateUserProfile } from '@/utils/auth-helpers/server';
 
 const profileFormSchema = z.object({
   username: z.string().min(2).max(30),
   email: z.string().email(),
   full_name: z.string().min(2).max(50),
-  bio: z.string().max(160).optional()
+  bio: z.string().max(160).optional(),
+  phone: z.string().optional(),
+  language: z.string().optional()
+  // Add other fields as needed
 });
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
@@ -36,28 +38,29 @@ export function ContactInfoForm({
 }) {
   const [loading, setLoading] = useState(false);
 
-  const handleFormSubmit = async (data: ProfileFormValues) => {
-    
-    setLoading(true);
-    console.log(data);
-    setTimeout(() => {}, 2000);
-    setLoading(false);
-  };
-
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
     defaultValues: {
       username: userProfile?.username || '',
       email: userProfile?.email || '',
       full_name: userProfile?.full_name || '',
-      bio: userProfile?.bio || ''
+      bio: userProfile?.bio || '',
+      phone: userProfile?.phone || '',
+      language: userProfile?.language || ''
+      // Initialize other fields
     },
     mode: 'onChange'
   });
 
+  const onSubmit = async (data: ProfileFormValues) => {
+    setLoading(true);
+    await updateUserProfile(data);
+    setLoading(false);
+  };
+
   return (
     <Form {...form}>
-      <form className="space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
           control={form.control}
           name="username"
@@ -119,39 +122,34 @@ export function ContactInfoForm({
             </FormItem>
           )}
         />
-        {/* <div>
-          {fields.map((field, index) => (
-            <FormField
-              control={form.control}
-              key={field.id}
-              name={`urls.${index}.value`}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className={cn(index !== 0 && 'sr-only')}>
-                    URLs
-                  </FormLabel>
-                  <FormDescription className={cn(index !== 0 && 'sr-only')}>
-                    Add links to your website, blog, or social media profiles.
-                  </FormDescription>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          ))}
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            className="mt-2"
-            onClick={() => append({ value: '' })}
-          >
-            Add URL
-          </Button>
-        </div> */}
-        <Button type="submit" disabled={loading} onClick={handleFormSubmit}>
+        <FormField
+          control={form.control}
+          name="phone"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Phone</FormLabel>
+              <FormControl>
+                <Input placeholder="+1 (555) 123-4567" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="language"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Preferred Language</FormLabel>
+              <FormControl>
+                <Input placeholder="English" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        {/* Add other form fields as needed */}
+        <Button type="submit" disabled={loading}>
           {loading ? 'Updating...' : 'Update Profile'}
         </Button>
       </form>

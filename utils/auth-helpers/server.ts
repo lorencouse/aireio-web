@@ -5,6 +5,7 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { getURL, getErrorRedirect, getStatusRedirect } from 'utils/helpers';
 import { getAuthTypes } from 'utils/auth-helpers/settings';
+import { UserProfile } from '../types';
 
 function isValidEmail(email: string) {
   const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
@@ -312,32 +313,31 @@ export async function updateEmail(formData: FormData) {
   }
 }
 
-export async function updateName(formData: FormData) {
-  // Get form data
-  const fullName = String(formData.get('fullName')).trim();
-
+export async function updateUserProfile(formData: Partial<UserProfile>) {
   const supabase = createClient();
-  const { error, data } = await supabase.auth.updateUser({
-    data: { full_name: fullName }
-  });
+  const user = await supabase.auth.getUser();
+
+  if (!user.data.user) {
+    throw new Error('No user found');
+  }
+
+  const { error, data } = await supabase
+    .from('user_profiles')
+    .update({
+      username: formData.username,
+      full_name: formData.full_name,
+      bio: formData.bio,
+      phone: formData.phone,
+      language: formData.language
+
+      // Add other fields as needed
+    })
+    .eq('id', user.data.user.id)
+    .select();
 
   if (error) {
-    return getErrorRedirect(
-      '/profile',
-      'Your name could not be updated.',
-      error.message
-    );
-  } else if (data.user) {
-    return getStatusRedirect(
-      '/profile',
-      'Success!',
-      'Your name has been updated.'
-    );
-  } else {
-    return getErrorRedirect(
-      '/profile',
-      'Hmm... Something went wrong.',
-      'Your name could not be updated.'
-    );
+    throw new Error(`Failed to update profile: ${error.message}`);
   }
+
+  return data;
 }
