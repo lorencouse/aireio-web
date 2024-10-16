@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { signUp } from '@/utils/auth-helpers/server';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
@@ -14,7 +14,6 @@ interface SignUpProps {
 }
 
 export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState<{

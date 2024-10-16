@@ -1,6 +1,5 @@
 import { createClient } from '@/utils/supabase/server';
 import { cache } from 'react';
-import { User } from '@supabase/supabase-js';
 
 export const getUser = cache(async () => {
   const supabase = createClient();
@@ -10,9 +9,9 @@ export const getUser = cache(async () => {
   return user;
 });
 
-export const getUserProfile = async (user: any) => {
-  // const supabase = createClient();
-  // const user: User | null = await getUser();
+export const getUserProfile = async () => {
+  const supabase = createClient();
+  const user = await getUser();
 
   if (!user) return null;
 

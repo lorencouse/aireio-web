@@ -29,7 +29,7 @@ export async function SignOut() {
     );
   }
 
-  return '/signin/password_signin';
+  redirect('/signin/password_signin');
 }
 
 export async function signInWithEmail(formData: FormData) {
@@ -216,7 +216,7 @@ export async function signUp(formData: FormData) {
       success: true,
       message:
         'Success! Please check your email for a confirmation link. You may now close this tab.',
-      redirectPath: '/profile'
+      redirectPath: '/'
     };
   } else {
     result = {
