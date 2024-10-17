@@ -20,7 +20,11 @@ const PlacePageLayout = ({ place: initialPlace }: { place: Place }) => {
 
   useEffect(() => {
     const fetchMissingPhotos = async () => {
-      const updatedPlace = await uploadPlacePhotos(place);
+      const placePhotoNames = await uploadPlacePhotos(place);
+      const updatedPlace = {
+        ...place,
+        photo_names: placePhotoNames
+      };
       setPlace(updatedPlace);
       const urls = getPlacePhotoUrls(updatedPlace);
       setPhotoUrls(urls);

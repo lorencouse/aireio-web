@@ -22,7 +22,11 @@ const PlaceCard = ({ place, distance, setIsLoadingPlace }: PlaceCardProps) => {
   );
 
   const fetchMissingPhotos = async () => {
-    const placeWithPhotos = await uploadPlacePhotos(place);
+    const photoNames = await uploadPlacePhotos(place);
+    const placeWithPhotos = {
+      ...place,
+      photo_names: photoNames
+    };
     setPhotoUrls(getPlacePhotoUrls(placeWithPhotos));
   };
 
@@ -30,7 +34,6 @@ const PlaceCard = ({ place, distance, setIsLoadingPlace }: PlaceCardProps) => {
     if (!place.photo_names || place.photo_names.length === 0) {
       fetchMissingPhotos();
     }
-
   }, []);
 
   const router = useRouter();

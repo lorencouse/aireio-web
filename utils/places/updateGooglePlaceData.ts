@@ -56,12 +56,13 @@ export const updateGooglePlaceData = async (place: Place) => {
       check_date: new Date(),
       // business_status: googlePlace.business_status ?? place.business_status,
       photo_refs: (() => {
-        if (!googlePlace.photos) return place.photo_refs;
-        const existingCount = place.photo_refs.length;
+        if (!googlePlace.photos) return place.photo_refs ?? [];
+        const existingRefs = place.photo_refs ?? [];
+        const existingCount = existingRefs.length;
         const newPhotos = googlePlace.photos
           .slice(existingCount, 3)
           .map((photo: { photo_reference: string }) => photo.photo_reference);
-        return [...place.photo_refs, ...newPhotos];
+        return [...existingRefs, ...newPhotos];
       })(),
       add_1: convertedAddress.add_1,
       add_2: convertedAddress.add_2,
@@ -109,19 +110,6 @@ export const updateGooglePlaceData = async (place: Place) => {
       rating_count:
         googlePlace.user_ratings_total ?? place?.rating_count ?? null
     };
-
-    // if (
-    //   !originalPhotoRefs ||
-    //   originalPhotoRefs.length < 2 ||
-    //   !updatedPlace.photo_names?.length
-    // ) {
-    //   const photoNames = await uploadPlacePhotos(updatedPlace);
-    //   const placeWithPhotoNames = {
-    //     ...updatedPlace,
-    //     photo_names: photoNames
-    //   };
-    //   updatedPlace = placeWithPhotoNames;
-    // }
 
     const { error } = await supabase
       .from('places')

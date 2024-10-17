@@ -6,19 +6,19 @@ import { Place } from '../types';
 
 export const uploadPlacePhotos = async (
   place: Partial<Place>
-): Promise<Place> => {
+): Promise<string[]> => {
   const supabase = createClient();
   const photoRefs = place.photo_refs || [];
   const existingPhotoNames = place.photo_names || [];
 
   if (photoRefs.length === 0) {
     console.log('No photos found for place', place.name);
-    return place;
+    return existingPhotoNames;
   }
 
   if (existingPhotoNames.length === photoRefs.length) {
     console.log('All photos already exist for place', place.name);
-    return place;
+    return existingPhotoNames;
   }
 
   const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY;
@@ -50,9 +50,7 @@ export const uploadPlacePhotos = async (
 
             return uploadSuccess ? formattedImageName : null;
           } catch (error) {
-            if (error.statusCode === '409') {
-              console.log('Image already exists:', formattedImageName);
-            }
+            console.log('Image already exists:', formattedImageName, error);
             return null;
           }
         })
@@ -65,10 +63,6 @@ export const uploadPlacePhotos = async (
 
   if (newPhotoNames.length > 0 && place.id) {
     const allPhotoNames = [...existingPhotoNames, ...newPhotoNames];
-    const updatedPlace = {
-      ...place,
-      photo_names: allPhotoNames
-    };
 
     // Insert new Image names
     const { error } = await supabase
@@ -79,11 +73,12 @@ export const uploadPlacePhotos = async (
 
     if (error) {
       console.error('Error updating photo names:', error);
-      return place;
+      return existingPhotoNames;
     } else {
-      return updatedPlace;
+      console.log('Photo names updated successfully');
+      return allPhotoNames;
     }
   }
 
-  return place;
+  return existingPhotoNames;
 };

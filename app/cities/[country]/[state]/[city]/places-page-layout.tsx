@@ -108,18 +108,8 @@ export default function PlacesPageLayout({
           />
         </div>
       </div>
-      {/* <div className="city-filters flex flex-col p-4 md:p-10">
-        <CityBreadCrumb city={city} />
-        <span className="text-lg font-bold border-t pt-6">Filter by:</span>
-        <SegmentedTypePicker searchParams={searchParams} />
-        <div className="flex flex-row gap-4 mb-6 justify-between flex-wrap">
-          <SortMethod searchParams={searchParams} />
-          <Button onClick={handleSearch}>Search</Button>
-          <SortOrderPicker searchParams={searchParams} />
-        </div>
-      </div> */}
       <div className="flex flex-row flex-wrap justify-between w-full border-t mt-6 items-center">
-        <Filters city={city} searchParams={searchParams} />
+        <Filters searchParams={searchParams} />
         <Button onClick={handleSearch} className="mx-4" disabled={isLoading}>
           {isLoading ? 'Loading...' : 'Search'}
         </Button>

@@ -180,70 +180,8 @@ export const createNewPlaces = async (
     }
 
     return insertedPlaces as Place[];
-
-    //   const insertedPlacesWithPhotos = await Promise.all(
-    //     insertedPlaces.map(async (place) => {
-    //       const updatedPhotoNames = await uploadPlacePhotos(place);
-
-    //       const updatedPlace = {
-    //         ...place,
-    //         photo_names: [
-    //           ...(Array.isArray(place.photo_names) ? place.photo_names : []),
-    //           ...updatedPhotoNames
-    //         ]
-    //       };
-
-    //       return updatedPlace;
-    //     })
-    //   );
-
-    //   // Type assertion to convert null to undefined for relevant properties
-    //   return insertedPlacesWithPhotos.map((place) => {
-    //     const placeWithUndefined: Place = Object.fromEntries(
-    //       Object.entries(place).map(([key, value]) => [
-    //         key,
-    //         value === null ? undefined : value
-    //       ])
-    //     ) as Place;
-    //     return placeWithUndefined;
-    //   });
   } catch (error) {
     console.error('Error in createNewPlaces:', error);
     throw error;
   }
-};
-
-export const uploadMissingPlacePhotos = async (
-  place: Place
-): Promise<Place> => {
-  // const insertedPlacesWithPhotos = await Promise.all(
-  //       insertedPlaces.map(async (place) => {
-  const updatedPhotoNames = await uploadPlacePhotos(place);
-
-  const updatedPlace = {
-    ...place,
-    photo_names: [
-      ...(Array.isArray(place.photo_names) ? place.photo_names : []),
-      ...updatedPhotoNames
-    ]
-  };
-
-  return updatedPlace;
-  //     })
-  //   );
-
-  //   // Type assertion to convert null to undefined for relevant properties
-  //   return insertedPlacesWithPhotos.map((place) => {
-  //     const placeWithUndefined: Place = Object.fromEntries(
-  //       Object.entries(place).map(([key, value]) => [
-  //         key,
-  //         value === null ? undefined : value
-  //       ])
-  //     ) as Place;
-  //     return placeWithUndefined;
-  //   });
-  // } catch (error) {
-  //   console.error('Error in createNewPlaces:', error);
-  //   throw error;
-  // }
 };
