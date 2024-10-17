@@ -37,7 +37,7 @@ export default async function Navbar() {
   return (
     <>
       {/* Mobile Navbar */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-background border-t z-10 h-20 pt-3">
+      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-background border-t z-10 ">
         <div className="flex justify-around items-center p-2 ">
           <Link href="/" className="flex flex-col items-center">
             <Home className="h-6 w-6" />
