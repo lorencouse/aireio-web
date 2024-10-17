@@ -13,11 +13,10 @@ export default function LoadingGrid() {
   );
 }
 
-
 const SkeletonCard = () => {
   return (
-    <div>
-      <Skeleton className="h-[200px] w-96 rounded-xl mb-4" />
+    <div className="m-6">
+      <Skeleton className="h-[200px] w-96 rounded-xl mb-4 " />
       <div className="space-y-2">
         <Skeleton className="h-4 w-96" />
         <Skeleton className="h-4 w-72" />
@@ -25,4 +24,4 @@ const SkeletonCard = () => {
       </div>
     </div>
   );
-}
+};

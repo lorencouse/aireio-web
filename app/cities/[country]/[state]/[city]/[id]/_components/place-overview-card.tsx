@@ -4,7 +4,6 @@ import { Card, CardContent } from '@/components/ui/card';
 import Gallery from './image-gallery';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 
-import PlaceBreadCrumb from './place-breadcrumb';
 // import { StarIcon } from '@radix-ui/react-icons';
 import Amenity from './amenity';
 const PlaceOverviewCard = ({
@@ -28,7 +27,6 @@ const PlaceOverviewCard = ({
             )}
           </div>
           <div className="w-full md:w-3/4 md:pl-6">
-            {place && <PlaceBreadCrumb place={place} />}
 
             {place.rating_score && (
               <div className="flex items-center mb-2">

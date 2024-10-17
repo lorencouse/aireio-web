@@ -9,7 +9,6 @@ import 'styles/main.css';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Comfortaa } from 'next/font/google';
 
-
 export const runtime = 'edge';
 
 const title = 'aireio';
@@ -38,21 +37,21 @@ export default async function RootLayout({ children }: PropsWithChildren) {
     <html lang="en" className={comfortaa.className}>
       <body className="bg-backgroud">
         {/* <UserProvider user={user} profile={profile}> */}
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <Navbar />
+          <main
+            id="skip"
+            className="min-h-[calc(100dvh-4rem)] md:min-h[calc(100dvh-5rem)] md:mt-16 mb-16 max-w-7xl mx-auto"
           >
-            <Navbar />
-            <main
-              id="skip"
-              className="min-h-[calc(100dvh-4rem)] md:min-h[calc(100dvh-5rem)] mt-16 mb-10 max-w-7xl mx-auto"
-            >
-              {children}
-            </main>
-            <Footer />
-          </ThemeProvider>
+            {children}
+          </main>
+          <Footer />
+        </ThemeProvider>
         {/* </UserProvider> */}
       </body>
     </html>

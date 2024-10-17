@@ -10,9 +10,9 @@ const Filters = ({
   searchParams: ReadonlyURLSearchParams | null;
 }) => {
   return (
-    <div className="city-filters flex flex-col p-4">
-      <div className="flex flex-row gap-4 flex-wrap w-full items-center  ">
-        <span className="text-lg font-bold">Filter by:</span>
+    <div className="city-filters flex flex-col mx-4">
+      <div className="flex flex-row gap-4 flex-wrap w-full items-center sm:pt-0 pt-4 ">
+        <span className="text-lg font-bold ">Filter by:</span>
         <SegmentedTypePicker searchParams={searchParams} />
         <SortMethod searchParams={searchParams} />
         <SortOrderPicker searchParams={searchParams} />

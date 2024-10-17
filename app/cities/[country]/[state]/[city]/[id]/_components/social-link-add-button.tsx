@@ -43,10 +43,10 @@ const AddSocialLink = ({ name }: { name: string }) => {
     <Popover>
       <PopoverTrigger asChild>
         <button
-          className="text-foreground bg-background hover:text-blue-500 transition-colors duration-200 cursor-pointer"
+          className="text-muted-foreground bg-background hover:text-blue-500 transition-colors duration-200 cursor-pointer"
           title={`Add ${name} link`}
         >
-          <Icon className="w-6 h-6 text-muted-foreground " />
+          <Icon className="w-6 h-6 text-input " />
         </button>
       </PopoverTrigger>
       <PopoverContent className="w-80 p-5 bg-background text-foreground">

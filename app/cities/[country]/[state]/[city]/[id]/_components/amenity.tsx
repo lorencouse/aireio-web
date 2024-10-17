@@ -53,8 +53,10 @@ export default function Amenity({
         <span className="font-bold">{name}:</span>
         <Popover>
           <PopoverTrigger asChild>
-            <span className="ml-2 underline cursor-pointer">
-              {value === true ? 'Yes' : value === false ? 'No' : 'Add'}
+            <span
+              className={`ml-2 underline cursor-pointer font-bold ${value === true ? 'text-green-500' : value === false ? 'text-red-600' : 'text-muted-foreground'}`}
+            >
+              {value === true ? 'Yes ✅' : value === false ? 'No ❌' : 'Add +'}
             </span>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-5">

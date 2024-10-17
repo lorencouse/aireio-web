@@ -25,15 +25,30 @@ const SocialLinks = ({ place }: { place: Place }) => {
   } = place;
 
   const socials = [
-    { name: 'facebook', link: facebook, icon: Facebook },
-    { name: 'instagram', link: instagram, icon: Instagram },
-    { name: 'mastodon', link: mastodon, icon: Globe },
-    { name: 'tiktok', link: tiktok, icon: Globe },
-    { name: 'twitter', link: twitter, icon: Twitter },
-    { name: 'youtube', link: youtube, icon: Youtube },
-    { name: 'website', link: website, icon: Globe },
-    { name: 'google maps', link: google_maps, icon: MapPin },
-    { name: 'email', link: email, icon: Mail }
+    {
+      name: 'facebook',
+      link: facebook,
+      icon: Facebook,
+      color: 'text-blue-400'
+    },
+    {
+      name: 'instagram',
+      link: instagram,
+      icon: Instagram,
+      color: 'text-pink-400'
+    },
+    { name: 'mastodon', link: mastodon, icon: Globe, color: 'text-blue-400' },
+    { name: 'tiktok', link: tiktok, icon: Globe, color: 'text-pink-400' },
+    { name: 'twitter', link: twitter, icon: Twitter, color: 'text-indigo-400' },
+    { name: 'youtube', link: youtube, icon: Youtube, color: 'text-red-400' },
+    { name: 'website', link: website, icon: Globe, color: 'text-blue-400' },
+    {
+      name: 'google maps',
+      link: google_maps,
+      icon: MapPin,
+      color: 'text-green-400'
+    },
+    { name: 'email', link: email, icon: Mail, color: 'text-red-400' }
   ];
 
   return (
@@ -49,7 +64,9 @@ const SocialLinks = ({ place }: { place: Place }) => {
             className="hover:text-blue-500 transition-colors duration-200"
             title={`${social.name} for ${place.city} ${place.name} `}
           >
-            <social.icon className="w-6 h-6 text-foreground" />
+            <social.icon
+              className={`w-6 h-6 text-foreground ${social.color}`}
+            />
           </a>
         ) : (
           <AddSocialLink key={index} name={social.name} />

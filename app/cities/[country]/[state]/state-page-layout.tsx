@@ -5,6 +5,7 @@ import CityList from '@/app/_components/city-list';
 
 import { City } from '@/utils/types';
 import StateBreadcrumbs from './_components/state-breadcrumbs';
+import HomeHero from '@/app/_components/home-hero';
 
 export default function StatePageLayout({
   cities,
@@ -17,15 +18,14 @@ export default function StatePageLayout({
 }) {
   return (
     <div className="state-page">
-      <h1 className="capitalize">
-        Cities in {stateName},{' '}
-        {cities[0].country ? cities[0].country : countryCode}
-      </h1>
+      <HomeHero heading={`Find More Cities in ${stateName}`} />
       <div className="flex flex-col items-center mt-4 ">
         <StateBreadcrumbs city={cities[0]} />
+
         <hr className="mt-10" />
         <h3 className="text-lg text-left w-full font-bold select-none pl-8 my-4">
-          Top Cities:
+          Top Cities in {stateName},{' '}
+          {cities[0].country ? cities[0].country : countryCode}:
         </h3>
 
         {cities.length === 0 ? <LoadingGrid /> : <CityList cities={cities} />}

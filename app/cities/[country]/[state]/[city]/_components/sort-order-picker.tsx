@@ -1,6 +1,4 @@
-import { Dispatch, SetStateAction } from 'react';
 import React, { useState } from 'react';
-
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -11,7 +9,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import Link from 'next/link';
 import useUpdateUrlQuery from '@/utils/hook/useUpdateUrlQuery';
 import { ReadonlyURLSearchParams } from 'next/navigation';
 
@@ -35,7 +32,7 @@ const SortOrderPicker: React.FC<SortOrderPickerProps> = ({ searchParams }) => {
       <DropdownMenuTrigger asChild>
         <Button
           variant="outline"
-          className="capitalize bg-background text-foreground"
+          className="capitalize bg-muted text-foreground "
         >
           {`Order: ${sortOrder}`}
         </Button>
@@ -45,13 +42,6 @@ const SortOrderPicker: React.FC<SortOrderPickerProps> = ({ searchParams }) => {
         <DropdownMenuSeparator />
         <DropdownMenuRadioGroup value={sortOrder}>
           {sortOrders.map((order) => (
-            // <Link
-            //   key={order}
-            //   href={`?${updateUrlQuery('sort_order', order, searchParams)}`}
-            //   passHref
-            //   replace
-            //   scroll={false}
-            // >
             <DropdownMenuRadioItem
               value={order}
               className="capitalize"
@@ -60,7 +50,6 @@ const SortOrderPicker: React.FC<SortOrderPickerProps> = ({ searchParams }) => {
             >
               {order}
             </DropdownMenuRadioItem>
-            // </Link>
           ))}
         </DropdownMenuRadioGroup>
       </DropdownMenuContent>

@@ -23,7 +23,7 @@ export function UserProfile({ user }: { user: UserProfileType }) {
       <DropdownMenuTrigger asChild className="w-[2.25rem] h-[2.25rem]">
         <Avatar>
           <AvatarImage
-            src={user.avatar_url || '/images/logo.png'}
+            src={user?.avatar_url || '/images/logo.png'}
             alt="User Profile"
           />
           <AvatarFallback></AvatarFallback>

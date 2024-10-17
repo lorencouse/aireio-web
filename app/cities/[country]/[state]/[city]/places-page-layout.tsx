@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-// import GoogleMap from './_components/google-map';
 import LazyGoogleMap from './_components/lazy-google-map';
 import { useSearchParams } from 'next/navigation';
 import { Place, City } from '@/utils/types';
@@ -13,7 +12,6 @@ import { fetchNewPlaces } from './actions';
 import LoadingGrid from '@/components/general/loading-grid';
 import LoadingPlace from './[id]/_components/loading-place';
 import CityHero from './_components/city-hero';
-import { Button } from '@/components/ui/button';
 import CityBreadCrumb from './_components/city-breadcrumbs';
 
 export default function PlacesPageLayout({
@@ -110,12 +108,12 @@ export default function PlacesPageLayout({
       </div>
       <div className="flex flex-row flex-wrap justify-between w-full border-t mt-6 items-center">
         <Filters searchParams={searchParams} />
-        <Button onClick={handleSearch} className="mx-4" disabled={isLoading}>
+        {/* <Button onClick={handleSearch} className="m-4" disabled={isLoading}>
           {isLoading ? 'Loading...' : 'Search'}
-        </Button>
+        </Button> */}
       </div>
 
-      <h1 className="text-4xl font-bold m-8 border-t pt-6 select-none text-center leading-normal w-full">
+      <h1 className="text-4xl font-bold mx-4 border-t mt-6 pt-6 select-none text-center leading-normal w-full">
         Workspaces in{' '}
         <span className="capitalize">
           {city && city.name.replace(/-/g, ' ')}

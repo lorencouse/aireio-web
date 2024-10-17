@@ -1,4 +1,3 @@
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { createClient } from '../supabase/server';
 import { Place } from '../types';
 
@@ -7,6 +6,7 @@ import calcDistance from './calcDistance';
 function convertStringToBool(value: string | boolean | null): boolean | null {
   if (typeof value === 'boolean') return value;
   if (value === null) return null;
+  if (value === undefined) return null;
   return value.toLowerCase() === 'yes';
 }
 
@@ -132,7 +132,7 @@ const fetchOSMDetails = async (
   type: string
 ) => {
   try {
-    let amenityType = type === 'coworking' ? 'coworking_space' : type;
+    const amenityType = type === 'coworking' ? 'coworking_space' : type;
 
     const query = `
       [out:json];

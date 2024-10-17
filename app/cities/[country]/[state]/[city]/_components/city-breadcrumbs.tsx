@@ -11,8 +11,8 @@ import { City } from '@/utils/types';
 
 export default function CityBreadCrumb({ city }: { city: City }) {
   return (
-    <Breadcrumb className="mb-8 capitalize">
-      <BreadcrumbList>
+    <Breadcrumb className="my-4 capitalize px-6 w-full">
+      <BreadcrumbList className="md:justify-start justify-center">
         <BreadcrumbItem>
           <BreadcrumbLink href={`/cities/${city.country_code}`}>
             {city.country || city.country_code || 'Country'}

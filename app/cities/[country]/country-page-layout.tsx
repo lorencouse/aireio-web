@@ -4,17 +4,15 @@ import LoadingGrid from '@/components/general/loading-grid';
 import CityList from '@/app/_components/city-list';
 
 import { City } from '@/utils/types';
+import HomeHero from '@/app/_components/home-hero';
 
 export default function CountryPageLayout({ cities }: { cities: City[] }) {
   return (
     <div className="state-page">
-      <h1 className="capitalize">
-        Cities in {cities[0]?.country ? cities[0].country : ''}
-      </h1>
+      <HomeHero heading={`Find Work Spaces in ${cities[0]?.country}`} />
       <div className="flex flex-col items-center mt-4 ">
-        <hr className="mt-10" />
-        <h3 className="text-lg text-left w-full font-bold select-none pl-8 my-4">
-          Top Cities:
+        <h3 className="md:text-2xl text-xl w-full font-bold select-none md:py-8 py-4 mb-4 text-center border-b-2">
+          Top Cities in {cities[0]?.country}
         </h3>
 
         {cities.length === 0 ? <LoadingGrid /> : <CityList cities={cities} />}

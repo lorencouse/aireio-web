@@ -1,7 +1,6 @@
 'use server';
 
 import { createClient } from '@/utils/supabase/server';
-import { uploadPlacePhotos } from '@/utils/places/uploadPlacePhotos';
 import { City, Place, GooglePlace } from '@/utils/types';
 import { Database } from '@/types_db';
 
@@ -79,15 +78,7 @@ export const fetchNewPlaces = async (
   lat: string,
   lng: string
 ): Promise<Place[]> => {
-  // const params = new URLSearchParams({
-  //   type,
-  //   lat,
-  //   lng,
-  //   radius
-  // });
   const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY;
-
-  // console.log('Fetching places with params:', params.toString());
 
   try {
     const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=${radius}&${

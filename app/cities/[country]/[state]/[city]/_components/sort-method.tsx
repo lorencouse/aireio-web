@@ -11,7 +11,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import Link from 'next/link';
 import useUpdateUrlQuery from '@/utils/hook/useUpdateUrlQuery';
 import { ReadonlyURLSearchParams } from 'next/navigation';
 
@@ -41,7 +40,7 @@ const SortMethod: React.FC<SortMethodProps> = ({
       <DropdownMenuTrigger asChild>
         <Button
           variant="outline"
-          className="capitalize text-foreground bg-background"
+          className="capitalize text-foreground bg-muted"
         >
           {`Sort by: ${sortMethod}`}
         </Button>

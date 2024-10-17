@@ -42,16 +42,16 @@ export const uploadPlacePhotos = async (
           const dir = `places/${place.city_id}/${place.id}`;
 
           try {
-            const uploadSuccess = await uploadImageToSupabase(
+            await uploadImageToSupabase(
               googlePhotoUrl,
               formattedImageName,
               dir
             );
 
-            return uploadSuccess ? formattedImageName : null;
+            return formattedImageName;
           } catch (error) {
             console.log('Image already exists:', formattedImageName, error);
-            return null;
+            return formattedImageName;
           }
         })
     );
@@ -73,7 +73,7 @@ export const uploadPlacePhotos = async (
 
     if (error) {
       console.error('Error updating photo names:', error);
-      return existingPhotoNames;
+      return allPhotoNames;
     } else {
       console.log('Photo names updated successfully');
       return allPhotoNames;

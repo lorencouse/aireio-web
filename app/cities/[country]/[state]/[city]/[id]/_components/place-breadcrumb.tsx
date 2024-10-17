@@ -15,7 +15,7 @@ import { Place } from '@/utils/types';
 
 export default function PlaceBreadCrumb({ place }: { place: Place }) {
   return (
-    <Breadcrumb className="mb-8 capitalize">
+    <Breadcrumb className="p-4 capitalize">
       <BreadcrumbList>
         <BreadcrumbItem>
           <BreadcrumbLink href="/">Home</BreadcrumbLink>

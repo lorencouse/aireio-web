@@ -22,7 +22,7 @@ export default function CityHero({
     city.country_code ? city.country_code : ''
   );
   return (
-    <div className="relative w-full md:h-[50vh] min-h-[250px]">
+    <div className="relative w-full h-full min-h-[250px]">
       <Image
         src={imageUrl || placeholderImage}
         alt={`${city.name || 'City'}, ${city.country || 'Country'} cityscape`}
