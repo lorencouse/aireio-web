@@ -18,14 +18,17 @@ const Filters = ({
 }) => {
   return (
     <div className="city-filters w-full">
-      <Accordion type="single" collapsible className="w-full">
-        <AccordionItem value="filters ">
-          <AccordionTrigger className="text-lg font-bold px-4 items-center justify-start gap-4">
+      <Accordion type="single" collapsible className="w-full ">
+        <AccordionItem
+          value="filters"
+          className="flex flex-row flex-wrap w-full "
+        >
+          <AccordionTrigger className="text-lg font-bold px-4  justify-start gap-4">
             <SlidersHorizontal />
             Filter by:
           </AccordionTrigger>
           <AccordionContent>
-            <div className="flex flex-row gap-x-4 flex-wrap w-full items-center pt-0 px-4 justify-center">
+            <div className="flex flex-row flex-wrap pt-2 px-4 gap-4 justify-center">
               <SegmentedTypePicker searchParams={searchParams} />
 
               <SortMethod searchParams={searchParams} />
