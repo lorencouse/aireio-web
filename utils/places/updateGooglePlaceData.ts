@@ -2,7 +2,7 @@
 import { createClient } from '../supabase/server';
 
 import convertGoogleAddress from '@/utils/places/convertGoogleAddress';
-import { uploadPlacePhotos } from './uploadPlacePhotos';
+// import { uploadPlacePhotos } from './uploadPlacePhotos';
 import { Place } from '../types';
 
 export const updateGooglePlaceData = async (place: Place) => {
@@ -22,7 +22,7 @@ export const updateGooglePlaceData = async (place: Place) => {
 
     const googlePlace = data.result;
 
-    const originalPhotoRefs = place.photo_refs;
+    // const originalPhotoRefs = place.photo_refs;
 
     // Delete cafe if google place does not have dine in
     if (!googlePlace.dine_in && place.type === 'cafe') {
@@ -48,18 +48,21 @@ export const updateGooglePlaceData = async (place: Place) => {
       googlePlace.address_components
     );
 
-    let updatedPlace: Partial<Place> = {
+    const updatedPlace: Partial<Place> = {
       ...place,
       name: googlePlace.name ?? place.name,
       lat: googlePlace.geometry?.location?.lat ?? place.lat,
       lng: googlePlace.geometry?.location?.lng ?? place.lng,
       check_date: new Date(),
       // business_status: googlePlace.business_status ?? place.business_status,
-      photo_refs: googlePlace.photos
-        ? googlePlace.photos
-            .slice(1, 3)
-            .map((photo: { photo_reference: string }) => photo.photo_reference)
-        : place.photo_refs,
+      photo_refs: (() => {
+        if (!googlePlace.photos) return place.photo_refs;
+        const existingCount = place.photo_refs.length;
+        const newPhotos = googlePlace.photos
+          .slice(existingCount, 3)
+          .map((photo: { photo_reference: string }) => photo.photo_reference);
+        return [...place.photo_refs, ...newPhotos];
+      })(),
       add_1: convertedAddress.add_1,
       add_2: convertedAddress.add_2,
       level: convertedAddress.level,
@@ -107,18 +110,18 @@ export const updateGooglePlaceData = async (place: Place) => {
         googlePlace.user_ratings_total ?? place?.rating_count ?? null
     };
 
-    if (
-      !originalPhotoRefs ||
-      originalPhotoRefs.length < 2 ||
-      !updatedPlace.photo_names?.length
-    ) {
-      const photoNames = await uploadPlacePhotos(updatedPlace);
-      const placeWithPhotoNames = {
-        ...updatedPlace,
-        photo_names: photoNames
-      };
-      updatedPlace = placeWithPhotoNames;
-    }
+    // if (
+    //   !originalPhotoRefs ||
+    //   originalPhotoRefs.length < 2 ||
+    //   !updatedPlace.photo_names?.length
+    // ) {
+    //   const photoNames = await uploadPlacePhotos(updatedPlace);
+    //   const placeWithPhotoNames = {
+    //     ...updatedPlace,
+    //     photo_names: photoNames
+    //   };
+    //   updatedPlace = placeWithPhotoNames;
+    // }
 
     const { error } = await supabase
       .from('places')

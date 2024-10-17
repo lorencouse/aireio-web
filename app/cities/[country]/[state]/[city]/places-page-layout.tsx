@@ -1,9 +1,6 @@
 'use client';
 
 import React from 'react';
-import SegmentedTypePicker from './_components/segmented-type-picker';
-import SortMethod from './_components/sort-method';
-import SortOrderPicker from './_components/sort-order-picker';
 // import GoogleMap from './_components/google-map';
 import LazyGoogleMap from './_components/lazy-google-map';
 import { useSearchParams } from 'next/navigation';
@@ -11,11 +8,12 @@ import { Place, City } from '@/utils/types';
 import PlacesList from './_components/places-list';
 import { filterAndSortPlaces } from '@/utils/places/sortPlacesUtils';
 import { useEffect, useState } from 'react';
-import { Button } from '@/components/ui/button';
+import Filters from './_components/filters';
 import { fetchNewPlaces } from './actions';
 import LoadingGrid from '@/components/general/loading-grid';
 import LoadingPlace from './[id]/_components/loading-place';
 import CityHero from './_components/city-hero';
+import { Button } from '@/components/ui/button';
 import CityBreadCrumb from './_components/city-breadcrumbs';
 
 export default function PlacesPageLayout({
@@ -98,8 +96,10 @@ export default function PlacesPageLayout({
 
   return (
     <>
-      <CityHero city={city} />
+      <CityBreadCrumb city={city} />
+
       <div className="grid lg:grid-cols-2 w-full">
+        <CityHero city={city} />
         <div className="city-map lg:mx-0 sm:mx-12">
           <LazyGoogleMap
             searchParams={searchParams}
@@ -107,17 +107,24 @@ export default function PlacesPageLayout({
             lng={city.lng.toString()}
           />
         </div>
-        <div className="city-filters flex flex-col p-4 md:p-10">
-          <CityBreadCrumb city={city} />
-          <span className="text-lg font-bold border-t pt-6">Filter by:</span>
-          <SegmentedTypePicker searchParams={searchParams} />
-          <div className="flex flex-row gap-4 mb-6 justify-between flex-wrap">
-            <SortMethod searchParams={searchParams} />
-            <Button onClick={handleSearch}>Search</Button>
-            <SortOrderPicker searchParams={searchParams} />
-          </div>
-        </div>
       </div>
+      {/* <div className="city-filters flex flex-col p-4 md:p-10">
+        <CityBreadCrumb city={city} />
+        <span className="text-lg font-bold border-t pt-6">Filter by:</span>
+        <SegmentedTypePicker searchParams={searchParams} />
+        <div className="flex flex-row gap-4 mb-6 justify-between flex-wrap">
+          <SortMethod searchParams={searchParams} />
+          <Button onClick={handleSearch}>Search</Button>
+          <SortOrderPicker searchParams={searchParams} />
+        </div>
+      </div> */}
+      <div className="flex flex-row flex-wrap justify-between w-full border-t mt-6 items-center">
+        <Filters city={city} searchParams={searchParams} />
+        <Button onClick={handleSearch} className="mx-4" disabled={isLoading}>
+          {isLoading ? 'Loading...' : 'Search'}
+        </Button>
+      </div>
+
       <h1 className="text-4xl font-bold m-8 border-t pt-6 select-none text-center leading-normal w-full">
         Workspaces in{' '}
         <span className="capitalize">

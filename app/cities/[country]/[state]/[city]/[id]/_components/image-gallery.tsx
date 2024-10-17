@@ -24,6 +24,7 @@ const Gallery = ({ photos }: { photos: string[] }) => {
   const [current, setCurrent] = useState(0);
   const [isFullscreenOpen, setIsFullscreenOpen] = useState(false);
 
+
   const handleClick = useCallback(
     (index: number) => {
       if (!mainApi || !thumbnailApi) return;

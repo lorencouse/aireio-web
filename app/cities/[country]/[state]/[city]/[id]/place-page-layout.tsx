@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PlaceHero from './_components/place-hero';
 import PlaceOverviewCard from './_components/place-overview-card';
 import PlaceDetails from './_components/place-details';
@@ -8,9 +8,27 @@ import PopupPlaceDeleted from './_components/popup-place-deleted';
 import { Place } from '@/utils/types';
 import { getPlacePhotoUrls } from '@/utils/functions/places/getPlacePhotoUrls';
 import LoadingPlace from './_components/loading-place';
-const PlacePageLayout = ({ place }: { place: Place }) => {
+
+import { uploadPlacePhotos } from '@/utils/places/uploadPlacePhotos';
+
+const PlacePageLayout = ({ place: initialPlace }: { place: Place }) => {
   const [showModal, setShowModal] = useState(false);
-  const photoUrls = getPlacePhotoUrls(place);
+  const [place, setPlace] = useState(initialPlace);
+  const [photoUrls, setPhotoUrls] = useState<string[]>(
+    getPlacePhotoUrls(initialPlace)
+  );
+
+  useEffect(() => {
+    const fetchMissingPhotos = async () => {
+      const updatedPlace = await uploadPlacePhotos(place);
+      setPlace(updatedPlace);
+      const urls = getPlacePhotoUrls(updatedPlace);
+      setPhotoUrls(urls);
+      console.log('Photo URLs:', updatedPlace.photo_names);
+    };
+
+    fetchMissingPhotos();
+  }, []);
 
   if (!place) return <LoadingPlace />;
 
@@ -25,7 +43,6 @@ const PlacePageLayout = ({ place }: { place: Place }) => {
       )}
       <PlaceHero place={place} photoUrl={photoUrls[0]} />
       <PlaceOverviewCard place={place} photoUrls={photoUrls} />
-
       <PlaceDetails place={place} />
     </div>
   );

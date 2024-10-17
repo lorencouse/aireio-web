@@ -32,8 +32,8 @@ export default function SegmentedTypePicker({
   };
 
   return (
-    <Tabs value={placeType} className="w-full my-6">
-      <TabsList className="grid w-full grid-cols-3">
+    <Tabs value={placeType} className="min-w-96 my-6">
+      <TabsList className="grid w-full grid-cols-3 items-center">
         {placeTypes.map(({ value, icon: Icon, label }) => (
           <TabsTrigger
             value={value}

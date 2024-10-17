@@ -1,10 +1,14 @@
+'use client';
+
 import Image from 'next/image';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card } from '@/components/ui/card';
 import { getPlacePhotoUrls } from '@/utils/functions/places/getPlacePhotoUrls';
 import { Place } from '@/utils/types';
 import { MapPin, Coffee, BookOpen, Building, Star } from 'lucide-react';
+import { uploadPlacePhotos } from '@/utils/places/uploadPlacePhotos';
+
 interface PlaceCardProps {
   place: Place;
   distance: number;
@@ -12,7 +16,22 @@ interface PlaceCardProps {
 }
 
 const PlaceCard = ({ place, distance, setIsLoadingPlace }: PlaceCardProps) => {
-  const photoUrls = getPlacePhotoUrls(place);
+  // const [updatedPlace, setUpdatedPlace] = useState(place);
+  const [photoUrls, setPhotoUrls] = useState<string[]>(
+    getPlacePhotoUrls(place)
+  );
+
+  const fetchMissingPhotos = async () => {
+    const placeWithPhotos = await uploadPlacePhotos(place);
+    setPhotoUrls(getPlacePhotoUrls(placeWithPhotos));
+  };
+
+  useEffect(() => {
+    if (!place.photo_names || place.photo_names.length === 0) {
+      fetchMissingPhotos();
+    }
+
+  }, []);
 
   const router = useRouter();
 
