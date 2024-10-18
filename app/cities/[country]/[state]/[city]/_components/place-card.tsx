@@ -3,7 +3,6 @@
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Card } from '@/components/ui/card';
 import { getPlacePhotoUrls } from '@/utils/functions/places/getPlacePhotoUrls';
 import { Place } from '@/utils/types';
 import { MapPin, Coffee, BookOpen, Building, Star } from 'lucide-react';
@@ -16,7 +15,6 @@ interface PlaceCardProps {
 }
 
 const PlaceCard = ({ place, distance, setIsLoadingPlace }: PlaceCardProps) => {
-  // const [updatedPlace, setUpdatedPlace] = useState(place);
   const [photoUrls, setPhotoUrls] = useState<string[]>(
     getPlacePhotoUrls(place)
   );
@@ -50,54 +48,53 @@ const PlaceCard = ({ place, distance, setIsLoadingPlace }: PlaceCardProps) => {
         return null;
     }
   };
+
   const handleClick = () => {
     window.scrollTo(0, 0);
     setIsLoadingPlace(true);
-
-    // Scroll to top of page
     router.push(
       `/cities/${place.country_code}/${place.state}/${place.city}/${place.id}`
     );
   };
 
   return (
-    <Card
-      className="md:w-96 w-80 hover:scale-105 transition-transform duration-200 cursor-pointer bg-background text-foreground relative overflow-hidden"
+    <div
+      className="relative md:w-72 sm:w-52 w-44 md:h-52 sm:h-48 h-44 cursor-pointer rounded-lg overflow-hidden shadow-md md:m-4 hover:scale-105 duration-200"
       onClick={handleClick}
     >
-      <div className="relative w-full md:h-64 h-52">
+      {photoUrls.length > 0 ? (
         <Image
           src={photoUrls[0]}
           alt={place.name}
           fill
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          style={{ objectFit: 'cover', objectPosition: 'center' }}
-          className="rounded-md"
+          sizes="(max-width: 768px) 100vw, 384px"
+          style={{ objectFit: 'cover' }}
           loading="lazy"
           placeholder="blur"
           blurDataURL="/images/logo.png"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent flex flex-col justify-end p-4 text-white">
-          <h3 className="text-xl font-bold mb-2">{place.name}</h3>
-          <div className="flex items-center text-sm mb-1">
-            <MapPin size={16} className="mr-1" />
+      ) : (
+        <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+          <MapPin size={24} />
+        </div>
+      )}
+      <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black">
+        <h3 className="absolute top-8 left-4 text-xl font-extrabold text-white whitespace-nowrap overflow-hidden text-ellipsis max-w-[90%]">
+          {place.name}
+        </h3>
+        <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
+          <div className="flex items-center mb-1 whitespace-nowrap overflow-hidden text-ellipsis">
+            <MapPin size={16} className="mr-1 flex-shrink-0" />
             <span>{place.add_1}</span>
           </div>
-          <div className="flex items-center text-sm mb-1">
+          <div className="flex items-center mb-1">
             {getTypeIcon(place.type)}
             <span className="capitalize">{place.type}</span>
           </div>
-          <div className="flex justify-between items-center text-sm">
-            {place.type === 'cafe' && (
+          <div className="flex justify-between items-center">
+            {place.type === 'cafe' && place.price_level && (
               <div className="flex items-center">
-                {/* <DollarSign size={16} className="mr-1" /> */}
-                {place.price_level ? (
-                  Array.from({ length: place.price_level }, (_, i) => (
-                    <span key={i}>$</span>
-                  ))
-                ) : (
-                  <span>?</span>
-                )}
+                {'$'.repeat(place.price_level)}
               </div>
             )}
             {place.rating_score && (
@@ -112,7 +109,7 @@ const PlaceCard = ({ place, distance, setIsLoadingPlace }: PlaceCardProps) => {
           </div>
         </div>
       </div>
-    </Card>
+    </div>
   );
 };
 

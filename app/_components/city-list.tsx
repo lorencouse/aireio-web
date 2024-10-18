@@ -1,16 +1,16 @@
 import React from 'react';
-
 import CityCard from './city-card';
-
 import { City } from '@/utils/types';
 
 const CityList = ({ cities }: { cities: City[] }) => {
+  if (!cities || cities.length === 0) {
+    return <div>No cities found.</div>;
+  }
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+    <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
       {cities.map((city) => (
-        <div key={city.id}>
-          <CityCard key={city.id} city={city} />
-        </div>
+        <CityCard key={city.id} city={city} />
       ))}
     </div>
   );

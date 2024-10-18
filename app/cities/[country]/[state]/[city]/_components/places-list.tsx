@@ -19,7 +19,7 @@ const PlacesList = ({
       <span className="text-lg font-bold pr-4 ">
         Showing {filteredPlaces.length} Places
       </span>
-      <div className="grid xl:grid-cols-3 lg:grid-cols-2 gap-6 mt-4">
+      <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-4">
         {filteredPlaces.length > 0 ? (
           filteredPlaces.map((place) => (
             <PlaceCard
@@ -40,7 +40,9 @@ const PlacesList = ({
             />
           ))
         ) : (
-          <p>No places found. Try adjusting your filters or refreshing.</p>
+          <p className="col-span-full">
+            No places found. Try adjusting your filters or refreshing.
+          </p>
         )}
       </div>
     </div>

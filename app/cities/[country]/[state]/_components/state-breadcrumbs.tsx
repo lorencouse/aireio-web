@@ -7,20 +7,25 @@ import {
 } from '@/components/ui/breadcrumb';
 
 import { City } from '@/utils/types';
+import formatPlaceName from '@/utils/functions/formatePlaceName';
 
 export default function StateBreadcrumbs({ city }: { city: City }) {
+  const formattedCountry =
+    formatPlaceName(city.country) ||
+    formatPlaceName(city.country_code) ||
+    'Country';
+  const formattedState =
+    formatPlaceName(city.state) || formatPlaceName(city.state_code) || 'State';
   return (
     <Breadcrumb className="mb-8 capitalize">
       <BreadcrumbList>
         <BreadcrumbItem>
           <BreadcrumbLink href={`/cities/${city.country_code}`}>
-            {city.country || city.country_code || 'Country'}
+            {formattedCountry}
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator>/</BreadcrumbSeparator>
-        <BreadcrumbItem>
-          {city.state || city.state_code || 'state'}
-        </BreadcrumbItem>
+        <BreadcrumbItem>{formattedState}</BreadcrumbItem>
       </BreadcrumbList>
     </Breadcrumb>
   );
