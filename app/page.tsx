@@ -12,8 +12,6 @@ import LoadingGrid from '@/components/general/loading-grid';
 
 
 async function getCities(): Promise<City[]> {
-  // This line opts out of caching for this data fetch
-  // noStore();
 
   const supabase = createClient();
 

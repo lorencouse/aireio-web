@@ -79,7 +79,7 @@ const PlaceCard = ({ place, distance, setIsLoadingPlace }: PlaceCardProps) => {
         </div>
       )}
       <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black">
-        <h3 className="absolute top-8 left-4 text-xl font-extrabold text-white whitespace-nowrap overflow-hidden text-ellipsis max-w-[90%]">
+        <h3 className="absolute sm:top-8 top-3 left-4 text-xl font-extrabold text-white whitespace-nowrap overflow-hidden text-ellipsis max-w-[90%]">
           {place.name}
         </h3>
         <div className="absolute bottom-0 left-0 right-0 p-4 text-white">

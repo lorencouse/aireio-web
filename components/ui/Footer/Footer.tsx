@@ -3,6 +3,7 @@ import Image from 'next/image';
 
 import Logo from '@/components/icons/Logo';
 import GitHub from '@/components/icons/GitHub';
+import StyledTitle from '@/components/icons/styledTitle';
 
 export default function Footer() {
   return (
@@ -16,9 +17,7 @@ export default function Footer() {
             <span className="mr-2 border rounded-full border-zinc-700">
               <Logo height={32} width={32} />
             </span>
-            ai
-            <span className="overline">re</span>
-            io
+            <StyledTitle />
           </Link>
         </div>
         <div className="col-span-1 lg:col-span-2">
@@ -96,9 +95,8 @@ export default function Footer() {
       <div className="flex flex-col items-center justify-between py-12 space-y-4 md:flex-row bg-zinc-900 text-white">
         <div>
           <span>
-            &copy; {new Date().getFullYear()} ai
-            <span className="overline overline-offset-2">re</span>io, Inc. All
-            rights reserved.
+            &copy; {new Date().getFullYear()} <StyledTitle />, Inc. All rights
+            reserved.
           </span>
         </div>
         <div className="flex items-center">

@@ -1,5 +1,3 @@
-// app/layout.tsx
-
 import { Metadata } from 'next';
 import Footer from '@/components/ui/Footer';
 import Navbar from '@/components/ui/Navbar';
@@ -11,8 +9,8 @@ import { Comfortaa } from 'next/font/google';
 
 export const runtime = 'edge';
 
-const title = 'aireio';
-const description = 'Find your workspace for the day.';
+const title = 'aireio™';
+const description = 'Find your remote workspace.';
 
 const comfortaa = Comfortaa({
   subsets: ['latin'],
@@ -26,17 +24,18 @@ export const metadata: Metadata = {
   openGraph: {
     title: title,
     description: description
+  },
+  icons: {
+    icon: '/favicon.ico',
+    apple: '/apple-touch-icon.png',
+    shortcut: '/favicon-16x16.png'
   }
 };
 
 export default async function RootLayout({ children }: PropsWithChildren) {
-  // const user = await getUser();
-  // const profile = await getUserProfile(user);
-
   return (
     <html lang="en" className={comfortaa.className}>
       <body className="bg-backgroud">
-        {/* <UserProvider user={user} profile={profile}> */}
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -52,7 +51,6 @@ export default async function RootLayout({ children }: PropsWithChildren) {
           </main>
           <Footer />
         </ThemeProvider>
-        {/* </UserProvider> */}
       </body>
     </html>
   );
