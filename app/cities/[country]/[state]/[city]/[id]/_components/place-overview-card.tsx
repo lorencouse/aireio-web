@@ -6,6 +6,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 
 // import { StarIcon } from '@radix-ui/react-icons';
 import Amenity from './amenity';
+import PriceLevel from '../../_components/price-level';
 const PlaceOverviewCard = ({
   place,
   photoUrls
@@ -27,7 +28,6 @@ const PlaceOverviewCard = ({
             )}
           </div>
           <div className="w-full md:w-3/4 md:pl-6">
-
             {place.rating_score && (
               <div className="flex items-center mb-2">
                 <span>✭</span>
@@ -38,10 +38,18 @@ const PlaceOverviewCard = ({
             )}
 
             {place.type === 'cafe' && (
-              <p className="mb-2">
+              <div className="mb-2 gap-2 flex flex-row">
                 <span className="font-bold">Price Level: </span>
-                {place.price_level ? '$'.repeat(place.price_level) : '?'}
-              </p>
+                {place.price_level ? (
+                  <PriceLevel
+                    priceLevel={place.price_level}
+                    primaryColor="text-foreground"
+                    secondaryColor="text-gray-300"
+                  />
+                ) : (
+                  '?'
+                )}
+              </div>
             )}
             <div>
               {/* <h3 className="font-bold mt-4 mb-2">Amenities:</h3> */}

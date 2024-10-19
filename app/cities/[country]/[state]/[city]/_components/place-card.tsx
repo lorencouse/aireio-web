@@ -7,6 +7,7 @@ import { getPlacePhotoUrls } from '@/utils/functions/places/getPlacePhotoUrls';
 import { Place } from '@/utils/types';
 import { MapPin, Coffee, BookOpen, Building, Star } from 'lucide-react';
 import { uploadPlacePhotos } from '@/utils/places/uploadPlacePhotos';
+import PriceLevel from './price-level';
 
 interface PlaceCardProps {
   place: Place;
@@ -78,7 +79,7 @@ const PlaceCard = ({ place, distance, setIsLoadingPlace }: PlaceCardProps) => {
           <MapPin size={24} />
         </div>
       )}
-      <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black">
+      <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center flex-col p-2">
         <h3 className="absolute sm:top-8 top-3 left-4 text-xl font-extrabold text-white whitespace-nowrap overflow-hidden text-ellipsis max-w-[90%]">
           {place.name}
         </h3>
@@ -87,16 +88,22 @@ const PlaceCard = ({ place, distance, setIsLoadingPlace }: PlaceCardProps) => {
             <MapPin size={16} className="mr-1 flex-shrink-0" />
             <span>{place.add_1}</span>
           </div>
-          <div className="flex items-center mb-1">
-            {getTypeIcon(place.type)}
-            <span className="capitalize">{place.type}</span>
-          </div>
           <div className="flex justify-between items-center">
+            <div className="flex flex-row">
+              {getTypeIcon(place.type)}
+              <span className="capitalize">{place.type}</span>
+            </div>
             {place.type === 'cafe' && place.price_level && (
               <div className="flex items-center">
-                {'$'.repeat(place.price_level)}
+                <PriceLevel
+                  priceLevel={place.price_level}
+                  primaryColor="text-white"
+                  secondaryColor="text-gray-400"
+                />
               </div>
             )}
+          </div>
+          <div className="flex justify-between items-center">
             {place.rating_score && (
               <div className="flex items-center">
                 <Star size={16} className="mr-1" />
