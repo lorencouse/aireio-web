@@ -5,14 +5,17 @@ import CityList from './_components/city-list';
 
 import { City } from '@/utils/types';
 import HomeHero from './_components/home-hero';
+import CountryList from './cities/[country]/_country/country-list';
 
 export default function HomeLayout({
-  initialCities
+  initialCities,
+  countries
 }: {
   initialCities: City[];
+  countries: { country: string; country_code: string }[];
 }) {
   return (
-    <div className="aireio-home">
+    <div id="aireio-home">
       <HomeHero heading="Find Your Work Space" />
       <div className="flex flex-col items-center">
         <h3 className="text-2xl w-full font-bold select-none pl-8 mb-4 border-t-2 mt-6 pt-6 text-center ">
@@ -25,6 +28,7 @@ export default function HomeLayout({
           <CityList cities={initialCities} />
         )}
       </div>
+      <CountryList countries={countries} currentCountry="" />
     </div>
   );
 }

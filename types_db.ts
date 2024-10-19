@@ -477,7 +477,13 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_unique_countries: {
+        Args: Record<string, never>
+        Returns: {
+          country: string
+          country_code: string
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never

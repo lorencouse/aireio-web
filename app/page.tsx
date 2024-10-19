@@ -4,33 +4,17 @@ import { Suspense } from 'react';
 
 import HomeLayout from './home-layout';
 
-import { City } from '@/utils/types';
-import { createClient } from '@/utils/supabase/server';
+import { getAllCities, getCountries } from './actions/fetch';
 import LoadingGrid from '@/components/general/loading-grid';
 
-
-
-
-async function getCities(): Promise<City[]> {
-
-  const supabase = createClient();
-
-  const { data, error } = await supabase.from('cities').select('*').limit(24);
-
-  if (error) {
-    console.error('Error fetching cities:', error);
-    return [];
-  }
-
-  return data || [];
-}
-
 export default async function Home() {
-  const cities = await getCities();
+  const numberOfCities = 24;
+  const cities = await getAllCities(numberOfCities);
+  const countries = await getCountries();
 
   return (
     <Suspense fallback={<LoadingGrid />}>
-      <HomeLayout initialCities={cities} />
+      <HomeLayout initialCities={cities} countries={countries} />
     </Suspense>
   );
 }

@@ -19,20 +19,17 @@ export default function StatePageLayout({
 }) {
   const stateNameFormatted = cities[0].name
     ? formatPlaceName(cities[0].name)
-    : formatPlaceName(stateName)
+    : formatPlaceName(stateName);
   const countryNameFormatted = cities[0].country
     ? formatPlaceName(cities[0].country)
     : countryCode;
   return (
-    <div className="state-page">
+    <div id="state-page">
+      <StateBreadcrumbs city={cities[0]} />
       <HomeHero heading={`Find More Cities in ${stateNameFormatted}`} />
-      <div className="flex flex-col items-center mt-4 ">
-        <StateBreadcrumbs city={cities[0]} />
-
-        <hr className="mt-10" />
-        <h3 className="text-lg text-left w-full font-bold select-none pl-8 my-4 ">
-          Top Cities in {stateNameFormatted},{' '}
-          {countryNameFormatted}:
+      <div className="flex flex-col items-center">
+        <h3 className="text-2xl w-full font-bold select-none pl-8 mb-4 border-t-2 mt-6 pt-6 text-center ">
+          Top Cities in {stateNameFormatted}, {countryNameFormatted}:
         </h3>
 
         {cities.length === 0 ? <LoadingGrid /> : <CityList cities={cities} />}
