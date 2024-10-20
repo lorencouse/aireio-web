@@ -8,10 +8,17 @@ import PopupPlaceDeleted from './_components/popup-place-deleted';
 import { Place } from '@/utils/types';
 import { getPlacePhotoUrls } from '@/utils/functions/places/getPlacePhotoUrls';
 import LoadingPlace from './_components/loading-place';
-import PlaceBreadCrumb from './_components/place-breadcrumb';
+// import PlaceBreadCrumb from '../../../../../../components/general/dynamic-breadcrumb';
 import { uploadPlacePhotos } from '@/utils/places/uploadPlacePhotos';
+import DynamicBreadcrumb from '@/components/general/dynamic-breadcrumb';
 
-const PlacePageLayout = ({ place: initialPlace }: { place: Place }) => {
+const PlacePageLayout = ({
+  place: initialPlace
+  // params
+}: {
+  place: Place;
+  // params: { country: string; state: string; city: string; id: string };
+}) => {
   const [showModal, setShowModal] = useState(false);
   const [place, setPlace] = useState(initialPlace);
   const [photoUrls, setPhotoUrls] = useState<string[]>(
@@ -44,7 +51,7 @@ const PlacePageLayout = ({ place: initialPlace }: { place: Place }) => {
           cityId={place.city_id ? place.city_id : ''}
         />
       )}
-      {place && <PlaceBreadCrumb place={place} />}
+      {place && <DynamicBreadcrumb placeName={place.name ? place.name : ''} />}
 
       <PlaceHero place={place} photoUrl={photoUrls[0]} />
       <PlaceOverviewCard place={place} photoUrls={photoUrls} />

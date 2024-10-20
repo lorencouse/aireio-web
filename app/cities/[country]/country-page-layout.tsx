@@ -2,8 +2,9 @@ import LoadingGrid from '@/components/general/loading-grid';
 import CityList from '@/app/_components/city-list';
 import { City } from '@/utils/types';
 import HomeHero from '@/app/_components/home-hero';
-import CountryList from './_country/country-list';
+import CountryList from './_components/country-list';
 import formatPlaceName from '@/utils/functions/formatePlaceName';
+import DynamicBreadcrumb from '@/components/general/dynamic-breadcrumb';
 
 type Country = {
   country: string;
@@ -22,6 +23,7 @@ export default function CountryPageLayout({
 
   return (
     <div className="state-page">
+      <DynamicBreadcrumb />
       <HomeHero heading={`Find Work Spaces in ${countryName}`} />
       <div className="flex flex-col items-center mt-4 ">
         <h2 className="md:text-3xl text-2xl">Top Cities in {countryName}</h2>

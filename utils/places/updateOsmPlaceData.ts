@@ -25,33 +25,33 @@ const updateOsmPlaceData = async (place: Place) => {
       ...place,
       osm_id: osmData.id?.toString(),
       add_1:
-        place.add_1 === null || place.add_1 === ''
+        !place.add_1
           ? `${osmData.tags['addr:housenumber'] || ''} ${
               osmData.tags['addr:street'] || ''
             }`.trim() || place.add_1
           : place.add_1,
       level:
-        place.level === null || place.level === ''
+        !place.level 
           ? osmData.tags.level || place.level
           : place.level,
       city:
-        place.city === null || place.city === ''
+        !place.city
           ? osmData.tags['addr:city'] || place.city
           : place.city,
       state:
-        place.state === null || place.state === ''
+        !place.state 
           ? osmData.tags['addr:state'] || place.state
           : place.state,
       postal_code:
-        place.postal_code === null || place.postal_code === ''
+        !place.postal_code
           ? osmData.tags['addr:postcode'] || place.postal_code
           : place.postal_code,
       phone:
-        place.phone === null || place.phone === ''
+        !place.phone 
           ? osmData.tags.phone || place.phone
           : place.phone,
       website:
-        place.website === null || place.website === ''
+        !place.website
           ? osmData.tags.website || place.website
           : place.website,
       facebook: osmData.tags['contact:facebook'] || place.facebook,

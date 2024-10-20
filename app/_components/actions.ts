@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation';
 import uploadImageToSupabase from '@/utils/functions/places/uploadImageToSupabase';
 import { City } from '@/utils/types';
 
-const normalizeString = (str: string | null): string => {
+export async function normalizeString(str: string | null): Promise<string> {
   if (!str) return '';
 
   const accentMap: { [key: string]: string } = {
@@ -43,7 +43,7 @@ const normalizeString = (str: string | null): string => {
     .replace(/[^\u0000-\u007E]/g, (char) => accentMap[char] || char)
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '');
-};
+}
 
 export const fetchCity = async (city: Partial<City>) => {
   const supabase = createClient();
@@ -71,9 +71,9 @@ export const fetchCity = async (city: Partial<City>) => {
     throw new Error('Missing required fields for city');
   }
 
-  const normalizedName = normalizeString(name);
-  const normalizedState = normalizeString(state);
-  const normalizedCountry = normalizeString(country);
+  const normalizedName = await normalizeString(name);
+  const normalizedState = await normalizeString(state);
+  const normalizedCountry = await normalizeString(country);
 
   try {
     const { data: insertedCity, error: insertError } = await supabase

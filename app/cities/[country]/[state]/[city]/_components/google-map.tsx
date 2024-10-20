@@ -1,7 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import useUpdateUrlQuery from '@/utils/hook/useUpdateUrlQuery';
-import { City } from '@/utils/types';
-import { getParamValue } from '@/utils/functions/getParamValue';
 import { ReadonlyURLSearchParams } from 'next/navigation';
 
 // import { useSearchParams } from 'next/navigation';
@@ -24,7 +22,6 @@ const GoogleMap: React.FC<MapWithDraggableMarkerProps> = ({
     null
   );
   const circleRef = useRef<google.maps.Circle | null>(null);
-  // const searchParams = useSearchParams();
   const initialLat = parseFloat(searchParams?.get('lat') ?? lat ?? '0');
   const initialLng = parseFloat(searchParams?.get('lng') ?? lng ?? '0');
   const initialRadius = parseInt(searchParams?.get('radius') ?? '1000');

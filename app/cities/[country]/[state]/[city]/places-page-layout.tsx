@@ -12,7 +12,7 @@ import { fetchNewPlaces } from './actions';
 import LoadingGrid from '@/components/general/loading-grid';
 import LoadingPlace from './[id]/_components/loading-place';
 import CityHero from './_components/city-hero';
-import CityBreadCrumb from './_components/city-breadcrumbs';
+import DynamicBreadcrumb from '@/components/general/dynamic-breadcrumb';
 
 export default function PlacesPageLayout({
   city,
@@ -94,7 +94,8 @@ export default function PlacesPageLayout({
 
   return (
     <>
-      <CityBreadCrumb city={city} />
+      {/* <CityBreadCrumb city={city} /> */}
+      <DynamicBreadcrumb />
 
       <div className="grid lg:grid-cols-2 w-full">
         <CityHero city={city} />

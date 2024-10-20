@@ -44,7 +44,7 @@ export const updateGooglePlaceData = async (place: Place) => {
 
     //   console.log('Google Place Photos:', googlePlace.photos);
 
-    const convertedAddress = convertGoogleAddress(
+    const convertedAddress = await convertGoogleAddress(
       googlePlace.address_components
     );
 

@@ -5,7 +5,7 @@ import CityList from './_components/city-list';
 
 import { City } from '@/utils/types';
 import HomeHero from './_components/home-hero';
-import CountryList from './cities/[country]/_country/country-list';
+import CountryList from './cities/[country]/_components/country-list';
 
 export default function HomeLayout({
   initialCities,

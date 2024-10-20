@@ -4,10 +4,10 @@ import LoadingGrid from '@/components/general/loading-grid';
 import CityList from '@/app/_components/city-list';
 
 import { City } from '@/utils/types';
-import StateBreadcrumbs from './_components/state-breadcrumbs';
 import HomeHero from '@/app/_components/home-hero';
 import formatPlaceName from '@/utils/functions/formatePlaceName';
-import CountryList from '../_country/country-list';
+import CountryList from '../_components/country-list';
+import DynamicBreadcrumb from '@/components/general/dynamic-breadcrumb';
 
 export default function StatePageLayout({
   cities,
@@ -25,7 +25,7 @@ export default function StatePageLayout({
 
   return (
     <div id="state-page">
-      <StateBreadcrumbs city={cities[0]} />
+      <DynamicBreadcrumb />
       <HomeHero heading={`Find More Cities in ${stateNameFormatted}`} />
       <div className="flex flex-col items-center">
         <h3 className="text-2xl w-full font-bold select-none pl-8 border-b-2 mb-6 py-6 text-center ">

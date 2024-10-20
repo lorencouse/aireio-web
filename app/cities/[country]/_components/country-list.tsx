@@ -47,7 +47,6 @@ const CountryList = ({
   );
 };
 
-// Helper function to convert country code to flag emoji
 const getCountryFlagEmoji = (countryCode: string) => {
   const codePoints = countryCode
     .toUpperCase()
