@@ -54,9 +54,9 @@ export default function Amenity({
         <Popover>
           <PopoverTrigger asChild>
             <span
-              className={`ml-2 underline cursor-pointer font-bold ${value === true ? 'text-green-500' : value === false ? 'text-red-600' : 'text-muted-foreground'}`}
+              className={`ml-2 cursor-pointer underline hover:opacity-70 font-bold ${value === true ? 'text-green-500' : value === false ? 'text-red-600' : 'text-muted-foreground'}`}
             >
-              {value === true ? 'Yes ✅' : value === false ? 'No ❌' : 'Add +'}
+              {value === true ? '✅' : value === false ? '❌' : 'Add➕'}
             </span>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-5">

@@ -138,7 +138,7 @@ const PlaceDetails = ({ place }: { place: Place }) => {
           </div>
         </div>
         <div
-          className={`amenities flex flex-col mt-4 ${isCafeOrRestaurant ? 'justify-between' : 'justify-end'} content-end  grow`}
+          className={`amenities flex flex-col mt-4 ${isCafeOrRestaurant ? 'justify-between' : 'justify-end'} content-end`}
         >
           {isCafeOrRestaurant && (
             <>

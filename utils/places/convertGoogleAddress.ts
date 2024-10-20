@@ -24,10 +24,9 @@ export default async function convertGoogleAddress(
   // street_number + route
   const streetNumber = findComponent('street_number');
   const route = findComponent('route');
-  result.add_1 = await normalizeString(
+  result.add_1 =
     (streetNumber ? streetNumber.long_name + ' ' : '') +
-      (route ? route.long_name : '')
-  );
+    (route ? route.long_name : '');
 
   // add_2 and level are not typically provided by Google Places API
   // You might need to get these from a different source or user input
@@ -56,9 +55,7 @@ export default async function convertGoogleAddress(
 
   // postcode
   const postcode = findComponent('postal_code');
-  result.postcode = postcode
-    ? await normalizeString(postcode.long_name)
-    : undefined;
+  result.postcode = postcode ? postcode.long_name : undefined;
 
   // country
   const country = findComponent('country');

@@ -14,7 +14,7 @@ interface PlaceHeroProps {
 }
 
 const PlaceHero: React.FC<PlaceHeroProps> = ({ place, photoUrl }) => {
-  const countryFormatted = formatPlaceName(place.country ? place.country : '');
+  const contryFormatted = formatPlaceName(place.country ? place.country : '');
   const cityFormatted = formatPlaceName(place.city ? place.city : '');
 
   return (
@@ -40,7 +40,7 @@ const PlaceHero: React.FC<PlaceHeroProps> = ({ place, photoUrl }) => {
           {place.name}
         </h1>
         <span className="text-white text-lg md:text-xl font-bold text-center px-4 text-shadow-lg select-none">
-          {cityFormatted}, {countryFormatted}
+          {cityFormatted && `${cityFormatted},`} {contryFormatted}
         </span>
       </div>
     </div>
