@@ -15,6 +15,10 @@ export default function convertGoogleAddress(addressComponents: any[]): {
   const findComponent = (type: string) =>
     addressComponents.find((component) => component.types.includes(type));
 
+  // Helper function to format string (lowercase and replace spaces with hyphens)
+  const formatString = (str: string): string =>
+    str.toLowerCase().replace(/\s+/g, '-');
+
   // street_number + route
   const streetNumber = findComponent('street_number');
   const route = findComponent('route');
@@ -29,27 +33,29 @@ export default function convertGoogleAddress(addressComponents: any[]): {
 
   // district (neighborhood)
   const neighborhood = findComponent('neighborhood');
-  result.district = neighborhood ? neighborhood.long_name : undefined;
+  result.district = neighborhood
+    ? formatString(neighborhood.long_name)
+    : undefined;
 
   // city (locality)
   const locality = findComponent('locality');
-  result.city = locality ? locality.long_name : undefined;
+  result.city = locality ? formatString(locality.long_name) : undefined;
 
   // county (administrative_area_level_2)
   const county = findComponent('administrative_area_level_2');
-  result.county = county ? county.long_name : undefined;
+  result.county = county ? formatString(county.long_name) : undefined;
 
   // state (administrative_area_level_1)
   const state = findComponent('administrative_area_level_1');
-  result.state = state ? state.long_name : undefined;
+  result.state = state ? formatString(state.long_name) : undefined;
 
   // postcode
   const postcode = findComponent('postal_code');
-  result.postcode = postcode ? postcode.long_name : undefined;
+  result.postcode = postcode ? formatString(postcode.long_name) : undefined;
 
   // country
   const country = findComponent('country');
-  result.country = country ? country.long_name : undefined;
+  result.country = country ? formatString(country.long_name) : undefined;
 
   return result;
 }

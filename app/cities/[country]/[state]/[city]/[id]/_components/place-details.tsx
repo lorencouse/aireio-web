@@ -53,6 +53,8 @@ const PlaceDetails = ({ place }: { place: Place }) => {
   const websiteName = place?.website
     ? new URL(place.website).hostname.replace('www.', '')
     : '';
+  const isCafeOrRestaurant =
+    place.type === 'cafe' || place.type === 'restaurant';
 
   return (
     <Card className="bg-background text-foreground">
@@ -134,11 +136,11 @@ const PlaceDetails = ({ place }: { place: Place }) => {
               )}
             </div>
           </div>
-
-          <SocialLinks place={place} />
         </div>
-        <div className="amenities flex flex-col mt-4">
-          {(place.type === 'cafe' || place.type === 'restaurant') && (
+        <div
+          className={`amenities flex flex-col mt-4 ${isCafeOrRestaurant ? 'justify-between' : 'justify-end'} content-end  grow`}
+        >
+          {isCafeOrRestaurant && (
             <>
               <p className="mb-6 text-2xl underline">This Location Serves</p>
               <Amenity
@@ -183,6 +185,7 @@ const PlaceDetails = ({ place }: { place: Place }) => {
               />
             </>
           )}
+          <SocialLinks place={place} />
         </div>
       </CardContent>
     </Card>

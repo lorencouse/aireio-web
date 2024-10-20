@@ -113,7 +113,7 @@ export default function PlacesPageLayout({
         </Button> */}
       </div>
 
-      <h1 className="md:text-4xl text-2xl font-bold mx-4 mt-4 select-none text-center leading-normal w-full">
+      <h1 className="md:text-4xl text-2xl font-bold mx-4 md:mt-8 mt-6 select-none text-center leading-normal w-full">
         Workspaces in{' '}
         <span className="capitalize">
           {city && city.name.replace(/-/g, ' ')}
