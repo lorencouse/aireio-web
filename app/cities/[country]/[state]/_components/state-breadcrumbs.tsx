@@ -17,7 +17,7 @@ export default function StateBreadcrumbs({ city }: { city: City }) {
   const formattedState =
     formatPlaceName(city.state) || formatPlaceName(city.state_code) || 'State';
   return (
-    <Breadcrumb className="mb-8 capitalize">
+    <Breadcrumb className="my-4 pl-4 capitalize">
       <BreadcrumbList>
         <BreadcrumbItem>
           <BreadcrumbLink href={`/cities/${city.country_code}`}>

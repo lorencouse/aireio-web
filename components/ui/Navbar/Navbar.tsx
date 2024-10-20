@@ -14,7 +14,6 @@ import {
   DrawerClose,
   DrawerContent,
   DrawerHeader,
-  DrawerTitle,
   DrawerTrigger
 } from '@/components/ui/drawer';
 import Link from 'next/link';
@@ -31,7 +30,6 @@ export default async function Navbar() {
       href: '/',
       icon: Home
     }
-    // Add more menu items as needed
   ];
 
   return (
@@ -41,20 +39,18 @@ export default async function Navbar() {
         <div className="flex justify-around items-center p-2 ">
           <Link href="/" className="flex flex-col items-center">
             <Home className="h-6 w-6" />
-            {/* <FullLogo width={60} height={50} /> */}
             <span className="text-xs">Home</span>
           </Link>
 
           <Drawer>
             <DrawerTrigger asChild>
-              <Link href="/profile" className="flex flex-col items-center">
+              <div className="flex flex-col items-center">
                 <Menu className="h-6 w-6" />
                 <span className="text-xs">Menu</span>
-              </Link>
+              </div>
             </DrawerTrigger>
             <DrawerContent className="bg-background text-foreground">
               <DrawerHeader className="w-full justify-center">
-                {/* <DrawerTitle>aireio™</DrawerTitle> */}
                 <FullLogo width={100} height={50} />
               </DrawerHeader>
               <div className="flex flex-col space-y-3 p-4">
@@ -93,10 +89,6 @@ export default async function Navbar() {
           </Drawer>
 
           {user ? (
-            // <Link href="/profile" className="flex flex-col items-center">
-            //   <User className="h-6 w-6" />
-            //   <span className="text-xs">Profile</span>
-            // </Link>
             <UserProfile user={user} />
           ) : (
             <Link href="/signin" className="flex flex-col items-center">

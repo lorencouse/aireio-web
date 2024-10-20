@@ -83,7 +83,7 @@ const PlaceCard = ({ place, distance, setIsLoadingPlace }: PlaceCardProps) => {
         <h3 className="absolute sm:top-8 top-3 left-4 text-xl font-extrabold text-white whitespace-nowrap overflow-hidden text-ellipsis max-w-[90%]">
           {place.name}
         </h3>
-        <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
+        <div className="absolute bottom-0 left-0 right-0 p-4 text-white md:text-sm text-xs">
           <div className="flex items-center mb-1 whitespace-nowrap overflow-hidden text-ellipsis">
             <MapPin size={16} className="mr-1 flex-shrink-0" />
             <span>{place.add_1}</span>
@@ -103,7 +103,7 @@ const PlaceCard = ({ place, distance, setIsLoadingPlace }: PlaceCardProps) => {
               </div>
             )}
           </div>
-          <div className="flex justify-between items-center">
+          <div className="flex flex-row flex-wrap justify-between items-center">
             {place.rating_score && (
               <div className="flex items-center">
                 <Star size={16} className="mr-1" />

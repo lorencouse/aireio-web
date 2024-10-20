@@ -6,6 +6,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Place } from '@/utils/types';
 
 import { placeholderImage } from '@/utils/constants';
+import formatPlaceName from '@/utils/functions/formatePlaceName';
 
 interface PlaceHeroProps {
   place: Place;
@@ -13,7 +14,9 @@ interface PlaceHeroProps {
 }
 
 const PlaceHero: React.FC<PlaceHeroProps> = ({ place, photoUrl }) => {
-  console.log(photoUrl);
+  const countryFormatted = formatPlaceName(place.country ? place.country : '');
+  const cityFormatted = formatPlaceName(place.city ? place.city : '');
+
   return (
     <div className="relative w-full md:h-[50vh] min-h-[250px]">
       {photoUrl ? (
@@ -37,8 +40,7 @@ const PlaceHero: React.FC<PlaceHeroProps> = ({ place, photoUrl }) => {
           {place.name}
         </h1>
         <span className="text-white text-lg md:text-xl font-bold text-center px-4 text-shadow-lg select-none">
-          {`${place.city || place.state || ''}, 
-          ${place.country || place.country_code || ''}`}
+          {cityFormatted}, {countryFormatted}
         </span>
       </div>
     </div>

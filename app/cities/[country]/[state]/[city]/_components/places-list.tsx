@@ -16,7 +16,7 @@ const PlacesList = ({
 }) => {
   return (
     <div className="flex flex-col items-end">
-      <span className="text-lg font-bold pr-4 ">
+      <span className="text-base  pr-1 mt-4">
         Showing {filteredPlaces.length} Places
       </span>
       <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-4">
