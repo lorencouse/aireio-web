@@ -52,9 +52,8 @@ const FavoriteToggle = ({ placeId }: FavoriteToggleProps) => {
         } else {
           if (result.authError) {
             toast({
-              title: 'Authentication required',
-              description: 'Please sign in to save favorites',
-              variant: 'destructive'
+              title: 'Please sign in to add to favorites',
+              duration: 2000
             });
           } else {
             throw new Error(result.error);
@@ -66,7 +65,7 @@ const FavoriteToggle = ({ placeId }: FavoriteToggleProps) => {
         console.error('Error toggling favorite:', error);
         toast({
           title: 'Error',
-          description: 'Failed to update favorite status',
+          description: 'Failed to update',
           variant: 'destructive'
         });
         // Revert on error

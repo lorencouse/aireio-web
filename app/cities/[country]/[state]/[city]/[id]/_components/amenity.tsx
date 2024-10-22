@@ -19,84 +19,76 @@ export default function Amenity({
   value: boolean | null;
   placeId: string;
 }) {
-  const [buttonValue, setButtonValue] = useState<boolean | null>(null);
-  const [submitted, setSubmitted] = useState(false);
+  const [buttonValue, setButtonValue] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isAuthError, setIsAuthError] = useState(false);
 
-  const handleClick = async (newValue: boolean) => {
-    setButtonValue(newValue);
-    const { success, error, authError } = await SubmitUserPlaceInfo(
-      placeId,
-      name,
-      newValue
-    );
+  const buttonVals = ['Not Available', '1', '2', '3', '4', '5'];
 
-    if (success) {
-      setSubmitted(true);
-      setError(null);
-      setIsAuthError(false);
-      setError('Success!');
-    } else {
-      setError(error || 'Failed to submit data');
-      setIsAuthError(!!authError);
-      if (authError) {
-        // Optionally, you can redirect to login page here
-        // router.push('/login')
+  const handleClick = async (index: number) => {
+    try {
+      const { success, error, authError } = await SubmitUserPlaceInfo(
+        placeId,
+        name,
+        index.toString()
+      );
+
+      if (success) {
+        setButtonValue(index);
+        setError('Success!');
+        setIsAuthError(false);
+      } else {
+        setError(error || 'Failed to submit data');
+        setIsAuthError(!!authError);
       }
+    } catch (err) {
+      setError('An error occurred');
     }
   };
 
+  const title = name.replace('Serves', '');
+
   return (
-    <div className="seating flex flex-row items-center gap-4 mb-2">
+    <div className="flex flex-row items-center gap-4 mb-2">
       <p>
-        <span className="font-bold">{name}:</span>
+        <span className="font-bold">{title}:</span>
         <Popover>
           <PopoverTrigger asChild>
-            <span
-              className={`ml-2 cursor-pointer underline hover:opacity-70 font-bold ${value === true ? 'text-green-500' : value === false ? 'text-red-600' : 'text-muted-foreground'}`}
-            >
-              {value === true ? '✅' : value === false ? '❌' : 'Add➕'}
+            <span className="ml-2 cursor-pointer hover:opacity-70">
+              {value
+                ? '✅'
+                : value === false
+                  ? '❌'
+                  : buttonValue
+                    ? buttonVals[buttonValue]
+                    : 'Add➕'}
             </span>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-5">
-            <p>
-              <span className="font-bold">{name}</span> at this location
-            </p>
-            <div className="flex items-center space-x-2 p-2">
-              <Button
-                variant={buttonValue === true ? 'default' : 'outline'}
-                size="icon"
-                onClick={() => handleClick(true)}
-                disabled={submitted}
-              >
-                <span
-                  className={
-                    buttonValue === true ? 'text-white' : 'text-gray-500'
-                  }
+            <h3 className="font-bold text-lg mb-5">
+              Rate {title} at this location
+            </h3>
+
+            <div className="flex flex-wrap gap-2">
+              {buttonVals.map((val, index) => (
+                <Button
+                  key={index}
+                  variant={buttonValue === index ? 'default' : 'outline'}
+                  onClick={() => handleClick(index)}
+                  className="text-xl"
                 >
-                  Yes
-                </span>
-              </Button>
-              <Button
-                variant={buttonValue === false ? 'default' : 'outline'}
-                size="icon"
-                onClick={() => handleClick(false)}
-                disabled={submitted}
-              >
-                <span
-                  className={
-                    buttonValue === false ? 'text-white' : 'text-gray-500'
-                  }
-                >
-                  No
-                </span>
-              </Button>
+                  {val}
+                </Button>
+              ))}
             </div>
             {error && <p className="text-red-500 mt-2">{error}</p>}
             {isAuthError && (
               <p className="mt-2">
-                Please <Link href="/signin">Log in</Link> to submit details
+                Please{' '}
+                <Link href="/signin" className="underline">
+                  Log in
+                </Link>{' '}
+                to submit details
               </p>
             )}
           </PopoverContent>

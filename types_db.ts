@@ -9,6 +9,73 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      amenity_aggregations: {
+        Row: {
+          amenity_name: string
+          last_updated: string | null
+          place_id: string
+          submission_count: number | null
+          value_distribution: Json | null
+        }
+        Insert: {
+          amenity_name: string
+          last_updated?: string | null
+          place_id: string
+          submission_count?: number | null
+          value_distribution?: Json | null
+        }
+        Update: {
+          amenity_name?: string
+          last_updated?: string | null
+          place_id?: string
+          submission_count?: number | null
+          value_distribution?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "amenity_aggregations_place_id_fkey"
+            columns: ["place_id"]
+            isOneToOne: false
+            referencedRelation: "places"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      amenity_submissions: {
+        Row: {
+          amenity_name: string | null
+          id: string
+          place_id: string | null
+          timestamp: string | null
+          user_id: string | null
+          value: string
+        }
+        Insert: {
+          amenity_name?: string | null
+          id?: string
+          place_id?: string | null
+          timestamp?: string | null
+          user_id?: string | null
+          value: string
+        }
+        Update: {
+          amenity_name?: string | null
+          id?: string
+          place_id?: string | null
+          timestamp?: string | null
+          user_id?: string | null
+          value?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "amenity_submissions_place_id_fkey"
+            columns: ["place_id"]
+            isOneToOne: false
+            referencedRelation: "places"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       cities: {
         Row: {
           country: string | null
@@ -59,6 +126,35 @@ export type Database = {
           updated_at?: string | null
         }
         Relationships: []
+      }
+      favorites: {
+        Row: {
+          created_at: string
+          id: string
+          place_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          place_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          place_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "favorites_place_id_fkey"
+            columns: ["place_id"]
+            isOneToOne: false
+            referencedRelation: "places"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       places: {
         Row: {
@@ -310,162 +406,6 @@ export type Database = {
           websites?: string[] | null
         }
         Relationships: []
-      }
-      user_submitted_place_details: {
-        Row: {
-          bathroom_code: string | null
-          cost_coffee: number | null
-          description: string | null
-          dine_in: boolean | null
-          email: string | null
-          facebook: string | null
-          favorited: string | null
-          id: string
-          indoor_seating: boolean | null
-          instagram: string | null
-          internet_access: boolean | null
-          internet_access_fee: boolean | null
-          internet_name: string | null
-          internet_password: string | null
-          mastodon: string | null
-          note: string | null
-          outdoor_seating: boolean | null
-          parking: boolean | null
-          parking_fee: boolean | null
-          phone: string | null
-          photos: string[] | null
-          place_id: string
-          power_outlets: boolean | null
-          price_level: number | null
-          rating_score: number | null
-          review: string | null
-          serves_beer: boolean | null
-          serves_breakfast: boolean | null
-          serves_brunch: boolean | null
-          serves_dinner: boolean | null
-          serves_lunch: boolean | null
-          serves_vegan_food: boolean | null
-          serves_vegetarian_food: boolean | null
-          serves_wine: boolean | null
-          takeaway: boolean | null
-          tiktok: string | null
-          toilet: boolean | null
-          toilet_code: string | null
-          twitter: string | null
-          updated: string
-          user_id: string
-          website: string | null
-          wheelchair_accessible: boolean | null
-          youtube: string | null
-        }
-        Insert: {
-          bathroom_code?: string | null
-          cost_coffee?: number | null
-          description?: string | null
-          dine_in?: boolean | null
-          email?: string | null
-          facebook?: string | null
-          favorited?: string | null
-          id?: string
-          indoor_seating?: boolean | null
-          instagram?: string | null
-          internet_access?: boolean | null
-          internet_access_fee?: boolean | null
-          internet_name?: string | null
-          internet_password?: string | null
-          mastodon?: string | null
-          note?: string | null
-          outdoor_seating?: boolean | null
-          parking?: boolean | null
-          parking_fee?: boolean | null
-          phone?: string | null
-          photos?: string[] | null
-          place_id: string
-          power_outlets?: boolean | null
-          price_level?: number | null
-          rating_score?: number | null
-          review?: string | null
-          serves_beer?: boolean | null
-          serves_breakfast?: boolean | null
-          serves_brunch?: boolean | null
-          serves_dinner?: boolean | null
-          serves_lunch?: boolean | null
-          serves_vegan_food?: boolean | null
-          serves_vegetarian_food?: boolean | null
-          serves_wine?: boolean | null
-          takeaway?: boolean | null
-          tiktok?: string | null
-          toilet?: boolean | null
-          toilet_code?: string | null
-          twitter?: string | null
-          updated: string
-          user_id: string
-          website?: string | null
-          wheelchair_accessible?: boolean | null
-          youtube?: string | null
-        }
-        Update: {
-          bathroom_code?: string | null
-          cost_coffee?: number | null
-          description?: string | null
-          dine_in?: boolean | null
-          email?: string | null
-          facebook?: string | null
-          favorited?: string | null
-          id?: string
-          indoor_seating?: boolean | null
-          instagram?: string | null
-          internet_access?: boolean | null
-          internet_access_fee?: boolean | null
-          internet_name?: string | null
-          internet_password?: string | null
-          mastodon?: string | null
-          note?: string | null
-          outdoor_seating?: boolean | null
-          parking?: boolean | null
-          parking_fee?: boolean | null
-          phone?: string | null
-          photos?: string[] | null
-          place_id?: string
-          power_outlets?: boolean | null
-          price_level?: number | null
-          rating_score?: number | null
-          review?: string | null
-          serves_beer?: boolean | null
-          serves_breakfast?: boolean | null
-          serves_brunch?: boolean | null
-          serves_dinner?: boolean | null
-          serves_lunch?: boolean | null
-          serves_vegan_food?: boolean | null
-          serves_vegetarian_food?: boolean | null
-          serves_wine?: boolean | null
-          takeaway?: boolean | null
-          tiktok?: string | null
-          toilet?: boolean | null
-          toilet_code?: string | null
-          twitter?: string | null
-          updated?: string
-          user_id?: string
-          website?: string | null
-          wheelchair_accessible?: boolean | null
-          youtube?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "user_submitted_place_details_place_id_fkey"
-            columns: ["place_id"]
-            isOneToOne: false
-            referencedRelation: "places"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "user_submitted_place_details_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-        ]
       }
     }
     Views: {

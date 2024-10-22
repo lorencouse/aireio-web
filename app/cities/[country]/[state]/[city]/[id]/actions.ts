@@ -2,14 +2,11 @@
 'use server';
 
 import { createClient } from '@/utils/supabase/server';
-import { Database } from '@/types_db';
-type UserSubmittedPlaceDetailsInsert =
-  Database['public']['Tables']['user_submitted_place_details']['Insert'];
 
 export const SubmitUserPlaceInfo = async (
   placeId: string,
   amenityName: string,
-  value: boolean
+  value: string
 ): Promise<{ success: boolean; error?: string; authError?: boolean }> => {
   const supabase = createClient();
 
@@ -23,24 +20,24 @@ export const SubmitUserPlaceInfo = async (
     return { success: false, error: 'User not authenticated', authError: true };
   }
 
-  if (!placeId || !amenityName || typeof value !== 'boolean') {
+  if (!placeId || !amenityName || !value) {
     return { success: false, error: 'Missing required parameters' };
   }
 
   const formattedAmenityName = amenityName.replace(/\s+/g, '_').toLowerCase();
 
-  const upsertData: UserSubmittedPlaceDetailsInsert = {
-    place_id: placeId,
-    user_id: user.id,
-    [formattedAmenityName]: value,
-    updated: new Date().toISOString()
-  };
-
-  const { error } = await supabase
-    .from('user_submitted_place_details')
-    .upsert(upsertData, {
-      onConflict: 'place_id,user_id'
-    });
+  const { error } = await supabase.from('amenity_submissions').upsert(
+    {
+      place_id: placeId,
+      user_id: user.id,
+      amenity_name: formattedAmenityName,
+      value,
+      timestamp: new Date().toISOString()
+    },
+    {
+      onConflict: 'place_id,user_id,amenity_name'
+    }
+  );
 
   if (error) {
     console.error('Error upserting user place data:', error);
@@ -70,22 +67,28 @@ export const toggleFavorite = async (
     return { success: false, error: 'Missing place ID' };
   }
 
-  const upsertData: UserSubmittedPlaceDetailsInsert = {
-    place_id: placeId,
-    user_id: user.id,
-    favorited: isFavoriting ? new Date().toISOString() : null,
-    updated: new Date().toISOString()
-  };
+  if (!isFavoriting) {
+    const { error } = await supabase
+      .from('favorites')
+      .delete()
+      .eq('place_id', placeId)
+      .eq('user_id', user.id);
+    if (error) {
+      console.error('Error removing favorite:', error);
+      return { success: false, error: 'Failed remove from favorites' };
+    }
+    return { success: true };
+  }
 
-  const { error } = await supabase
-    .from('user_submitted_place_details')
-    .upsert(upsertData, {
-      onConflict: 'place_id,user_id'
-    });
+  // Add to favorites
+  const { error } = await supabase.from('favorites').insert({
+    place_id: placeId,
+    user_id: user.id
+  });
 
   if (error) {
     console.error('Error toggling favorite:', error);
-    return { success: false, error: 'Failed to update favorite status' };
+    return { success: false, error: 'Failed add to favorites' };
   }
 
   return { success: true };
@@ -111,8 +114,8 @@ export const getFavoriteStatus = async (
   }
 
   const { data, error } = await supabase
-    .from('user_submitted_place_details')
-    .select('favorited')
+    .from('favorites')
+    .select('*')
     .eq('place_id', placeId)
     .eq('user_id', user.id)
     .single();
@@ -123,7 +126,7 @@ export const getFavoriteStatus = async (
     return { favorited: false, error: 'Failed to check favorite status' };
   }
 
-  return { favorited: !!data?.favorited };
+  return { favorited: !!data };
 };
 
 // Helper function to get all favorited places
@@ -131,7 +134,7 @@ export const getFavoritedPlaces = async (
   page = 1,
   limit = 10
 ): Promise<{
-  places: Array<{ place_id: string; favorited: string | null }>;
+  places: { place_id: string }[];
   count: number;
   error?: string;
   authError?: boolean;
@@ -156,11 +159,8 @@ export const getFavoritedPlaces = async (
   const to = from + limit - 1;
 
   const { data, error, count } = await supabase
-    .from('user_submitted_place_details')
-    .select('place_id, favorited', { count: 'exact' })
-    .eq('user_id', user.id)
-    .not('favorited', 'is', null)
-    .order('favorited', { ascending: false })
+    .from('favorites')
+    .select('place_id', { count: 'exact' })
     .range(from, to);
 
   if (error) {

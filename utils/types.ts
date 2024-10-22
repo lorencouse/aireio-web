@@ -84,60 +84,24 @@ export type Place = {
   deleted: string | null;
 };
 
-export type UserSubmittedPlaceDetails = {
-  id: string;
-  place_id: string;
-  user_id: string;
-  updated: string;
-  // contact info
-  phone: string | null;
-  facebook: string | null;
-  instagram: string | null;
-  mastodon: string | null;
-  tiktok: string | null;
-  twitter: string | null;
-  youtube: string | null;
-  email: string | null;
-  website: string | null;
-
-  // amenities
-  internet_access: boolean | null;
-  internet_access_fee: boolean | null;
-  internet_name: string | null;
-  internet_password: string | null;
-  dine_in: boolean | null;
-  outdoor_seating: boolean | null;
-  indoor_seating: boolean | null;
-  takeaway: boolean | null;
-  toilet: boolean | null;
-  toilet_code: string | null;
-  power_outlets: boolean | null;
-  wheelchair_accessible: boolean | null;
-  parking: boolean | null;
-  parking_fee: boolean | null;
-  serves_beer: boolean | null;
-  serves_breakfast: boolean | null;
-  serves_brunch: boolean | null;
-  serves_dinner: boolean | null;
-  serves_lunch: boolean | null;
-  serves_vegetarian_food: boolean | null;
-  serves_vegan_food: boolean | null;
-  serves_wine: boolean | null;
-
-  price_level: number | null;
-  cost_coffee: number | null;
-  bathroom_code: string | null;
-  description: string | null;
-  note: string | null;
-
-  // rating
-  rating_score: number | null;
-  review: string | null;
-  photos: string[] | null;
-  favorited: string | null;
+export type AmenitySubmission = {
+  id: string; // UUID
+  place_id: string; // UUID
+  user_id: string; // UUID
+  amenity_name: string;
+  value: string;
+  timestamp: string;
 };
 
-export interface FavoritedPlace {
+export type AmenityAggregation = {
+  place_id: string; // UUID
+  amenity_name: string;
+  submission_count: number;
+  value_distribution: Record<string, number>;
+  last_updated: string;
+};
+
+export interface FavoritePlace {
   id: string;
   user_id: string;
   place_id: string;
@@ -204,4 +168,57 @@ export type GooglePlace = {
   types: string[];
   user_ratings_total: number;
   vicinity: string;
+};
+
+export type UserSubmittedPlaceDetails = {
+  id: string;
+  place_id: string;
+  user_id: string;
+  updated: string;
+  // contact info
+  phone: string | null;
+  facebook: string | null;
+  instagram: string | null;
+  mastodon: string | null;
+  tiktok: string | null;
+  twitter: string | null;
+  youtube: string | null;
+  email: string | null;
+  website: string | null;
+
+  // amenities
+  internet_access: boolean | null;
+  internet_access_fee: boolean | null;
+  internet_name: string | null;
+  internet_password: string | null;
+  dine_in: boolean | null;
+  outdoor_seating: boolean | null;
+  indoor_seating: boolean | null;
+  takeaway: boolean | null;
+  toilet: boolean | null;
+  toilet_code: string | null;
+  power_outlets: boolean | null;
+  wheelchair_accessible: boolean | null;
+  parking: boolean | null;
+  parking_fee: boolean | null;
+  serves_beer: boolean | null;
+  serves_breakfast: boolean | null;
+  serves_brunch: boolean | null;
+  serves_dinner: boolean | null;
+  serves_lunch: boolean | null;
+  serves_vegetarian_food: boolean | null;
+  serves_vegan_food: boolean | null;
+  serves_wine: boolean | null;
+
+  price_level: number | null;
+  cost_coffee: number | null;
+  bathroom_code: string | null;
+  description: string | null;
+  note: string | null;
+
+  // rating
+  rating_score: number | null;
+  review: string | null;
+  photos: string[] | null;
+  favorited: string | null;
 };

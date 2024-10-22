@@ -1,5 +1,5 @@
 import React from 'react';
-import { Place, UserSubmittedPlaceDetails } from '@/utils/types';
+import { Place } from '@/utils/types';
 import { Card, CardContent } from '@/components/ui/card';
 import Gallery from './image-gallery';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -8,12 +8,10 @@ import PriceLevel from '../../_components/price-level';
 import FavoriteToggle from './favorite-toggle';
 const PlaceOverviewCard = ({
   place,
-  photoUrls,
-  userSubmittedDetails
+  photoUrls
 }: {
   place: Place;
   photoUrls: string[];
-  userSubmittedDetails: UserSubmittedPlaceDetails[];
 }) => {
   return (
     <Card className="mb-8 rounded-t-none bg-background text-foreground">
@@ -28,8 +26,6 @@ const PlaceOverviewCard = ({
           )}
         </div>
         <div className="w-full md:w-3/4 md:pl-6">
-          <FavoriteToggle placeId={place.id} />
-
           {place.rating_score && (
             <div className="flex items-center my-2 ">
               <span className="font-bold text-xl mr-1">✭</span>
@@ -76,10 +72,11 @@ const PlaceOverviewCard = ({
             />
 
             <Amenity
-              name={'Wifi'}
+              name={'Internet Access'}
               value={place.internet_access}
               placeId={place.id}
             />
+            <FavoriteToggle placeId={place.id} />
           </div>
         </div>
       </CardContent>
