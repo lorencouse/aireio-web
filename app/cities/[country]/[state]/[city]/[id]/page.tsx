@@ -1,10 +1,11 @@
 import { createClient } from '@/utils/supabase/server';
-import { Place } from '@/utils/types';
+import { Place, UserSubmittedPlaceDetails } from '@/utils/types';
 import updateGooglePlaceData from '@/utils/places/updateGooglePlaceData';
 import updateOsmPlaceData from '@/utils/places/updateOsmPlaceData';
 import PlacePageLayout from './place-page-layout';
 import { Suspense } from 'react';
 import LoadingPlace from './_components/loading-place';
+import { getUserSubmittedPlaceDetails } from '@/utils/supabase/queries';
 
 const checkIsUpToDate = (place: Place): boolean => {
   const thirtyDaysAgo = new Date();
@@ -22,6 +23,9 @@ export default async function PlacePage({
   params: { id: string };
 }) {
   const supabase = createClient();
+
+  const userSubmittedDetails: UserSubmittedPlaceDetails[] =
+    await getUserSubmittedPlaceDetails(params.id);
 
   const { data: place, error } = await supabase
     .from('places')
@@ -54,7 +58,10 @@ export default async function PlacePage({
   return (
     <div className="place-page">
       <Suspense fallback={<LoadingPlace />}>
-        <PlacePageLayout place={updatedPlace} />
+        <PlacePageLayout
+          place={updatedPlace}
+          userSubmittedDetails={userSubmittedDetails}
+        />
       </Suspense>
     </div>
   );

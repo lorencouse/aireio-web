@@ -5,19 +5,18 @@ import PlaceHero from './_components/place-hero';
 import PlaceOverviewCard from './_components/place-overview-card';
 import PlaceDetails from './_components/place-details';
 import PopupPlaceDeleted from './_components/popup-place-deleted';
-import { Place } from '@/utils/types';
+import { Place, UserSubmittedPlaceDetails } from '@/utils/types';
 import { getPlacePhotoUrls } from '@/utils/functions/places/getPlacePhotoUrls';
 import LoadingPlace from './_components/loading-place';
-// import PlaceBreadCrumb from '../../../../../../components/general/dynamic-breadcrumb';
 import { uploadPlacePhotos } from '@/utils/places/uploadPlacePhotos';
 import DynamicBreadcrumb from '@/components/general/dynamic-breadcrumb';
 
 const PlacePageLayout = ({
-  place: initialPlace
-  // params
+  place: initialPlace,
+  userSubmittedDetails
 }: {
   place: Place;
-  // params: { country: string; state: string; city: string; id: string };
+  userSubmittedDetails: UserSubmittedPlaceDetails[];
 }) => {
   const [showModal, setShowModal] = useState(false);
   const [place, setPlace] = useState(initialPlace);
@@ -54,7 +53,11 @@ const PlacePageLayout = ({
       {place && <DynamicBreadcrumb placeName={place.name ? place.name : ''} />}
 
       <PlaceHero place={place} photoUrl={photoUrls[0]} />
-      <PlaceOverviewCard place={place} photoUrls={photoUrls} />
+      <PlaceOverviewCard
+        place={place}
+        photoUrls={photoUrls}
+        userSubmittedDetails={userSubmittedDetails}
+      />
       <PlaceDetails place={place} />
     </div>
   );

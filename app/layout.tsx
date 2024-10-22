@@ -6,6 +6,7 @@ import { getURL } from '@/utils/helpers';
 import 'styles/main.css';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Comfortaa } from 'next/font/google';
+import { Toaster } from '@/components/ui/toaster';
 
 export const runtime = 'edge';
 
@@ -50,6 +51,7 @@ export default async function RootLayout({ children }: PropsWithChildren) {
             {children}
           </main>
           <Footer />
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>

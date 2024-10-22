@@ -14,7 +14,7 @@ export type Database = {
           country: string | null
           country_code: string | null
           created_at: string | null
-          deleted: boolean
+          deleted: string | null
           google_id: string
           id: string
           lat: number
@@ -30,7 +30,7 @@ export type Database = {
           country?: string | null
           country_code?: string | null
           created_at?: string | null
-          deleted?: boolean
+          deleted?: string | null
           google_id: string
           id?: string
           lat: number
@@ -46,7 +46,7 @@ export type Database = {
           country?: string | null
           country_code?: string | null
           created_at?: string | null
-          deleted?: boolean
+          deleted?: string | null
           google_id?: string
           id?: string
           lat?: number
@@ -66,14 +66,14 @@ export type Database = {
           add_2: string | null
           brand: string | null
           brand_wikidata: string | null
-          check_date: Date | null
+          check_date: string | null
           city: string | null
           city_id: string | null
           cost_coffee: string | null
           country: string | null
           country_code: string | null
           county: string | null
-          deleted: boolean
+          deleted: string | null
           description: string | null
           dine_in: boolean | null
           district: string | null
@@ -129,14 +129,14 @@ export type Database = {
           add_2?: string | null
           brand?: string | null
           brand_wikidata?: string | null
-          check_date?: Date | null
+          check_date?: string | null
           city?: string | null
           city_id?: string | null
           cost_coffee?: string | null
           country?: string | null
           country_code?: string | null
           county?: string | null
-          deleted?: boolean
+          deleted?: string | null
           description?: string | null
           dine_in?: boolean | null
           district?: string | null
@@ -192,14 +192,14 @@ export type Database = {
           add_2?: string | null
           brand?: string | null
           brand_wikidata?: string | null
-          check_date?: Date | null
+          check_date?: string | null
           city?: string | null
           city_id?: string | null
           cost_coffee?: string | null
           country?: string | null
           country_code?: string | null
           county?: string | null
-          deleted?: boolean
+          deleted?: string | null
           description?: string | null
           dine_in?: boolean | null
           district?: string | null
@@ -309,15 +309,7 @@ export type Database = {
           username?: string | null
           websites?: string[] | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "user_profiles_id_fkey"
-            columns: ["id"]
-            isOneToOne: true
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       user_submitted_place_details: {
         Row: {
@@ -327,6 +319,7 @@ export type Database = {
           dine_in: boolean | null
           email: string | null
           facebook: string | null
+          favorited: string | null
           id: string
           indoor_seating: boolean | null
           instagram: string | null
@@ -372,6 +365,7 @@ export type Database = {
           dine_in?: boolean | null
           email?: string | null
           facebook?: string | null
+          favorited?: string | null
           id?: string
           indoor_seating?: boolean | null
           instagram?: string | null
@@ -417,6 +411,7 @@ export type Database = {
           dine_in?: boolean | null
           email?: string | null
           facebook?: string | null
+          favorited?: string | null
           id?: string
           indoor_seating?: boolean | null
           instagram?: string | null
@@ -477,8 +472,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      format_country_name: {
+        Args: {
+          name: string
+        }
+        Returns: string
+      }
       get_unique_countries: {
-        Args: Record<string, never>
+        Args: Record<PropertyKey, never>
         Returns: {
           country: string
           country_code: string
@@ -574,4 +575,19 @@ export type Enums<
   ? Database[PublicEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : PublicEnumNameOrOptions extends keyof PublicSchema["Enums"]
     ? PublicSchema["Enums"][PublicEnumNameOrOptions]
+    : never
+
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    | keyof PublicSchema["CompositeTypes"]
+    | { schema: keyof Database },
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+    schema: keyof Database
+  }
+    ? keyof Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never = never,
+> = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof PublicSchema["CompositeTypes"]
+    ? PublicSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never

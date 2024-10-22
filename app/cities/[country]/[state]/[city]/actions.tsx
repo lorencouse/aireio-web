@@ -150,7 +150,7 @@ export const createNewPlaces = async (
       rating_count: place.user_ratings_total || null,
       price_level: place.price_level || null,
       photo_refs: place.photos ? [place.photos[0].photo_reference] : null,
-      deleted: false
+      deleted: null
       // Only include fields you have data for
     }));
 

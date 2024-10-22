@@ -1,18 +1,19 @@
 import React from 'react';
-import { Place } from '@/utils/types';
+import { Place, UserSubmittedPlaceDetails } from '@/utils/types';
 import { Card, CardContent } from '@/components/ui/card';
 import Gallery from './image-gallery';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-
-// import { StarIcon } from '@radix-ui/react-icons';
 import Amenity from './amenity';
 import PriceLevel from '../../_components/price-level';
+import FavoriteToggle from './favorite-toggle';
 const PlaceOverviewCard = ({
   place,
-  photoUrls
+  photoUrls,
+  userSubmittedDetails
 }: {
   place: Place;
   photoUrls: string[];
+  userSubmittedDetails: UserSubmittedPlaceDetails[];
 }) => {
   return (
     <Card className="mb-8 rounded-t-none bg-background text-foreground">
@@ -27,9 +28,11 @@ const PlaceOverviewCard = ({
           )}
         </div>
         <div className="w-full md:w-3/4 md:pl-6">
+          <FavoriteToggle placeId={place.id} />
+
           {place.rating_score && (
-            <div className="flex items-center mb-2">
-              <span>✭</span>
+            <div className="flex items-center my-2 ">
+              <span className="font-bold text-xl mr-1">✭</span>
               <span>
                 {place.rating_score} ({place.rating_count})
               </span>

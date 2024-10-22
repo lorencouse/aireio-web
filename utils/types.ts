@@ -12,7 +12,7 @@ export type City = {
   photo_ref: string | null;
   created_at: string | null;
   updated_at: string | null;
-  deleted: boolean | null;
+  deleted: string | null;
 };
 
 export type Place = {
@@ -23,7 +23,7 @@ export type Place = {
   lat: number;
   lng: number;
   type: string;
-  check_date: Date | null;
+  check_date: string | null;
   photo_refs: string[] | null;
   photo_names: string[] | null;
   // address
@@ -81,7 +81,7 @@ export type Place = {
   note: string | null;
   opening_hours: string[] | null;
   price_level: number | null;
-  deleted: boolean;
+  deleted: string | null;
 };
 
 export type UserSubmittedPlaceDetails = {
@@ -134,7 +134,15 @@ export type UserSubmittedPlaceDetails = {
   rating_score: number | null;
   review: string | null;
   photos: string[] | null;
+  favorited: string | null;
 };
+
+export interface FavoritedPlace {
+  id: string;
+  user_id: string;
+  place_id: string;
+  created_at: string;
+}
 
 export type UserProfile = {
   id: string;

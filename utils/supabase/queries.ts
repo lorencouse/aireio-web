@@ -1,5 +1,6 @@
 import { createClient } from '@/utils/supabase/server';
 import { cache } from 'react';
+import { UserSubmittedPlaceDetails } from '../types';
 
 export const getUser = cache(async () => {
   const supabase = createClient();
@@ -30,4 +31,30 @@ export const getUserProfile = async () => {
   }
 
   return userProfile;
+};
+
+export const getUserSubmittedPlaceDetails = async (
+  placeId: string
+): Promise<UserSubmittedPlaceDetails[]> => {
+  const supabase = createClient();
+
+  if (!placeId) return [];
+
+  const { data: details, error } = await supabase
+    .from('user_submitted_place_details')
+    .select('*')
+    .eq('place_id', placeId);
+
+  if (error || !details) {
+    console.log(
+      `Could not get user submitted place details for place id: ${placeId}`,
+      {
+        error,
+        details
+      }
+    );
+    return [];
+  }
+
+  return details;
 };

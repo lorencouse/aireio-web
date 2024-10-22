@@ -28,7 +28,7 @@ export const updateGooglePlaceData = async (place: Place) => {
     if (!googlePlace.dine_in && place.type === 'cafe') {
       const updatedPlace = {
         ...place,
-        deleted: true
+        deleted: new Date().toISOString()
       };
 
       const { error } = await supabase
@@ -53,7 +53,7 @@ export const updateGooglePlaceData = async (place: Place) => {
       name: googlePlace.name ?? place.name,
       lat: googlePlace.geometry?.location?.lat ?? place.lat,
       lng: googlePlace.geometry?.location?.lng ?? place.lng,
-      check_date: new Date(),
+      check_date: new Date().toISOString(),
       // business_status: googlePlace.business_status ?? place.business_status,
       photo_refs: (() => {
         if (!googlePlace.photos) return place.photo_refs ?? [];

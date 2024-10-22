@@ -7,7 +7,7 @@ import {
   PopoverContent,
   PopoverTrigger
 } from '@/components/ui/popover';
-import { SubmitUserPlaceData } from '../actions';
+import { SubmitUserPlaceInfo } from '../actions';
 import Link from 'next/link';
 
 export default function Amenity({
@@ -26,7 +26,7 @@ export default function Amenity({
 
   const handleClick = async (newValue: boolean) => {
     setButtonValue(newValue);
-    const { success, error, authError } = await SubmitUserPlaceData(
+    const { success, error, authError } = await SubmitUserPlaceInfo(
       placeId,
       name,
       newValue
