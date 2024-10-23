@@ -62,8 +62,6 @@ export default function PlacesPageLayout({
 
   // Update filtered places when search params or allPlaces change
   useEffect(() => {
-    // if (!allPlaces || allPlaces.length === 0) return;
-
     const { type, radius, lat, lng, sortMethod, sortOrder } =
       parseSearchParams();
 
@@ -94,7 +92,6 @@ export default function PlacesPageLayout({
 
   return (
     <>
-      {/* <CityBreadCrumb city={city} /> */}
       <DynamicBreadcrumb />
 
       <div className="grid lg:grid-cols-2 w-full">

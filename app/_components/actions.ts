@@ -76,7 +76,7 @@ export const fetchCity = async (city: Partial<City>) => {
   const normalizedCountry = await normalizeString(country);
 
   try {
-    const { data: insertedCity, error: insertError } = await supabase
+    await supabase
       .from('cities')
       .insert({
         name: normalizedName,
@@ -91,29 +91,6 @@ export const fetchCity = async (city: Partial<City>) => {
       .select()
       .single();
 
-    if (!insertError) {
-      const res = await fetch(
-        `https://maps.googleapis.com/maps/api/place/details/json?place_id=${google_id}&fields=photos&key=${process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY}`
-      );
-      if (!res.ok) {
-        throw new Error(
-          `Network response was not ok: ${res.status} ${res.statusText}`
-        );
-      }
-      const data = await res.json();
-      console.log('Received data:', data);
-
-      const photoRef = data.result?.photos?.[0]?.photo_reference || '';
-      console.log('Photo reference:', photoRef);
-      if (insertedCity) {
-        const completeCity: City = {
-          ...(insertedCity as City),
-          photo_ref: photoRef
-        };
-        await uploadCityPhoto(completeCity);
-      }
-    }
-
     redirect(`/cities/${country_code}/${normalizedState}/${normalizedName}`);
   } catch (error) {
     console.error('Unexpected error in fetchCity:', error);
@@ -121,41 +98,92 @@ export const fetchCity = async (city: Partial<City>) => {
   }
 };
 
-const uploadCityPhoto = async (city: City) => {
+interface GooglePlacePhotoResponse {
+  result?: {
+    photos?: Array<{
+      photo_reference: string;
+    }>;
+  };
+  status: string;
+  error_message?: string;
+}
+
+export const uploadCityPhoto = async (
+  city: City
+): Promise<{
+  success: boolean;
+  message: string;
+  photoRef?: string;
+}> => {
   const supabase = createClient();
   const maxWidth = 1200;
-  const normalizedName = normalizeString(city.name);
-  const normalizedState = normalizeString(city.state);
+  const normalizedName = await normalizeString(city.name);
+  const normalizedState = await normalizeString(city.state);
 
-  if (city.photo_ref) {
-    const googlePhotoUrl = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=${maxWidth}&photoreference=${city.photo_ref}&key=${process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY}`;
+  try {
+    // 1. Fetch photo reference from Google Places API
+    const res = await fetch(
+      `https://maps.googleapis.com/maps/api/place/details/json?place_id=${city.google_id}&fields=photos&key=${process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY}`
+    );
 
-    const imgName = `${city.country_code}_${normalizedState}_${normalizedName}.jpg`;
-    const googleId = city.google_id || '';
-
-    try {
-      const success = await uploadImageToSupabase(
-        googlePhotoUrl,
-        imgName,
-        'cities'
+    if (!res.ok) {
+      throw new Error(
+        `Google Places API error: ${res.status} ${res.statusText}`
       );
-
-      if (success) {
-        const { error: updateError } = await supabase
-          .from('cities')
-          .update({ photo_ref: imgName })
-          .eq('google_id', googleId);
-
-        if (updateError) throw updateError;
-
-        console.log('Photo updated in Supabase');
-      }
-    } catch (error) {
-      console.error('Error uploading image to Supabase:', error);
     }
+
+    const data: GooglePlacePhotoResponse = await res.json();
+
+    if (data.status !== 'OK') {
+      throw new Error(
+        `Google Places API returned status: ${data.status} - ${data.error_message || 'Unknown error'}`
+      );
+    }
+
+    const photoRef = data.result?.photos?.[0]?.photo_reference;
+
+    if (!photoRef) {
+      return {
+        success: false,
+        message: `No photos available for ${city.name}`
+      };
+    }
+
+    // 2. Construct the image URL and name
+    const googlePhotoUrl = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=${maxWidth}&photoreference=${photoRef}&key=${process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY}`;
+    const imgName = `${city.country_code}_${normalizedState}_${normalizedName}.jpg`;
+
+    // 3. Upload the image to Supabase storage
+    const success = await uploadImageToSupabase(
+      googlePhotoUrl,
+      imgName,
+      'cities'
+    );
+
+    if (!success) {
+      throw new Error('Failed to upload image to Supabase storage');
+    }
+
+    // 4. Update the city record with the new photo reference
+    const { error: updateError } = await supabase
+      .from('cities')
+      .update({ photo_ref: photoRef })
+      .eq('google_id', city.google_id);
+
+    if (updateError) {
+      throw updateError;
+    }
+
+    return {
+      success: true,
+      message: 'Successfully uploaded and updated city photo',
+      photoRef
+    };
+  } catch (error) {
+    console.error('Error in uploadCityPhoto:', error);
+    return {
+      success: false,
+      message: error instanceof Error ? error.message : 'Unknown error occurred'
+    };
   }
-
-  redirect(`/cities/${city.country_code}/${normalizedState}/${normalizedName}`);
 };
-
-export default fetchCity;
