@@ -5,7 +5,7 @@ import CityList from '@/app/_components/city-list';
 
 import { City } from '@/utils/types';
 import HomeHero from '@/app/_components/home-hero';
-import formatPlaceName from '@/utils/functions/formatePlaceName';
+import formatPlaceName from '@/utils/functions/formatPlaceName';
 import CountryList from '../_components/country-list';
 import DynamicBreadcrumb from '@/components/general/dynamic-breadcrumb';
 

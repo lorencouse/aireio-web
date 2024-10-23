@@ -1,6 +1,6 @@
 'use client';
 
-import { LogOut, Settings, User } from 'lucide-react';
+import { LogOut, Settings, User, Heart } from 'lucide-react';
 import Link from 'next/link';
 import { SignOut } from '@/utils/auth-helpers/server';
 
@@ -38,6 +38,13 @@ export function UserProfile({ user }: { user: UserProfileType }) {
               <User className="mr-2 h-4 w-4" />
               <span>Profile</span>
               <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+            </DropdownMenuItem>
+          </Link>
+          <Link href="/favorites">
+            <DropdownMenuItem>
+              <Heart className="mr-2 h-4 w-4" />
+              <span>Favorites</span>
+              <DropdownMenuShortcut>⇧⌘F</DropdownMenuShortcut>
             </DropdownMenuItem>
           </Link>
           <Link href="/profile/appearance">

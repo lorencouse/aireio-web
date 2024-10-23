@@ -80,13 +80,14 @@ const FavoriteToggle = ({ placeId }: FavoriteToggleProps) => {
       onPressedChange={handleToggle}
       disabled={isPending}
       aria-label={isFavorited ? 'Remove from favorites' : 'Add to favorites'}
-      className="hover:bg-rose-100 data-[state=on]:bg-rose-200 data-[state=on]:text-rose-600 disabled:opacity-50"
+      className="hover:bg-rose-100 hover:scale-105 hover:-translate-y-1 data-[state=on]:bg-rose-200 data-[state=off]:bg-muted data-[state=on]:text-rose-600 disabled:opacity-50 rounded-full"
     >
       <Heart
         className={`h-4 w-4 ${
           isFavorited ? 'fill-rose-600 text-rose-600' : 'text-slate-600'
-        } ${isPending ? 'opacity-50' : ''}`}
+        } ${isPending ? 'opacity-50' : ''} mr-2`}
       />
+      {isFavorited ? 'Favorites' : 'Add to Favorites'}
     </Toggle>
   );
 };

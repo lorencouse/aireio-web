@@ -1,22 +1,26 @@
 import Link from 'next/link';
-import formatPlaceName from '@/utils/functions/formatePlaceName';
+import formatPlaceName from '@/utils/functions/formatPlaceName';
 
 const CountryList = ({
   countries,
-  currentCountry
+  currentCountry,
+  heading
 }: {
   countries: { country: string; country_code: string }[];
   currentCountry: string;
+  heading?: string;
 }) => {
   const CountryList = countries.filter(
     (country) => country.country !== currentCountry
   );
 
+  const title = heading ? heading : 'Explore More Countries';
+
   return (
     <div className="countries">
       <div className="flex flex-row flex-wrap gap-4 mx-4">
         <h3 className="md:text-2xl text-xl w-full font-bold select-none md:py-8 py-6 mt-6 text-center border-y-2">
-          Explore More Countries
+          {title}
         </h3>
         {CountryList.map((c) => (
           <Link
@@ -47,7 +51,7 @@ const CountryList = ({
   );
 };
 
-const getCountryFlagEmoji = (countryCode: string) => {
+export const getCountryFlagEmoji = (countryCode: string) => {
   const codePoints = countryCode
     .toUpperCase()
     .split('')

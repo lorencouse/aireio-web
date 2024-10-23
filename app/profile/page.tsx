@@ -4,12 +4,13 @@ import { Separator } from '@/components/ui/separator';
 import { ContactInfoForm } from './contact-info-form';
 import { UserProfile } from '@/utils/types';
 import { getUserProfile } from '@/utils/supabase/queries';
+import { redirect } from 'next/navigation';
 
 export default async function ContactInfoPage() {
   const profile: UserProfile | null = await getUserProfile();
 
   if (!profile) {
-    return null;
+    redirect('/signin/password_signin');
   }
 
   return (

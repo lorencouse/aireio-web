@@ -2,6 +2,7 @@
 'use server';
 
 import { createClient } from '@/utils/supabase/server';
+import { Place } from '@/utils/types';
 
 export const SubmitUserPlaceInfo = async (
   placeId: string,
@@ -130,7 +131,7 @@ export const getFavoriteStatus = async (
 };
 
 // Helper function to get all favorited places
-export const getFavoritedPlaces = async (
+export const getFavoritePlaces = async (
   page = 1,
   limit = 10
 ): Promise<{
@@ -172,4 +173,17 @@ export const getFavoritedPlaces = async (
     places: data || [],
     count: count || 0
   };
+};
+
+export const getPlacesById = async (placeIds: string[]): Promise<Place[]> => {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from('places')
+    .select('*')
+    .in('id', placeIds);
+  if (error) {
+    console.error('Error fetching places:', error);
+    return [];
+  }
+  return data || [];
 };

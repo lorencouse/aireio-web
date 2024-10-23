@@ -10,8 +10,8 @@ const PlacesList = ({
   setIsLoadingPlace
 }: {
   filteredPlaces: Place[];
-  searchParams: URLSearchParams | null;
-  city: City;
+  searchParams?: URLSearchParams | null;
+  city?: City;
   setIsLoadingPlace: (isLoadingPlace: boolean) => void;
 }) => {
   return (
@@ -27,10 +27,14 @@ const PlacesList = ({
               distance={calcDistance(
                 {
                   lat: parseFloat(
-                    searchParams?.get('lat') || city.lat.toString()
+                    searchParams?.get('lat') ||
+                      city?.lat.toString() ||
+                      place.lat.toString()
                   ),
                   lng: parseFloat(
-                    searchParams?.get('lng') || city.lng.toString()
+                    searchParams?.get('lng') ||
+                      city?.lng.toString() ||
+                      place.lng.toString()
                   )
                 },
                 { lat: place.lat, lng: place.lng }

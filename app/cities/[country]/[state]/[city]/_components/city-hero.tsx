@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { placeholderImage } from '@/utils/constants';
 import { getSupabaseCityPhotoUrl } from '@/utils/functions/cities/getSupabaseCityPhotoUrl';
 import { City } from '@/utils/types';
-import formatPlaceName from '@/utils/functions/formatePlaceName';
+import formatPlaceName from '@/utils/functions/formatPlaceName';
 import { uploadCityPhoto } from '@/app/_components/actions';
 import { useEffect, useState } from 'react';
 

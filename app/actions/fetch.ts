@@ -55,6 +55,19 @@ export async function getCitiesForCountry(country: string): Promise<City[]> {
   return data || [];
 }
 
+export async function getCitiesById(cityIds: string[]): Promise<City[]> {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from('cities')
+    .select('*')
+    .in('id', cityIds);
+  if (error) {
+    console.error('Error fetching cities:', error);
+    return [];
+  }
+  return data || [];
+}
+
 type CountryResult =
   Database['public']['Functions']['get_unique_countries']['Returns'][number];
 

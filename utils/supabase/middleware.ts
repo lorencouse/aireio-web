@@ -52,7 +52,10 @@ export async function updateSession(request: NextRequest) {
     data: { user }
   } = await supabase.auth.getUser();
 
-  if (!user && request.nextUrl.pathname.startsWith('/profile')) {
+  if (
+    (!user && request.nextUrl.pathname.startsWith('/profile')) ||
+    (!user && request.nextUrl.pathname.startsWith('/favorites'))
+  ) {
     return NextResponse.redirect(
       new URL('/signin/password_signin', request.url)
     );

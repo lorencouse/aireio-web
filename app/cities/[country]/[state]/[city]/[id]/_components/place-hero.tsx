@@ -6,7 +6,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Place } from '@/utils/types';
 
 import { placeholderImage } from '@/utils/constants';
-import formatPlaceName from '@/utils/functions/formatePlaceName';
+import formatPlaceName from '@/utils/functions/formatPlaceName';
 
 interface PlaceHeroProps {
   place: Place;
