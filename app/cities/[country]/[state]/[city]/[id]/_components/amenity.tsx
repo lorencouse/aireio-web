@@ -9,17 +9,18 @@ import {
 } from '@/components/ui/popover';
 import { SubmitUserPlaceInfo } from '../actions';
 import Link from 'next/link';
+import { AmenityAggregation } from '@/utils/types';
 
 const getRatingColor = (index: number | null) => {
   switch (index) {
     case 0:
-      return 'bg-black ';
+      return 'bg-red-600 ';
     case 1:
       return 'bg-red-500 ';
     case 2:
       return 'bg-orange-500 ';
     case 3:
-      return 'bg-yellow-500 ';
+      return 'bg-yellow-400 ';
     case 4:
       return 'bg-lime-500 ';
     case 5:
@@ -32,17 +33,40 @@ const getRatingColor = (index: number | null) => {
 export default function Amenity({
   name,
   value,
-  placeId
+  placeId,
+  aggregation
 }: {
   name: string;
   value: boolean | null;
   placeId: string;
+  aggregation?: AmenityAggregation;
 }) {
-  const [buttonValue, setButtonValue] = useState<number | null>(null);
+  // Initialize buttonValue based on the most common value in value_distribution
+  const [buttonValue, setButtonValue] = useState<number | null>(() => {
+    if (aggregation?.value_distribution) {
+      const distribution = aggregation.value_distribution as Record<
+        string,
+        number
+      >;
+
+      // Calculate weighted average
+      let totalScore = 0;
+      let totalCount = 0;
+
+      Object.entries(distribution).forEach(([value, count]) => {
+        totalScore += parseInt(value) * count;
+        totalCount += count;
+      });
+
+      // Return rounded average if there are submissions, null otherwise
+      return totalCount > 0 ? Math.round(totalScore / totalCount) : null;
+    }
+    return null;
+  });
   const [error, setError] = useState<string | null>(null);
   const [isAuthError, setIsAuthError] = useState(false);
 
-  const buttonVals = ['None', '1', '2', '3', '4', '5'];
+  const buttonVals = ['X', '1', '2', '3', '4', '5'];
 
   const handleClick = async (index: number) => {
     try {
@@ -68,38 +92,38 @@ export default function Amenity({
   const title = name.replace('Serves', '');
 
   return (
-    <div className="flex flex-row flex-wrap items-center gap-4 mb-2">
+    <div className="flex flex-row flex-wrap items-center gap-4 py-2 ">
       <p>
         <span className="font-bold">{title}:</span>
         <Popover>
           <PopoverTrigger asChild>
             <span
-              className={`ml-2 cursor-pointer hover:opacity-70 ${getRatingColor(buttonValue)}`}
+              className={`ml-2 cursor-pointer px-3 rounded text-white py-2 hover:opacity-70 ${getRatingColor(buttonValue)} ${buttonValue !== null ? 'text-white ' : value ? ' bg-green-500' : value === false ? ' bg-red-600' : 'bg-muted-foreground'}`}
             >
               {value
-                ? '✅'
+                ? '✓'
                 : value === false
-                  ? '❌'
-                  : buttonValue
-                    ? buttonVals[buttonValue]
-                    : 'Add➕'}
+                  ? 'X'
+                  : buttonValue !== null
+                    ? `${buttonVals[buttonValue]}`
+                    : 'Add ✚'}
             </span>
           </PopoverTrigger>
-          <PopoverContent className="w-auto p-5">
-            <h3 className="font-bold text-lg mb-5">
-              Rate {title} at this location
+          <PopoverContent className="w-auto p-4 max-w-[90vw]">
+            <h3 className="font-bold text-lg mb-4">
+              Rate {title} at this location:
             </h3>
 
-            <div className="flex flex-row flex-wrap gap-2">
+            <div className="flex flex-row flex-wrap gap-2 justify-center">
               {buttonVals.map((val, index) => (
                 <Button
                   key={index}
                   variant="outline"
                   onClick={() => handleClick(index)}
-                  className={`text-lg text-white p-3 hover:scale-105 ${
+                  className={`text-lg text-white min-w-[40px] p-2 hover:scale-105 ${
                     buttonValue === index ? 'ring-2 ring-offset-2' : ''
                   } 
-  ${getRatingColor(index)}`}
+        ${getRatingColor(index)}`}
                 >
                   {val}
                 </Button>
@@ -113,6 +137,12 @@ export default function Amenity({
                   Log in
                 </Link>{' '}
                 to submit details
+              </p>
+            )}
+            {aggregation?.last_updated && (
+              <p className="text-sm text-gray-500 mt-2">
+                Last updated:{' '}
+                {new Date(aggregation.last_updated).toLocaleDateString()}
               </p>
             )}
           </PopoverContent>

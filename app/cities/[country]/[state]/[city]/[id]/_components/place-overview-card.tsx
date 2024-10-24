@@ -1,17 +1,20 @@
 import React from 'react';
-import { Place } from '@/utils/types';
+import { AmenityAggregation, Place } from '@/utils/types';
 import { Card, CardContent } from '@/components/ui/card';
 import Gallery from './image-gallery';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import Amenity from './amenity';
 import PriceLevel from '../../_components/price-level';
 import FavoriteToggle from './favorite-toggle';
+
 const PlaceOverviewCard = ({
   place,
-  photoUrls
+  photoUrls,
+  userSubmissions
 }: {
   place: Place;
   photoUrls: string[];
+  userSubmissions: AmenityAggregation[];
 }) => {
   return (
     <Card className="mb-8 rounded-t-none bg-background text-foreground">
@@ -54,27 +57,42 @@ const PlaceOverviewCard = ({
               name={'Indoor Seating'}
               value={place.indoor_seating}
               placeId={place.id}
+              aggregation={userSubmissions.find(
+                (sub) => sub.amenity_name === 'indoor_seating'
+              )}
             />
             <Amenity
               name={'Outdoor Seating'}
               value={place.outdoor_seating}
               placeId={place.id}
+              aggregation={userSubmissions.find(
+                (sub) => sub.amenity_name === 'outdoor_seating'
+              )}
             />
             <Amenity
               name={'Wheelchair Accessible'}
               value={place.wheelchair_accessible}
               placeId={place.id}
+              aggregation={userSubmissions.find(
+                (sub) => sub.amenity_name === 'wheelchair_accessible'
+              )}
             />
             <Amenity
               name={'Power Outlets'}
               value={place.power_outlets}
               placeId={place.id}
+              aggregation={userSubmissions.find(
+                (sub) => sub.amenity_name === 'power_outlets'
+              )}
             />
 
             <Amenity
               name={'Internet Access'}
               value={place.internet_access}
               placeId={place.id}
+              aggregation={userSubmissions.find(
+                (sub) => sub.amenity_name === 'internet_access'
+              )}
             />
             <FavoriteToggle placeId={place.id} />
           </div>

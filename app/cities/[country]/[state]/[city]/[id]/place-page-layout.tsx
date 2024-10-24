@@ -53,7 +53,7 @@ const PlacePageLayout = ({
       {place && <DynamicBreadcrumb placeName={place.name ? place.name : ''} />}
 
       <PlaceHero place={place} photoUrl={photoUrls[0]} />
-      <PlaceOverviewCard place={place} photoUrls={photoUrls} />
+      <PlaceOverviewCard place={place} photoUrls={photoUrls} userSubmissions={userSubmissions} />
       <PlaceDetails place={place} />
     </div>
   );
