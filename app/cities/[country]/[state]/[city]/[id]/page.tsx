@@ -1,5 +1,5 @@
 import { createClient } from '@/utils/supabase/server';
-import { Place, UserSubmittedPlaceDetails } from '@/utils/types';
+import { Place } from '@/utils/types';
 import updateGooglePlaceData from '@/utils/places/updateGooglePlaceData';
 import updateOsmPlaceData from '@/utils/places/updateOsmPlaceData';
 import PlacePageLayout from './place-page-layout';
@@ -51,10 +51,23 @@ export default async function PlacePage({
     updatedPlace = (await updateOsmPlaceData(updatedPlace)) || updatedPlace;
   }
 
+  const { data: userSubmissions, error: userSubmissionsError } = await supabase
+    .from('amenity_aggregations')
+    .select('*')
+    .eq('place_id', params.id);
+
+  if (userSubmissionsError) {
+    console.error('Error fetching user submissions:', userSubmissionsError);
+    // Handle error as needed
+  }
+
   return (
     <div className="place-page">
       <Suspense fallback={<LoadingPlace />}>
-        <PlacePageLayout place={updatedPlace} />
+        <PlacePageLayout
+          place={updatedPlace}
+          userSubmissions={userSubmissions || []}
+        />
       </Suspense>
     </div>
   );

@@ -87,7 +87,7 @@ const FavoriteToggle = ({ placeId }: FavoriteToggleProps) => {
           isFavorited ? 'fill-rose-600 text-rose-600' : 'text-slate-600'
         } ${isPending ? 'opacity-50' : ''} mr-2`}
       />
-      {isFavorited ? 'Favorites' : 'Add to Favorites'}
+      {isFavorited ? 'In Favorites' : 'Add to Favorites'}
     </Toggle>
   );
 };
