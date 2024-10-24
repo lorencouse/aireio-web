@@ -90,12 +90,8 @@ export default function FavoritesLayout({
 
   return (
     <div id="favorites">
-      <h1>Favorites</h1>
+      <h1 className="pt-4">Your Favorites</h1>
       <div className="flex flex-col items-center">
-        <h3 className="text-2xl w-full font-bold select-none pl-8 mb-4 border-t-2 mt-6 pt-6 text-center">
-          Your Cities
-        </h3>
-        <CityList cities={cities} />
         <h3 className="text-2xl w-full font-bold select-none pl-8 mb-4 border-t-2 mt-6 pt-6 text-center">
           Favorite Places
         </h3>
@@ -121,6 +117,8 @@ export default function FavoritesLayout({
           />
         )}
       </div>
+      <CityList cities={cities} heading="Your Cities" />
+
       <CountryList
         countries={countries}
         currentCountry={country}

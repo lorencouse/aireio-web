@@ -1,6 +1,6 @@
 // /app/cities/[country]/[state]/[city]/page.tsx
-import PlacesPageLayout from './places-page-layout';
-import { getCity, getPlaces, fetchExistingPlaces } from './actions';
+import CityPageLayout from './city-page-layout';
+import { getCity, fetchExistingPlaces } from './actions';
 import { City } from '@/utils/types';
 
 export default async function Places({
@@ -22,7 +22,7 @@ export default async function Places({
 
   return (
     <div className="flex flex-col justify-center items-center w-full mt-[1rem]">
-      <PlacesPageLayout city={city} places={places} />
+      <CityPageLayout city={city} places={places} />
     </div>
   );
 }

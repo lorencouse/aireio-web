@@ -13,8 +13,9 @@ import LoadingGrid from '@/components/general/loading-grid';
 import LoadingPlace from './[id]/_components/loading-place';
 import CityHero from './_components/city-hero';
 import DynamicBreadcrumb from '@/components/general/dynamic-breadcrumb';
+import { Button } from '@/components/ui/button';
 
-export default function PlacesPageLayout({
+export default function CityPageLayout({
   city,
   places
 }: {
@@ -106,12 +107,14 @@ export default function PlacesPageLayout({
       </div>
       <div className="flex flex-row flex-wrap justify-between w-full border-t mt-6 items-center">
         <Filters searchParams={searchParams} />
-        {/* <Button onClick={handleSearch} className="m-4" disabled={isLoading}>
-          {isLoading ? 'Loading...' : 'Search'}
-        </Button> */}
+      </div>
+      <div className="w-full flex justify-end">
+        <Button onClick={handleSearch} className="m-4" disabled={isLoading}>
+          {isLoading ? 'Loading...' : 'Search More Places'}
+        </Button>
       </div>
 
-      <h1 className="md:text-4xl text-2xl font-bold mx-4 md:mt-8 mt-6 select-none text-center leading-normal w-full">
+      <h1 className="md:text-4xl text-2xl font-bold mx-4 select-none text-center leading-normal w-full">
         Workspaces in{' '}
         <span className="capitalize">
           {city && city.name.replace(/-/g, ' ')}

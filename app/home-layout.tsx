@@ -18,14 +18,10 @@ export default function HomeLayout({
     <div id="aireio-home">
       <HomeHero heading="Find Your Work Space" />
       <div className="flex flex-col items-center">
-        <h3 className="text-2xl w-full font-bold select-none pl-8 mb-4 border-t-2 mt-6 pt-6 text-center ">
-          Explore Popular Cities
-        </h3>
-
         {initialCities.length === 0 ? (
           <LoadingGrid />
         ) : (
-          <CityList cities={initialCities} />
+          <CityList cities={initialCities} heading="Explore Popular Cities" />
         )}
       </div>
       <CountryList countries={countries} currentCountry="" />

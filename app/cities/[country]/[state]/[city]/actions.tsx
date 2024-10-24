@@ -134,42 +134,69 @@ export const createNewPlaces = async (
 
     type PlaceInsert = Database['public']['Tables']['places']['Insert'];
 
-    const newPlaces: PlaceInsert[] = places.map((place) => ({
-      name: place.name,
-      city_id: city.id,
-      google_id: place.place_id,
-      lat: place.geometry.location.lat,
-      lng: place.geometry.location.lng,
-      type: type,
-      add_1: place.vicinity || null,
-      city: city.name,
-      state: city.state || null,
-      country: city.country || null,
-      country_code: city.country_code || null,
-      rating_score: place.rating || null,
-      rating_count: place.user_ratings_total || null,
-      price_level: place.price_level || null,
-      photo_refs: place.photos ? [place.photos[0].photo_reference] : null,
-      deleted: null
-      // Only include fields you have data for
-    }));
-
-    // Then use this in your insert operation
-    const { data: insertedPlaces, error } = await supabase
+    // First, get all existing Google IDs for this city to check for duplicates
+    const { data: existingPlaces, error: fetchError } = await supabase
       .from('places')
-      .insert(newPlaces)
-      .select();
+      .select('google_id')
+      .eq('city_id', city.id);
 
-    if (error) {
-      console.error('Error in insert operation:', error);
-      throw error;
+    if (fetchError) {
+      console.error('Error fetching existing places:', fetchError);
+      throw fetchError;
     }
 
-    if (!insertedPlaces || insertedPlaces.length === 0) {
-      console.log('No new places inserted');
+    // Create a Set of existing Google Place IDs for efficient lookup
+    const existingGoogleIds = new Set(
+      existingPlaces?.map((place) => place.google_id) || []
+    );
+
+    // Filter out places that already exist in the database
+    const newPlacesToInsert: PlaceInsert[] = places
+      .filter((place) => !existingGoogleIds.has(place.place_id))
+      .map((place) => ({
+        name: place.name,
+        city_id: city.id,
+        google_id: place.place_id,
+        lat: place.geometry.location.lat,
+        lng: place.geometry.location.lng,
+        type: type,
+        add_1: place.vicinity || null,
+        city: city.name,
+        state: city.state || null,
+        country: city.country || null,
+        country_code: city.country_code || null,
+        rating_score: place.rating || null,
+        rating_count: place.user_ratings_total || null,
+        price_level: place.price_level || null,
+        photo_refs: place.photos ? [place.photos[0].photo_reference] : null,
+        deleted: null
+      }));
+
+    // If there are no new places to insert, return empty array
+    if (newPlacesToInsert.length === 0) {
+      console.log(
+        'No new places to insert - all places already exist in database'
+      );
       return [];
     }
 
+    // Insert only the new places
+    const { data: insertedPlaces, error: insertError } = await supabase
+      .from('places')
+      .insert(newPlacesToInsert)
+      .select();
+
+    if (insertError) {
+      console.error('Error in insert operation:', insertError);
+      throw insertError;
+    }
+
+    if (!insertedPlaces || insertedPlaces.length === 0) {
+      console.log('No new places were inserted');
+      return [];
+    }
+
+    console.log(`Successfully inserted ${insertedPlaces.length} new places`);
     return insertedPlaces as Place[];
   } catch (error) {
     console.error('Error in createNewPlaces:', error);

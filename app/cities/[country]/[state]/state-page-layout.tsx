@@ -28,11 +28,14 @@ export default function StatePageLayout({
       <DynamicBreadcrumb />
       <HomeHero heading={`Find More Cities in ${stateNameFormatted}`} />
       <div className="flex flex-col items-center">
-        <h3 className="text-2xl w-full font-bold select-none pl-8 border-b-2 mb-6 py-6 text-center ">
-          Top Cities in {stateNameFormatted}
-        </h3>
-
-        {cities.length === 0 ? <LoadingGrid /> : <CityList cities={cities} />}
+        {cities.length === 0 ? (
+          <LoadingGrid />
+        ) : (
+          <CityList
+            cities={cities}
+            heading={`Top Cities in ${stateNameFormatted}`}
+          />
+        )}
       </div>
       <CountryList countries={countries} currentCountry={currentCountry} />
     </div>

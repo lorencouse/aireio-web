@@ -25,9 +25,12 @@ export default function CountryPageLayout({
     <div className="state-page">
       <DynamicBreadcrumb />
       <HomeHero heading={`Find Work Spaces in ${countryName}`} />
-      <div className="flex flex-col items-center mt-4 ">
-        <h2 className="md:text-3xl text-2xl">Top Cities in {countryName}</h2>
-        {cities.length === 0 ? <LoadingGrid /> : <CityList cities={cities} />}
+      <div className="flex flex-col items-center ">
+        {cities.length === 0 ? (
+          <LoadingGrid />
+        ) : (
+          <CityList cities={cities} heading={`Top Cities in ${countryName}`} />
+        )}
       </div>
 
       <CountryList countries={countries} currentCountry={currentCountry} />
