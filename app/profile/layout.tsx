@@ -24,12 +24,12 @@ const sidebarNavItems = [
     href: '/profile/appearance'
   },
   {
-    title: 'Notifications',
-    href: '/profile/notifications'
+    title: 'Contributions',
+    href: '/profile/contributions'
   },
   {
-    title: 'Display',
-    href: '/profile/display'
+    title: 'Notifications',
+    href: '/profile/notifications'
   }
 ];
 
@@ -55,7 +55,9 @@ export default async function SettingsLayout({
             height={150}
             className="h-16 w-16 rounded-full"
           />
-          <span className="capitalize text-xl">Hello, {name}</span>
+          <div className="flex flex-col gap-2">
+            <span className="capitalize text-xl">Hello, {name}</span>
+          </div>
         </div>
         <div className="space-y-0.5">
           <h2 className="text-2xl font-bold tracking-tight">Settings</h2>

@@ -7,9 +7,8 @@ import {
   PopoverContent,
   PopoverTrigger
 } from '@/components/ui/popover';
-import { SubmitUserPlaceInfo } from '../actions';
+import { SubmitUserPlaceInfo } from '@/app/cities/[country]/[state]/[city]/[id]/actions';
 import Link from 'next/link';
-import { AmenityAggregation } from '@/utils/types';
 import formatPlaceName from '@/utils/functions/formatPlaceName';
 
 export const getRatingColor = (index: number | null) => {
@@ -31,39 +30,19 @@ export const getRatingColor = (index: number | null) => {
   }
 };
 
-export default function Amenity({
+export default function ContributionRating({
   name,
   value,
   placeId,
-  aggregation
+  date
 }: {
   name: string;
-  value: boolean | null;
+  value: number | null;
   placeId: string;
-  aggregation?: AmenityAggregation;
+  date: string;
 }) {
   // Initialize buttonValue based on the most common value in value_distribution
-  const [buttonValue, setButtonValue] = useState<number | null>(() => {
-    if (aggregation?.value_distribution) {
-      const distribution = aggregation.value_distribution as Record<
-        string,
-        number
-      >;
-
-      // Calculate weighted average
-      let totalScore = 0;
-      let totalCount = 0;
-
-      Object.entries(distribution).forEach(([value, count]) => {
-        totalScore += parseInt(value) * count;
-        totalCount += count;
-      });
-
-      // Return rounded average if there are submissions, null otherwise
-      return totalCount > 0 ? Math.round(totalScore / totalCount) : null;
-    }
-    return null;
-  });
+  const [buttonValue, setButtonValue] = useState<number | null>(value);
   const [error, setError] = useState<string | null>(null);
   const [isAuthError, setIsAuthError] = useState(false);
 
@@ -90,24 +69,18 @@ export default function Amenity({
     }
   };
 
-  const title = name.replace('Serves', '');
+  const formattedTitle = formatPlaceName(name);
+  const title = formattedTitle.replace('Serves', '');
 
   return (
     <div className="flex flex-row flex-wrap items-center gap-4 py-2 ">
       <p>
-        <span className="font-bold">{title}:</span>
         <Popover>
           <PopoverTrigger asChild>
             <span
-              className={`ml-2 cursor-pointer px-3 rounded text-white py-2 hover:opacity-70 ${getRatingColor(buttonValue)} ${buttonValue !== null ? 'text-white ' : value ? ' bg-green-500' : value === false ? ' bg-red-600' : 'bg-muted-foreground'}`}
+              className={`ml-2 cursor-pointer px-3 rounded text-white py-2 hover:opacity-70 ${getRatingColor(buttonValue)} `}
             >
-              {value
-                ? '✓'
-                : value === false
-                  ? 'X'
-                  : buttonValue !== null
-                    ? `${buttonVals[buttonValue]}`
-                    : 'Add ✚'}
+              {value}
             </span>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-4 max-w-[90vw]">
@@ -140,11 +113,8 @@ export default function Amenity({
                 to submit details
               </p>
             )}
-            {aggregation?.last_updated && (
-              <p className="text-sm text-gray-500 mt-2">
-                Last updated:{' '}
-                {new Date(aggregation.last_updated).toLocaleDateString()}
-              </p>
+            {date && (
+              <p className="text-sm text-gray-500 mt-2">Last updated: {date}</p>
             )}
           </PopoverContent>
         </Popover>

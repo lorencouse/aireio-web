@@ -4,7 +4,7 @@ export type City = Database['public']['Tables']['cities']['Row'];
 
 export type Place = Database['public']['Tables']['places']['Row'];
 
-export type AmenitySubmission =
+export type UserContribution =
   Database['public']['Tables']['amenity_submissions']['Row'];
 
 export type AmenityAggregation =

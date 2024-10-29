@@ -115,7 +115,7 @@ export default function CityPageLayout({
       </div>
 
       <h1 className="md:text-4xl text-2xl font-bold mx-4 select-none text-center leading-normal w-full">
-        Workspaces in{' '}
+        Remote Workspaces in{' '}
         <span className="capitalize">
           {city && city.name.replace(/-/g, ' ')}
         </span>

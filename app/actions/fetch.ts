@@ -1,6 +1,6 @@
 'use server';
 import { createClient } from '@/utils/supabase/server';
-import { City } from '@/utils/types';
+import { UserContribution, City } from '@/utils/types';
 import { Database } from '@/types_db';
 
 export async function getAllCities(limit: number): Promise<City[]> {
@@ -82,4 +82,46 @@ export async function getCountries(): Promise<CountryResult[]> {
   }
 
   return data || [];
+}
+
+export async function getUserContributions(): Promise<UserContribution[]> {
+  const supabase = createClient();
+
+  try {
+    // Get user with proper error handling
+    const {
+      data: { user },
+      error: userError
+    } = await supabase.auth.getUser();
+
+    if (userError) {
+      console.log('Authentication error', userError);
+      return [];
+    }
+
+    if (!user?.id) {
+      console.log('No authenticated user found');
+      return [];
+    }
+
+    const { data, error: contributionsError } = await supabase
+      .from('amenity_submissions')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('timestamp', { ascending: false });
+
+    if (contributionsError) {
+      console.log('Error fetching user contributions:', contributionsError);
+    }
+
+    return (data as UserContribution[]) || [];
+  } catch (error) {
+    if (error) {
+      throw error;
+    }
+
+    console.error('Error in getUserContributions:', error);
+  }
+
+  return [];
 }
