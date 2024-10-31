@@ -125,3 +125,26 @@ export async function getUserContributions(): Promise<UserContribution[]> {
 
   return [];
 }
+
+export async function getCoinCount({
+  userId
+}: {
+  userId: string;
+}): Promise<number> {
+  if (!userId) {
+    return 0;
+  }
+  const supabase = createClient();
+
+  const { count, error } = await supabase
+    .from('amenity_submissions')
+    .select('*', { count: 'exact', head: true })
+    .eq('user_id', userId);
+
+  if (error) {
+    console.error('Error fetching coin count:', error.message);
+    return 0;
+  }
+
+  return count ?? 0;
+}

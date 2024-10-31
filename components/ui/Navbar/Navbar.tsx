@@ -1,7 +1,7 @@
 'use server';
 
 import { getUserProfile } from '@/utils/supabase/queries';
-import { Menu, Home, User, LogIn, SquareMenu } from 'lucide-react';
+import { Menu, Home, User, LogIn } from 'lucide-react';
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -20,9 +20,15 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { UserProfile } from '@/components/user-profile';
 import FullLogo from '@/components/icons/FullLogo';
+import { getCoinCount } from '@/app/actions/fetch';
 
 export default async function Navbar() {
   const user = await getUserProfile();
+  let coinCount: number = 0;
+
+  if (user) {
+    coinCount = await getCoinCount({ userId: user.id });
+  }
 
   const menuItems = [
     {
@@ -89,7 +95,7 @@ export default async function Navbar() {
           </Drawer>
 
           {user ? (
-            <UserProfile user={user} />
+            <UserProfile user={user} coinCount={coinCount} />
           ) : (
             <Link href="/signin" className="flex flex-col items-center">
               <LogIn className="h-6 w-6" />
@@ -125,7 +131,7 @@ export default async function Navbar() {
 
         <div className="flex items-center gap-2">
           {user ? (
-            <UserProfile user={user} />
+            <UserProfile user={user} coinCount={coinCount} />
           ) : (
             <Link href="/signin" className="text-foreground hover:underline">
               Sign In

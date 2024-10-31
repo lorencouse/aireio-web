@@ -16,8 +16,15 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { UserProfile as UserProfileType } from '@/utils/types';
+import CoinCount from './ui/Navbar/_components/coin-count';
 
-export function UserProfile({ user }: { user: UserProfileType }) {
+export async function UserProfile({
+  user,
+  coinCount
+}: {
+  user: UserProfileType;
+  coinCount: number;
+}) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild className="w-[2.25rem] h-[2.25rem]">
@@ -30,7 +37,10 @@ export function UserProfile({ user }: { user: UserProfileType }) {
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
-        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+        <DropdownMenuLabel>
+          <CoinCount count={coinCount} />
+          {/* Your Profile */}
+        </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <Link href="/profile">
@@ -55,13 +65,12 @@ export function UserProfile({ user }: { user: UserProfileType }) {
             </DropdownMenuItem>
           </Link>
         </DropdownMenuGroup>
-        {/* <SignOutButton> */}
+
         <DropdownMenuItem>
           <LogOut className="mr-2 h-4 w-4" />
           <span onClick={() => SignOut()}>Log out</span>
           <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
         </DropdownMenuItem>
-        {/* </SignOutButton> */}
       </DropdownMenuContent>
     </DropdownMenu>
   );
