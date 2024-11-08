@@ -7,6 +7,21 @@ export type Place = Database['public']['Tables']['places']['Row'];
 export type UserContribution =
   Database['public']['Tables']['amenity_submissions']['Row'];
 
+export type UserContributionJoined = {
+  id: string;
+  user_id: string | null;
+  place_id: string | null;
+  amenity_name: string | null;
+  value: string;
+  timestamp: string | null;
+  places: {
+    name: string;
+    country_code: string;
+    state: string | null;
+    city: string | null;
+  };
+};
+
 export type AmenityAggregation =
   Database['public']['Tables']['amenity_aggregations']['Row'];
 

@@ -1,6 +1,6 @@
 'use server';
 import { createClient } from '@/utils/supabase/server';
-import { UserContribution, City } from '@/utils/types';
+import { UserContributionJoined, City } from '@/utils/types';
 import { Database } from '@/types_db';
 
 export async function getAllCities(limit: number): Promise<City[]> {
@@ -84,11 +84,12 @@ export async function getCountries(): Promise<CountryResult[]> {
   return data || [];
 }
 
-export async function getUserContributions(): Promise<UserContribution[]> {
+export async function getUserContributions(): Promise<
+  UserContributionJoined[]
+> {
   const supabase = createClient();
 
   try {
-    // Get user with proper error handling
     const {
       data: { user },
       error: userError
@@ -104,26 +105,33 @@ export async function getUserContributions(): Promise<UserContribution[]> {
       return [];
     }
 
+    // Using a flattened select with explicit fields
     const { data, error: contributionsError } = await supabase
       .from('amenity_submissions')
-      .select('*')
+      .select(
+        `
+      id,
+      user_id,
+      place_id,
+      amenity_name,
+      value,
+      timestamp,
+      places(name, country_code, state, city)
+      `
+      )
       .eq('user_id', user.id)
       .order('timestamp', { ascending: false });
 
     if (contributionsError) {
       console.log('Error fetching user contributions:', contributionsError);
+      return [];
     }
 
-    return (data as UserContribution[]) || [];
+    return (data as UserContributionJoined[]) || [];
   } catch (error) {
-    if (error) {
-      throw error;
-    }
-
     console.error('Error in getUserContributions:', error);
+    return [];
   }
-
-  return [];
 }
 
 export async function getCoinCount({

@@ -8,7 +8,7 @@ import {
   TableHeader,
   TableRow
 } from '@/components/ui/table';
-import { UserContribution } from '@/utils/types';
+import { UserContributionJoined } from '@/utils/types';
 import formatPlaceName from '@/utils/functions/formatPlaceName';
 import Link from 'next/link';
 import { formatDateShort } from '@/utils/functions/formatTimestamp';
@@ -18,7 +18,7 @@ import { CircleDollarSign } from 'lucide-react';
 export function ContributionsTable({
   contributions
 }: {
-  contributions: UserContribution[];
+  contributions: UserContributionJoined[];
 }) {
   return (
     <Table>
@@ -35,8 +35,14 @@ export function ContributionsTable({
         {contributions.map((c) => (
           <TableRow key={c.id}>
             <TableCell className="font-medium">
-              <Link href={c.place_id ? `/places/${c.place_id}` : '#'}>
-                {c.place_id}
+              <Link
+                href={
+                  c.place_id
+                    ? `/cities/${c.places.country_code}/${c.places.state}/${c.places.city}/${c.place_id}`
+                    : '#'
+                }
+              >
+                {c.places.name}
               </Link>
             </TableCell>
             <TableCell> {formatPlaceName(c.amenity_name)}</TableCell>
