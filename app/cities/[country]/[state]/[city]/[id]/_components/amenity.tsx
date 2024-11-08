@@ -7,10 +7,9 @@ import {
   PopoverContent,
   PopoverTrigger
 } from '@/components/ui/popover';
-import { SubmitUserPlaceInfo } from '../actions';
+import { submitUserPlaceInfo } from '../actions';
 import Link from 'next/link';
 import { AmenityAggregation } from '@/utils/types';
-import formatPlaceName from '@/utils/functions/formatPlaceName';
 
 export const getRatingColor = (index: number | null) => {
   switch (index) {
@@ -71,7 +70,7 @@ export default function Amenity({
 
   const handleClick = async (index: number) => {
     try {
-      const { success, error, authError } = await SubmitUserPlaceInfo(
+      const { success, error, authError } = await submitUserPlaceInfo(
         placeId,
         name,
         index.toString()
@@ -101,12 +100,12 @@ export default function Amenity({
             <span
               className={`ml-2 cursor-pointer px-3 rounded text-white py-2 hover:opacity-70 ${getRatingColor(buttonValue)} ${buttonValue !== null ? 'text-white ' : value ? ' bg-green-500' : value === false ? ' bg-red-600' : 'bg-muted-foreground'}`}
             >
-              {value
-                ? '✓'
-                : value === false
-                  ? 'X'
-                  : buttonValue !== null
-                    ? `${buttonVals[buttonValue]}`
+              {buttonValue !== null
+                ? `${buttonVals[buttonValue]}`
+                : value
+                  ? '✓'
+                  : value === false
+                    ? 'X'
                     : 'Add ✚'}
             </span>
           </PopoverTrigger>

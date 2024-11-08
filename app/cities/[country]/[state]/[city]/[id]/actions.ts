@@ -4,7 +4,7 @@
 import { createClient } from '@/utils/supabase/server';
 import { Place } from '@/utils/types';
 
-export const SubmitUserPlaceInfo = async (
+export const submitUserPlaceInfo = async (
   placeId: string,
   amenityName: string,
   value: string

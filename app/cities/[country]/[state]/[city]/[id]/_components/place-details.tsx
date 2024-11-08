@@ -6,8 +6,15 @@ import { Place } from '@/utils/types';
 import Amenity from './amenity';
 import SocialLinks from './social-links';
 import Icon from './icon-map';
+import { AmenityAggregation } from '@/utils/types';
 
-const PlaceDetails = ({ place }: { place: Place }) => {
+const PlaceDetails = ({
+  place,
+  userSubmissions
+}: {
+  place: Place;
+  userSubmissions: AmenityAggregation[];
+}) => {
   const handlePress = (url: string) => {
     window.open(url, '_blank');
   };
@@ -85,7 +92,6 @@ const PlaceDetails = ({ place }: { place: Place }) => {
 
           <div className="flex space-x-2 mb-4">
             <Icon name="clock" className="w-5 h-5" />
-            {/* <p>{formattedOpeningHours}</p> */}
             <div>
               {place?.opening_hours ? (
                 <ul>
@@ -109,41 +115,65 @@ const PlaceDetails = ({ place }: { place: Place }) => {
                 name="Serves Vegetarian Food"
                 value={place.serves_vegetarian_food}
                 placeId={place.id}
+                aggregation={userSubmissions.find(
+                  (sub) => sub.amenity_name === 'serves_vegetarian_food'
+                )}
               />
               <Amenity
                 name="Serves Vegan Food"
                 value={place.serves_vegan_food}
                 placeId={place.id}
+                aggregation={userSubmissions.find(
+                  (sub) => sub.amenity_name === 'serves_vegan_food'
+                )}
               />
               <Amenity
                 name="Serves Beer"
                 value={place.serves_beer}
                 placeId={place.id}
+                aggregation={userSubmissions.find(
+                  (sub) => sub.amenity_name === 'serves_beer'
+                )}
               />
               <Amenity
                 name="Serves Wine"
                 value={place.serves_wine}
                 placeId={place.id}
+                aggregation={userSubmissions.find(
+                  (sub) => sub.amenity_name === 'serves_wine'
+                )}
               />
               <Amenity
                 name="Serves Breakfast"
                 value={place.serves_breakfast}
                 placeId={place.id}
+                aggregation={userSubmissions.find(
+                  (sub) => sub.amenity_name === 'serves_breakfast'
+                )}
               />
               <Amenity
                 name="Serves Brunch"
                 value={place.serves_brunch}
                 placeId={place.id}
+                aggregation={userSubmissions.find(
+                  (sub) => sub.amenity_name === 'serves_brunch'
+                )}
               />
               <Amenity
                 name="Serves Lunch"
                 value={place.serves_lunch}
                 placeId={place.id}
+                aggregation={userSubmissions.find(
+                  (sub) => sub.amenity_name === 'serves_lunch'
+                )}
               />
               <Amenity
                 name="Serves Dinner"
                 value={place.serves_dinner}
                 placeId={place.id}
+                aggregation={userSubmissions.find(
+                  (sub) => sub.amenity_name === 'serves_dinner'
+                )}
               />
             </>
           )}

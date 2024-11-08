@@ -7,7 +7,7 @@ import {
   PopoverContent,
   PopoverTrigger
 } from '@/components/ui/popover';
-import { SubmitUserPlaceInfo } from '@/app/cities/[country]/[state]/[city]/[id]/actions';
+import { submitUserPlaceInfo } from '@/app/cities/[country]/[state]/[city]/[id]/actions';
 import Link from 'next/link';
 import formatPlaceName from '@/utils/functions/formatPlaceName';
 
@@ -50,7 +50,7 @@ export default function ContributionRating({
 
   const handleClick = async (index: number) => {
     try {
-      const { success, error, authError } = await SubmitUserPlaceInfo(
+      const { success, error, authError } = await submitUserPlaceInfo(
         placeId,
         name,
         index.toString()

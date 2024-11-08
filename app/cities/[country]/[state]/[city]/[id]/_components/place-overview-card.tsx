@@ -6,6 +6,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import Amenity from './amenity';
 import PriceLevel from '../../_components/price-level';
 import FavoriteToggle from './favorite-toggle';
+import WifiDetails from './wifi-details';
 
 const PlaceOverviewCard = ({
   place,
@@ -29,6 +30,7 @@ const PlaceOverviewCard = ({
           )}
         </div>
         <div className="w-full md:w-3/4 md:pl-6">
+          <FavoriteToggle placeId={place.id} />
           {place.rating_score && (
             <div className="flex items-center my-2 ">
               <span className="font-bold text-xl mr-1">✭</span>
@@ -94,7 +96,20 @@ const PlaceOverviewCard = ({
                 (sub) => sub.amenity_name === 'internet_access'
               )}
             />
-            <FavoriteToggle placeId={place.id} />
+            {(place.internet_access === true ||
+              userSubmissions.some(
+                (sub) => sub.amenity_name === 'internet_access'
+              )) && (
+              <WifiDetails
+                placeId={place.id}
+                wifiNetwork={userSubmissions.find(
+                  (sub) => sub.amenity_name === 'wifi_network'
+                )}
+                wifiPassword={userSubmissions.find(
+                  (sub) => sub.amenity_name === 'wifi_password'
+                )}
+              />
+            )}
           </div>
         </div>
       </CardContent>
