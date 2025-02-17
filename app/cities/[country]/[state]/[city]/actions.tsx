@@ -3,6 +3,7 @@
 import { createClient } from '@/utils/supabase/server';
 import { City, Place, GooglePlace } from '@/utils/types';
 import { Database } from '@/types_db';
+import { redirect } from 'next/navigation';
 
 export async function getCity(params: any): Promise<City> {
   const supabase = await createClient();
@@ -17,9 +18,10 @@ export async function getCity(params: any): Promise<City> {
 
   if (error) {
     console.error('Error fetching city:', error);
-    throw error;
-  }
 
+    // redirect to previous page if city not found
+    redirect('..');
+  }
   if (!city) {
     throw new Error('City not found');
   }

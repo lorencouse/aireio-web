@@ -30,7 +30,14 @@ const PlaceOverviewCard = ({
           )}
         </div>
         <div className="w-full md:w-3/4 md:pl-6">
-          <FavoriteToggle placeId={place.id} />
+          <div className="flex flex-row items-center gap-4 justify-between">
+            <FavoriteToggle placeId={place.id} />
+
+            <span className="text-xs bg-gray-100 p-3 rounded-full hover:bg-slate-300 cursor-pointer">
+              Recommend Removal
+            </span>
+            {/* Only show for logged in.  Adds user ID to array.  if array length > 2, mark as review for moderation. */}
+          </div>
           {place.rating_score && (
             <div className="flex items-center my-2 ">
               <span className="font-bold text-xl mr-1">✭</span>
