@@ -6,7 +6,7 @@ const uploadImageToSupabase = async (
   imgName: string,
   dir: string
 ): Promise<boolean> => {
-  const supabase = createClient();
+  const supabase = await createClient();
   const filePath = `${dir}/${imgName}`;
 
   try {

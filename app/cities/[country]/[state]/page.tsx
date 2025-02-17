@@ -7,9 +7,9 @@ import { getCitiesForState, getCountries } from '@/app/actions/fetch';
 export default async function StatePage({
   params
 }: {
-  params: { country: string; state: string };
+  params: Promise<{ country: string; state: string }>;
 }) {
-  const { country, state } = params;
+  const { country, state } = await params;
   const cities: City[] = await getCitiesForState(country, state);
   const countries: { country: string; country_code: string }[] =
     await getCountries();

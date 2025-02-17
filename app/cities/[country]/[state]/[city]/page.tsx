@@ -6,7 +6,7 @@ import { City } from '@/utils/types';
 export default async function Places({
   params
 }: {
-  params: {
+  params: Promise<{
     country: string;
     state: string;
     city: string;
@@ -14,9 +14,10 @@ export default async function Places({
     radius?: string;
     lat?: string;
     lng?: string;
-  };
+  }>;
 }) {
-  const city: City = await getCity(params);
+  const cityParams = await params;
+  const city: City = await getCity(cityParams);
 
   const places = await fetchExistingPlaces(city.id);
 

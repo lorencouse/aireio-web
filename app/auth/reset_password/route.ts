@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
   const code = requestUrl.searchParams.get('code');
 
   if (code) {
-    const supabase = createClient();
+    const supabase = await createClient();
 
     const { error } = await supabase.auth.exchangeCodeForSession(code);
 
@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const supabase = createClient();
+  const supabase = await createClient();
   const requestUrl = new URL(request.url);
 
   // Get the new password from the request body

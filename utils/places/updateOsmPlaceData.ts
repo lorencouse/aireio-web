@@ -13,7 +13,7 @@ function convertStringToBool(value: string | boolean | null): boolean | null {
 const updateOsmPlaceData = async (place: Place) => {
   const { lat, lng, type } = place;
   const osmData = await fetchOSMDetails(lng, lat, type);
-  const supabase = createClient();
+  const supabase = await createClient();
 
   if (!osmData) {
     console.log('No matching OSM data found');
@@ -24,36 +24,23 @@ const updateOsmPlaceData = async (place: Place) => {
     const updatedPlace: Place = {
       ...place,
       osm_id: osmData.id?.toString(),
-      add_1:
-        !place.add_1
-          ? `${osmData.tags['addr:housenumber'] || ''} ${
-              osmData.tags['addr:street'] || ''
-            }`.trim() || place.add_1
-          : place.add_1,
-      level:
-        !place.level 
-          ? osmData.tags.level || place.level
-          : place.level,
-      city:
-        !place.city
-          ? osmData.tags['addr:city'] || place.city
-          : place.city,
-      state:
-        !place.state 
-          ? osmData.tags['addr:state'] || place.state
-          : place.state,
-      postal_code:
-        !place.postal_code
-          ? osmData.tags['addr:postcode'] || place.postal_code
-          : place.postal_code,
-      phone:
-        !place.phone 
-          ? osmData.tags.phone || place.phone
-          : place.phone,
-      website:
-        !place.website
-          ? osmData.tags.website || place.website
-          : place.website,
+      add_1: !place.add_1
+        ? `${osmData.tags['addr:housenumber'] || ''} ${
+            osmData.tags['addr:street'] || ''
+          }`.trim() || place.add_1
+        : place.add_1,
+      level: !place.level ? osmData.tags.level || place.level : place.level,
+      city: !place.city ? osmData.tags['addr:city'] || place.city : place.city,
+      state: !place.state
+        ? osmData.tags['addr:state'] || place.state
+        : place.state,
+      postal_code: !place.postal_code
+        ? osmData.tags['addr:postcode'] || place.postal_code
+        : place.postal_code,
+      phone: !place.phone ? osmData.tags.phone || place.phone : place.phone,
+      website: !place.website
+        ? osmData.tags.website || place.website
+        : place.website,
       facebook: osmData.tags['contact:facebook'] || place.facebook,
       instagram: osmData.tags['contact:instagram'] || place.instagram,
       mastodon: osmData.tags['contact:mastodon'] || place.mastodon,

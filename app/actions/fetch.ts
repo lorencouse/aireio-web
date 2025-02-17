@@ -4,7 +4,7 @@ import { UserContributionJoined, City } from '@/utils/types';
 import { Database } from '@/types_db';
 
 export async function getAllCities(limit: number): Promise<City[]> {
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const { data, error } = await supabase
     .from('cities')
@@ -22,7 +22,7 @@ export async function getCitiesForState(
   country: string,
   state: string
 ): Promise<City[]> {
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const { data, error } = await supabase
     .from('cities')
@@ -39,7 +39,7 @@ export async function getCitiesForState(
   return data || [];
 }
 export async function getCitiesForCountry(country: string): Promise<City[]> {
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const { data, error } = await supabase
     .from('cities')
@@ -56,7 +56,7 @@ export async function getCitiesForCountry(country: string): Promise<City[]> {
 }
 
 export async function getCitiesById(cityIds: string[]): Promise<City[]> {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data, error } = await supabase
     .from('cities')
     .select('*')
@@ -72,7 +72,7 @@ type CountryResult =
   Database['public']['Functions']['get_unique_countries']['Returns'][number];
 
 export async function getCountries(): Promise<CountryResult[]> {
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const { data, error } = await supabase.rpc('get_unique_countries');
 
@@ -87,7 +87,7 @@ export async function getCountries(): Promise<CountryResult[]> {
 export async function getUserContributions(): Promise<
   UserContributionJoined[]
 > {
-  const supabase = createClient();
+  const supabase = await createClient();
 
   try {
     const {
@@ -142,7 +142,7 @@ export async function getCoinCount({
   if (!userId) {
     return 0;
   }
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const { count, error } = await supabase
     .from('amenity_submissions')

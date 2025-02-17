@@ -9,7 +9,7 @@ export const submitUserPlaceInfo = async (
   amenityName: string,
   value: string
 ): Promise<{ success: boolean; error?: string; authError?: boolean }> => {
-  const supabase = createClient();
+  const supabase = await createClient();
 
   // Check if the user is authenticated
   const {
@@ -52,7 +52,7 @@ export const toggleFavorite = async (
   placeId: string,
   isFavoriting: boolean
 ): Promise<{ success: boolean; error?: string; authError?: boolean }> => {
-  const supabase = createClient();
+  const supabase = await createClient();
 
   // Check if the user is authenticated
   const {
@@ -99,7 +99,7 @@ export const toggleFavorite = async (
 export const getFavoriteStatus = async (
   placeId: string
 ): Promise<{ favorited: boolean; error?: string; authError?: boolean }> => {
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const {
     data: { user },
@@ -140,7 +140,7 @@ export const getFavoritePlaces = async (
   error?: string;
   authError?: boolean;
 }> => {
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const {
     data: { user },
@@ -176,7 +176,7 @@ export const getFavoritePlaces = async (
 };
 
 export const getPlacesById = async (placeIds: string[]): Promise<Place[]> => {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data, error } = await supabase
     .from('places')
     .select('*')

@@ -8,7 +8,7 @@ import { redirect } from 'next/navigation';
 export async function login(formData: FormData) {
   const email = formData.get('email') as string;
   const password = formData.get('password') as string;
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const { data, error } = await supabase.auth.signInWithPassword({
     email,
@@ -19,8 +19,9 @@ export async function login(formData: FormData) {
     return { error: error.message };
   }
 
-  // Manually set the auth cookie
-  cookies().set('sb-auth-token', data.session?.access_token ?? '', {
+  // Manually set the auth cookie\
+  const cookieStore = await cookies();
+  cookieStore.set('sb-auth-token', data.session?.access_token ?? '', {
     path: '/',
     sameSite: 'lax',
     httpOnly: true,
@@ -32,11 +33,12 @@ export async function login(formData: FormData) {
 }
 
 export async function logout() {
-  const supabase = createClient();
+  const supabase = await createClient();
   await supabase.auth.signOut();
 
   // Clear the auth cookie
-  cookies().set('sb-auth-token', '', {
+  const cookieStore = await cookies();
+  cookieStore.set('sb-auth-token', '', {
     path: '/',
     sameSite: 'lax',
     httpOnly: true,
@@ -48,7 +50,7 @@ export async function logout() {
 }
 
 export async function getSession() {
-  const supabase = createClient();
+  const supabase = await createClient();
   const {
     data: { session }
   } = await supabase.auth.getSession();

@@ -6,7 +6,7 @@ import convertGoogleAddress from '@/utils/places/convertGoogleAddress';
 import { Place } from '../types';
 
 export const updateGooglePlaceData = async (place: Place) => {
-  const supabase = createClient();
+  const supabase = await createClient();
   try {
     const response = await fetch(
       `https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.google_id}&key=${process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY}`

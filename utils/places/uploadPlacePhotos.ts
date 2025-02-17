@@ -7,7 +7,7 @@ import { Place } from '../types';
 export const uploadPlacePhotos = async (
   place: Partial<Place>
 ): Promise<string[]> => {
-  const supabase = createClient();
+  const supabase = await createClient();
   const photoRefs = place.photo_refs || [];
   const existingPhotoNames = place.photo_names || [];
 

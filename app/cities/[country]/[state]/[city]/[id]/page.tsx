@@ -19,14 +19,30 @@ const checkIsUpToDate = (place: Place): boolean => {
 export default async function PlacePage({
   params
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
-  const supabase = createClient();
+  const placeId = (await params).id;
+
+  if (!placeId) {
+    return (
+      <div>
+        Error loading place{' '}
+        <span
+          className="text-blue-500 underline cursor-pointer hover:text-blue-800"
+          onClick={() => window.history.back()}
+        >
+          ← Go Back
+        </span>
+      </div>
+    );
+  }
+
+  const supabase = await createClient();
 
   const { data: place, error } = await supabase
     .from('places')
     .select('*')
-    .eq('id', params.id)
+    .eq('id', placeId)
     .single();
 
   if (error) {
@@ -54,7 +70,7 @@ export default async function PlacePage({
   const { data: userSubmissions, error: userSubmissionsError } = await supabase
     .from('amenity_aggregations')
     .select('*')
-    .eq('place_id', params.id);
+    .eq('place_id', placeId);
 
   if (userSubmissionsError) {
     console.error('Error fetching user submissions:', userSubmissionsError);

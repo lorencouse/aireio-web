@@ -100,7 +100,7 @@ export async function normalizeString(str: string | null): Promise<string> {
 }
 
 export const fetchCity = async (city: Partial<City>) => {
-  const supabase = createClient();
+  const supabase = await createClient();
   const {
     name,
     country,
@@ -169,7 +169,7 @@ export const uploadCityPhoto = async (
   message: string;
   photoRef?: string;
 }> => {
-  const supabase = createClient();
+  const supabase = await createClient();
   const maxWidth = 1200;
   const normalizedName = await normalizeString(city.name);
   const normalizedState = await normalizeString(city.state);

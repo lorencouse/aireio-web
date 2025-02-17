@@ -2,7 +2,7 @@ import { createClient } from '@/utils/supabase/server';
 import { cache } from 'react';
 
 export const getUser = cache(async () => {
-  const supabase = createClient();
+  const supabase = await createClient();
   const {
     data: { user }
   } = await supabase.auth.getUser();
@@ -10,7 +10,7 @@ export const getUser = cache(async () => {
 });
 
 export const getUserProfile = async () => {
-  const supabase = createClient();
+  const supabase = await createClient();
   const user = await getUser();
 
   if (!user) return null;
@@ -33,7 +33,7 @@ export const getUserProfile = async () => {
 };
 
 export const getUserSubmittedPlaceDetails = async (placeId: string) => {
-  const supabase = createClient();
+  const supabase = await createClient();
 
   if (!placeId) return [];
 

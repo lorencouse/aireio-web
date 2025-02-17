@@ -5,7 +5,7 @@ import { City, Place, GooglePlace } from '@/utils/types';
 import { Database } from '@/types_db';
 
 export async function getCity(params: any): Promise<City> {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { country, state, city: name } = params;
   const { data: city, error } = await supabase
     .from('cities')
@@ -52,7 +52,7 @@ export async function getPlaces(city: City, params: any) {
 }
 
 export const fetchExistingPlaces = async (cityId: string): Promise<Place[]> => {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data, error } = await supabase
     .from('places')
     .select('*')
@@ -130,7 +130,7 @@ export const createNewPlaces = async (
     if (!city || !type || !places) {
       throw new Error('Missing required parameters for createNewPlaces');
     }
-    const supabase = createClient();
+    const supabase = await createClient();
 
     type PlaceInsert = Database['public']['Tables']['places']['Insert'];
 
