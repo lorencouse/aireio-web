@@ -156,6 +156,38 @@ export type Database = {
           },
         ]
       }
+      place_likes: {
+        Row: {
+          created_at: string | null
+          id: number
+          is_like: boolean
+          place_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: number
+          is_like: boolean
+          place_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: number
+          is_like?: boolean
+          place_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "place_likes_place_id_fkey"
+            columns: ["place_id"]
+            isOneToOne: false
+            referencedRelation: "places"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       places: {
         Row: {
           add_1: string | null

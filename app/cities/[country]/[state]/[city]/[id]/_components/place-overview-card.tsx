@@ -1,5 +1,5 @@
 import React from 'react';
-import { AmenityAggregation, Place } from '@/utils/types';
+import { AmenityAggregation, Place, PlaceLike } from '@/utils/types';
 import { Card, CardContent } from '@/components/ui/card';
 import Gallery from './image-gallery';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -7,15 +7,18 @@ import Amenity from './amenity';
 import PriceLevel from '../../_components/price-level';
 import FavoriteToggle from './favorite-toggle';
 import WifiDetails from './wifi-details';
+import ThumbsUpDown from './thumbs-up-down';
 
 const PlaceOverviewCard = ({
   place,
   photoUrls,
-  userSubmissions
+  userSubmissions,
+  likes
 }: {
   place: Place;
   photoUrls: string[];
   userSubmissions: AmenityAggregation[];
+  likes: PlaceLike[];
 }) => {
   return (
     <Card className="mb-8 rounded-t-none bg-background text-foreground">
@@ -32,11 +35,7 @@ const PlaceOverviewCard = ({
         <div className="w-full md:w-3/4 md:pl-6">
           <div className="flex flex-row items-center gap-4 justify-between">
             <FavoriteToggle placeId={place.id} />
-
-            <span className="text-xs bg-gray-100 p-3 rounded-full hover:bg-slate-300 cursor-pointer">
-              Recommend Removal
-            </span>
-            {/* Only show for logged in.  Adds user ID to array.  if array length > 2, mark as review for moderation. */}
+            <ThumbsUpDown placeId={place.id} likes={likes} />
           </div>
           {place.rating_score && (
             <div className="flex items-center my-2 ">

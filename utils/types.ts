@@ -29,6 +29,8 @@ export type Favorite = Database['public']['Tables']['favorites']['Row'];
 
 export type UserProfile = Database['public']['Tables']['user_profiles']['Row'];
 
+export type PlaceLike = Database['public']['Tables']['place_likes']['Row'];
+
 export type GooglePlace = {
   business_status: string;
   geometry: {

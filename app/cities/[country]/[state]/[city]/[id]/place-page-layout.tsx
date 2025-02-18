@@ -5,7 +5,7 @@ import PlaceHero from './_components/place-hero';
 import PlaceOverviewCard from './_components/place-overview-card';
 import PlaceDetails from './_components/place-details';
 import PopupPlaceDeleted from './_components/popup-place-deleted';
-import { Place, AmenityAggregation } from '@/utils/types';
+import { Place, AmenityAggregation, PlaceLike } from '@/utils/types';
 import { getPlacePhotoUrls } from '@/utils/functions/places/getPlacePhotoUrls';
 import LoadingPlace from './_components/loading-place';
 import { uploadPlacePhotos } from '@/utils/places/uploadPlacePhotos';
@@ -13,10 +13,12 @@ import DynamicBreadcrumb from '@/components/general/dynamic-breadcrumb';
 
 const PlacePageLayout = ({
   place: initialPlace,
-  userSubmissions
+  userSubmissions,
+  likes
 }: {
   place: Place;
   userSubmissions: AmenityAggregation[];
+  likes: PlaceLike[];
 }) => {
   const [showModal, setShowModal] = useState(false);
   const [place, setPlace] = useState(initialPlace);
@@ -57,6 +59,7 @@ const PlacePageLayout = ({
         place={place}
         photoUrls={photoUrls}
         userSubmissions={userSubmissions}
+        likes={likes}
       />
       <PlaceDetails place={place} userSubmissions={userSubmissions} />
     </div>
