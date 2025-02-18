@@ -211,11 +211,16 @@ export const updateLike = async (
   }
 
   // Add to likes
-  const { error } = await supabase.from('place_likes').upsert({
-    is_like: status === 'like' ? true : false,
-    place_id: placeId,
-    user_id: user.id
-  });
+  const { error } = await supabase.from('place_likes').upsert(
+    {
+      is_like: status === 'like' ? true : false,
+      place_id: placeId,
+      user_id: user.id
+    },
+    {
+      onConflict: 'place_id,user_id'
+    }
+  );
 
   if (error) {
     console.error('Error toggling like:', error);

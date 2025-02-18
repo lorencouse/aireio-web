@@ -26,18 +26,25 @@ const ThumbsUpDown: React.FC<ThumbsUpDownProps> = ({
     null
   );
 
-  const handleThumbsUp = async () => {
-    const newState = selectedThumb === 'like' ? null : 'like';
-    setSelectedThumb(newState);
-    if (onToggle) onToggle(newState);
-    await updateLike(placeId, newState);
-  };
+  const handleThumbsButton = async (buttonType: 'like' | 'dislike' | null) => {
+    const oldState = selectedThumb;
+    const newState = selectedThumb === buttonType ? null : buttonType;
 
-  const handleThumbsDown = async () => {
-    const newState = selectedThumb === 'dislike' ? null : 'dislike';
-    setSelectedThumb(newState);
-    if (onToggle) onToggle(newState);
-    await updateLike(placeId, newState);
+    try {
+      setSelectedThumb(newState);
+      if (onToggle) onToggle(newState);
+
+      const result = await updateLike(placeId, newState);
+      if (!result.success) {
+        // Revert on failure or auth error
+        setSelectedThumb(oldState);
+        if (onToggle) onToggle(oldState);
+      }
+    } catch (error) {
+      // Revert on any unexpected errors
+      setSelectedThumb(oldState);
+      if (onToggle) onToggle(oldState);
+    }
   };
 
   useEffect(() => {
@@ -68,7 +75,7 @@ const ThumbsUpDown: React.FC<ThumbsUpDownProps> = ({
           selectedThumb === 'like' &&
             'bg-green-100 text-green-700 hover:bg-green-200 hover:text-green-800'
         )}
-        onClick={handleThumbsUp}
+        onClick={() => handleThumbsButton('like')}
         aria-label="Thumbs up"
       >
         <ThumbsUp
@@ -87,7 +94,7 @@ const ThumbsUpDown: React.FC<ThumbsUpDownProps> = ({
           selectedThumb === 'dislike' &&
             'bg-red-100 text-red-700 hover:bg-red-200 hover:text-red-800'
         )}
-        onClick={handleThumbsDown}
+        onClick={() => handleThumbsButton('dislike')}
         aria-label="Thumbs down"
       >
         <ThumbsDown
