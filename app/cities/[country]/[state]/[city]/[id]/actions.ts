@@ -2,7 +2,7 @@
 'use server';
 
 import { createClient } from '@/utils/supabase/server';
-import { Place } from '@/utils/types';
+import { Place, PlaceLike } from '@/utils/types';
 import updateGooglePlaceData from '@/utils/places/updateGooglePlaceData';
 import updateOsmPlaceData from '@/utils/places/updateOsmPlaceData';
 
@@ -232,7 +232,7 @@ export const updateLike = async (
 
 // Helper function to check if a place is liked
 export const getLikeStatus = async (
-  placeId: string
+  likes: PlaceLike[]
 ): Promise<{
   status: 'like' | 'dislike' | null;
   error?: string;
@@ -253,22 +253,11 @@ export const getLikeStatus = async (
     };
   }
 
-  const { data, error } = await supabase
-    .from('place_likes')
-    .select('*')
-    .eq('place_id', placeId)
-    .eq('user_id', user.id)
-    .single();
+  let likeStatus = likes.find((like) => like.user_id === user.id);
 
-  if (error && error.code !== 'PGRST116') {
-    // PGRST116 is "not found"
-    console.error('Error checking like status:', error);
-    return { status: null, error: 'Failed to check like status' };
-  }
-
-  if (!data) {
+  if (!likeStatus) {
     return { status: null };
-  } else if (data.is_like === true) {
+  } else if (likeStatus.is_like === true) {
     return { status: 'like' };
   } else {
     return { status: 'dislike' };

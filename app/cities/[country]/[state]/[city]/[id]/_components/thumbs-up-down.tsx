@@ -8,6 +8,8 @@ import { getLikeStatus } from '../actions';
 import { PlaceLike } from '@/utils/types';
 import { updateLike } from '../actions';
 import { useEffect } from 'react';
+import { getUser } from '@/utils/supabase/queries';
+import { set } from 'react-hook-form';
 
 type ThumbsUpDownProps = {
   onToggle?: (newState: 'like' | 'dislike' | null) => void;
@@ -25,10 +27,29 @@ const ThumbsUpDown: React.FC<ThumbsUpDownProps> = ({
   const [selectedThumb, setSelectedThumb] = useState<'like' | 'dislike' | null>(
     null
   );
+  const [likeCount, setLikeCount] = useState<number>(0);
+  const [dislikeCount, setDislikeCount] = useState<number>(0);
 
   const handleThumbsButton = async (buttonType: 'like' | 'dislike' | null) => {
     const oldState = selectedThumb;
     const newState = selectedThumb === buttonType ? null : buttonType;
+
+    // Store old counts to revert if needed
+    const oldLikeCount = likeCount;
+    const oldDislikeCount = dislikeCount;
+
+    // Update counts based on the state changes
+    if (oldState === 'like') {
+      setLikeCount((prev) => prev - 1);
+    } else if (oldState === 'dislike') {
+      setDislikeCount((prev) => prev - 1);
+    }
+
+    if (newState === 'like') {
+      setLikeCount((prev) => prev + 1);
+    } else if (newState === 'dislike') {
+      setDislikeCount((prev) => prev + 1);
+    }
 
     try {
       setSelectedThumb(newState);
@@ -39,28 +60,40 @@ const ThumbsUpDown: React.FC<ThumbsUpDownProps> = ({
         // Revert on failure or auth error
         setSelectedThumb(oldState);
         if (onToggle) onToggle(oldState);
+        // Revert counts
+        setLikeCount(oldLikeCount);
+        setDislikeCount(oldDislikeCount);
       }
     } catch (error) {
       // Revert on any unexpected errors
       setSelectedThumb(oldState);
       if (onToggle) onToggle(oldState);
+      // Revert counts
+      setLikeCount(oldLikeCount);
+      setDislikeCount(oldDislikeCount);
     }
   };
 
   useEffect(() => {
-    const checkLikeStatus = async () => {
-      const { status, error, authError } = await getLikeStatus(placeId);
-
-      if (authError) {
-        return;
-      }
-
-      if (!error) {
+    if (likes) {
+      let lCount = 0;
+      let dislCount = 0;
+      likes.forEach((like) => {
+        if (like.is_like) {
+          lCount++;
+        } else {
+          dislCount++;
+        }
+      });
+      setLikeCount(lCount);
+      setDislikeCount(dislCount);
+      const checkLikeStatus = async () => {
+        const { status } = await getLikeStatus(likes);
         setSelectedThumb(status);
-      }
-    };
+      };
 
-    checkLikeStatus();
+      checkLikeStatus();
+    }
   }, [placeId]);
 
   return (
@@ -85,7 +118,7 @@ const ThumbsUpDown: React.FC<ThumbsUpDownProps> = ({
           )}
         />
       </Button>
-
+      {likeCount}
       <Button
         variant="ghost"
         size="sm"
@@ -104,6 +137,7 @@ const ThumbsUpDown: React.FC<ThumbsUpDownProps> = ({
           )}
         />
       </Button>
+      {dislikeCount}
     </div>
   );
 };
