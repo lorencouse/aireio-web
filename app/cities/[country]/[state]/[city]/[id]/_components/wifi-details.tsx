@@ -73,7 +73,7 @@ export default function WifiDetails({
         <span className="font-bold">Wifi Password:</span>
         <Popover>
           <PopoverTrigger asChild>
-            <span className="ml-2 cursor-pointer px-3 rounded text-white py-2 hover:opacity-70 bg-muted-foreground">
+            <span className="ml-2 cursor-pointer px-3 rounded-full text-foreground py-2 hover:opacity-70 bg-background border border-foreground">
               Add ✚
             </span>
           </PopoverTrigger>

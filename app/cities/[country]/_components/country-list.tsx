@@ -19,7 +19,7 @@ const CountryList = ({
   return (
     <div className="countries">
       <div className="flex flex-row flex-wrap gap-4 mx-4">
-        <h3 className="md:text-2xl text-xl w-full font-bold select-none md:py-8 py-6 mt-6 text-center border-y-2">
+        <h3 className="md:text-2xl text-xl w-full font-bold select-none md:py-8 py-6 mt-6 text-center border-y">
           {title}
         </h3>
         {CountryList.map((c) => (

@@ -16,10 +16,10 @@ const PlacesList = ({
 }) => {
   return (
     <div className="flex flex-col items-end">
-      <span className="text-base  pr-1 mt-4">
+      <span className="text-base pr-1 mt-4">
         Showing {filteredPlaces.length} Places
       </span>
-      <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-4">
+      <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 mt-4">
         {filteredPlaces.length > 0 ? (
           filteredPlaces.map((place) => (
             <PlaceCard

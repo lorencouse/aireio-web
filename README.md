@@ -16,6 +16,7 @@ Features to Implement:
 - [ ] Finish footer pages (About, Contact, etc.)
 - [x] Fix like/dislike buttons to show correct count
 - [ ] Add color scheme to website
+- [ ] Add rich info on hover of place cards
 
 Bugs to Fix:
 

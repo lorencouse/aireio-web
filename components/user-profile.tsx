@@ -18,7 +18,7 @@ import {
 import { UserProfile as UserProfileType } from '@/utils/types';
 import CoinCount from './ui/Navbar/_components/coin-count';
 
-export async function UserProfile({
+export function UserProfile({
   user,
   coinCount
 }: {
