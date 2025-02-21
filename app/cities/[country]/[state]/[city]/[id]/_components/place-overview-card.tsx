@@ -21,7 +21,7 @@ const PlaceOverviewCard = ({
   likes: PlaceLike[];
 }) => {
   return (
-    <Card className="mb-8 rounded-t-none bg-background text-foreground">
+    <Card className="mb-8 rounded-t-none rounded-b-2xl bg-background text-foreground drop-shadow-lg">
       <CardContent className="flex flex-col md:flex-row p-6">
         <div className="w-full md:w-1/4 flex justify-center items-center mb-4 md:mb-0">
           {photoUrls.length > 0 ? (

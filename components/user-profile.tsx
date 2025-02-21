@@ -1,6 +1,6 @@
 'use client';
 
-import { LogOut, Settings, User, Heart } from 'lucide-react';
+import { LogOut, Settings, User, Heart, MenuIcon } from 'lucide-react';
 import Link from 'next/link';
 import { SignOut } from '@/utils/auth-helpers/server';
 
@@ -27,8 +27,9 @@ export async function UserProfile({
 }) {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild className="w-[2.25rem] h-[2.25rem]">
-        <Avatar>
+      <DropdownMenuTrigger className="border border-gray-300 py-2 px-4 rounded-full flex flex-row items-center align-middle gap-4 hover:drop-shadow-lg bg-background">
+        <MenuIcon className="w-5 h-5 text-gray-400 hover:drop-shadow-lg" />
+        <Avatar className="w-[2.25rem] h-[2.25rem]">
           <AvatarImage
             src={user?.avatar_url || '/images/logo.png'}
             alt="User Profile"

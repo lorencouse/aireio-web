@@ -26,7 +26,7 @@ const PlaceDetails = ({
     place.type === 'cafe' || place.type === 'restaurant';
 
   return (
-    <Card className="bg-background text-foreground">
+    <Card className="bg-background text-foreground rounded-2xl drop-shadow-lg">
       <CardContent className="pt-6 text-lg flex flex-row flex-wrap justify-between gap-8">
         <div className="contact-info">
           <div className="mb-8">

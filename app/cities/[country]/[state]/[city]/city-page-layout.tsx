@@ -95,9 +95,9 @@ export default function CityPageLayout({
     <>
       <DynamicBreadcrumb />
 
-      <div className="grid lg:grid-cols-2 w-full">
+      <div className="city-hero-container grid lg:grid-cols-2 w-full rounded-2xl overflow-hidden">
         <CityHero city={city} />
-        <div className="city-map lg:mx-0 sm:mx-12">
+        <div className="city-map lg:mx-0 sm:mx-12 lg:rounded-r-2xl overflow-hidden">
           <LazyGoogleMap
             searchParams={searchParams}
             lat={city.lat.toString()}

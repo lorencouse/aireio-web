@@ -18,7 +18,7 @@ const PlaceHero: React.FC<PlaceHeroProps> = ({ place, photoUrl }) => {
   const cityFormatted = formatPlaceName(place.city ? place.city : '');
 
   return (
-    <div className="relative w-full md:h-[50vh] min-h-[250px]">
+    <div className="relative w-full md:h-[50vh] min-h-[250px] drop-shadow-lg">
       {photoUrl ? (
         <Image
           src={photoUrl || placeholderImage}
@@ -28,15 +28,16 @@ const PlaceHero: React.FC<PlaceHeroProps> = ({ place, photoUrl }) => {
           loading="lazy"
           placeholder="blur"
           blurDataURL="/images/logo.png"
+          className="rounded-t-2xl"
         />
       ) : (
-        <Avatar className="w-24 h-24">
+        <Avatar className="w-24 h-24 rounded-t-2xl">
           <AvatarFallback>{place?.name[0] ?? '?'}</AvatarFallback>
         </Avatar>
       )}
 
-      <div className="absolute inset-0 bg-black bg-opacity-40 flex flex-col items-center justify-center gap-6">
-        <h1 className="text-white text-3xl md:text-5xl font-bold text-center px-4 text-shadow-lg select-none">
+      <div className="absolute inset-0 bg-black bg-opacity-40 flex flex-col items-center justify-center gap-6 rounded-t-2xl">
+        <h1 className="text-white text-2xl md:text-5xl font-bold text-center px-4 text-shadow-lg select-none">
           {place.name}
         </h1>
         <span className="text-white text-lg md:text-xl font-bold text-center px-4 text-shadow-lg select-none">

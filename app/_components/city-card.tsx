@@ -36,11 +36,11 @@ const CityCard: React.FC<CityCardProps> = ({ city }) => {
             <AvatarFallback>{cityName[0]}</AvatarFallback>
           </Avatar>
         )}
-        <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center flex-col p-2">
-          <h3 className="text-white capitalize font-bold text-center text-shadow select-none mb-1 whitespace-nowrap overflow-hidden text-ellipsis w-full text-responsive">
+        <div className="absolute inset-0 flex items-center justify-center flex-col p-2">
+          <h3 className="text-white capitalize font-bold text-center select-none mb-1 whitespace-nowrap overflow-hidden text-ellipsis w-full text-responsive drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">
             {cityName}
           </h3>
-          <h4 className="text-white capitalize font-bold text-center text-shadow select-none whitespace-nowrap overflow-hidden text-ellipsis w-full text-responsive-small">
+          <h4 className="text-white capitalize font-bold text-center select-none whitespace-nowrap overflow-hidden text-ellipsis w-full text-responsive-small drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">
             {countryName}
           </h4>
         </div>

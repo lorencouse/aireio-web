@@ -26,7 +26,7 @@ export const getRatingColor = (index: number | null) => {
     case 5:
       return 'bg-green-500 ';
     default:
-      return 'bg-foreground';
+      return 'bg-background';
   }
 };
 
@@ -98,7 +98,7 @@ export default function Amenity({
         <Popover>
           <PopoverTrigger asChild>
             <span
-              className={`ml-2 cursor-pointer px-3 rounded text-white py-2 hover:opacity-70 ${getRatingColor(buttonValue)} ${buttonValue !== null ? 'text-white ' : value ? ' bg-green-500' : value === false ? ' bg-red-600' : 'bg-muted-foreground'}`}
+              className={`ml-2 cursor-pointer px-3 rounded-full py-2 hover:opacity-70 border border-muted-foreground ${getRatingColor(buttonValue)} ${buttonValue !== null ? 'text-white ' : value ? ' bg-green-500' : value === false ? ' bg-red-600' : 'bg-background text-foreground'}`}
             >
               {buttonValue !== null
                 ? `${buttonVals[buttonValue]}`
@@ -120,7 +120,7 @@ export default function Amenity({
                   key={index}
                   variant="outline"
                   onClick={() => handleClick(index)}
-                  className={`text-lg text-white min-w-[40px] p-2 hover:scale-105 ${
+                  className={`text-lg text-white rounded-full min-w-[40px] p-2 hover:scale-105 ${
                     buttonValue === index ? 'ring-2 ring-offset-2' : ''
                   } 
         ${getRatingColor(index)}`}

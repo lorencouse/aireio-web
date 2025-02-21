@@ -45,14 +45,14 @@ export default async function Navbar() {
         <div className="flex justify-around items-center p-2 ">
           <Link href="/" className="flex flex-col items-center">
             <Home className="h-6 w-6" />
-            <span className="text-xs">Home</span>
+            <span className="text-sm">Home</span>
           </Link>
 
           <Drawer>
             <DrawerTrigger asChild>
               <div className="flex flex-col items-center">
                 <Menu className="h-6 w-6" />
-                <span className="text-xs">Menu</span>
+                <span className="text-sm">Menu</span>
               </div>
             </DrawerTrigger>
             <DrawerContent className="bg-background text-foreground">
@@ -99,14 +99,14 @@ export default async function Navbar() {
           ) : (
             <Link href="/signin" className="flex flex-col items-center">
               <LogIn className="h-6 w-6" />
-              <span className="text-xs">Sign In</span>
+              <span className="text-sm">Sign In</span>
             </Link>
           )}
         </div>
       </div>
 
       {/* Desktop Navbar */}
-      <div className="hidden md:flex min-w-full fixed top-0 justify-between p-2 border-b z-10 dark:bg-opacity-50 bg-background">
+      <div className="hidden md:flex min-w-full fixed top-0 justify-between px-6 py-4 border-b z-10 dark:bg-opacity-50 bg-background">
         <NavigationMenu>
           <NavigationMenuList className="flex gap-3 w-full justify-between items-center">
             <Link href="/" className="pl-2 flex items-center" aria-label="Home">
@@ -117,7 +117,7 @@ export default async function Navbar() {
                 height={30}
                 className="rounded-sm"
               />
-              <span className="sr-only">Home</span>
+              <span className="sr-only text-md">Home</span>
             </Link>
             {menuItems.map((item) => (
               <NavigationMenuItem key={item.title}>

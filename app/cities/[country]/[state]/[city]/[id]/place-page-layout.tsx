@@ -45,13 +45,13 @@ const PlacePageLayout = ({
 
   return (
     <div>
-      {place.deleted && (
+      {/* {place.deleted && (
         <PopupPlaceDeleted
           showModal={showModal}
           setShowModal={setShowModal}
           cityId={place.city_id ? place.city_id : ''}
         />
-      )}
+      )} */}
       {place && <DynamicBreadcrumb placeName={place.name ? place.name : ''} />}
 
       <PlaceHero place={place} photoUrl={photoUrls[0]} />

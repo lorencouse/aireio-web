@@ -49,11 +49,11 @@ export default function CityHero({ city }: { city: City }) {
         placeholder="blur"
         blurDataURL="/images/logo.png"
       />
-      <div className="absolute inset-0 bg-black bg-opacity-40 flex flex-col items-center justify-center gap-6">
-        <h1 className="text-white text-4xl md:text-6xl font-bold capitalize text-center px-4 text-shadow-lg select-none">
+      <div className="absolute inset-0 flex flex-col items-center justify-center gap-6">
+        <h1 className="text-white text-4xl md:text-6xl font-bold capitalize text-center px-4 drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)] select-none">
           {formattedCity}
         </h1>
-        <span className="text-white text-xl md:text-2xl font-bold capitalize text-center px-4 text-shadow-lg select-none">
+        <span className="text-white text-xl md:text-2xl font-bold capitalize text-center px-4 drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)] select-none">
           {formattedCountry}
         </span>
       </div>

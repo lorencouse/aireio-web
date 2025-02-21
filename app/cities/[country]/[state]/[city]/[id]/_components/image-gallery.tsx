@@ -24,7 +24,6 @@ const Gallery = ({ photos }: { photos: string[] }) => {
   const [current, setCurrent] = useState(0);
   const [isFullscreenOpen, setIsFullscreenOpen] = useState(false);
 
-
   const handleClick = useCallback(
     (index: number) => {
       if (!mainApi || !thumbnailApi) return;
@@ -38,7 +37,10 @@ const Gallery = ({ photos }: { photos: string[] }) => {
   const mainImages = useMemo(
     () =>
       photos.map((photoUrl, index) => (
-        <CarouselItem key={index} className="relative w-full aspect-[4/3]">
+        <CarouselItem
+          key={index}
+          className="relative w-full aspect-[4/3] rounded-lg"
+        >
           <Image
             src={photoUrl || '/default-image.jpg'}
             alt={`Carousel Main Image ${index + 1}`}

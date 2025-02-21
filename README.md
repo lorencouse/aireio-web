@@ -11,10 +11,11 @@ Features to Implement:
 
 - [ ] Update map to use open source map API
 - [ ] Add pins with numbers tro show place locations on map
-- [ ] Add search bar to search for specific locations
+- [ ] Add search bar to search for specific locations in city hero
 - [ ] Sort places by recommended score
 - [ ] Finish footer pages (About, Contact, etc.)
-- [ ] Fix like/dislike buttons to show correct count
+- [x] Fix like/dislike buttons to show correct count
+- [ ] Add color scheme to website
 
 Bugs to Fix:
 
