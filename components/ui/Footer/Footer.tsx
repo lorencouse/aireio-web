@@ -7,7 +7,7 @@ import StyledTitle from '@/components/icons/styledTitle';
 
 export default function Footer() {
   return (
-    <footer className="mx-auto max-w-[1920px] px-6 bg-muted">
+    <footer className="mx-auto max-w-[1920px] px-6 bg-muted md:mb-0 mb-12">
       <div className="grid grid-cols-1 gap-8 py-12 text-foreground transition-colors duration-150 border-b lg:grid-cols-12 border-zinc-600 bg-muted">
         <div className="col-span-1 lg:col-span-2">
           <Link
@@ -108,7 +108,7 @@ export default function Footer() {
             <Image
               src="/images/Loren-Couse-Logo.jpg"
               alt="Loren Couse Logo"
-              className="inline-block rounded-sm ml-4 text-fore"
+              className="inline-block rounded-sm ml-4 text-foreground"
               width={30}
               height={30}
             />

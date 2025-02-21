@@ -60,7 +60,7 @@ const PlaceCard = ({ place, distance, setIsLoadingPlace }: PlaceCardProps) => {
 
   return (
     <div
-      className="relative md:w-72 sm:w-64 w-52 md:h-52 sm:h-44 h-36 cursor-pointer rounded-lg overflow-hidden shadow-md md:m-4 hover:scale-105 duration-200"
+      className="relative md:w-72 sm:w-64 xs:w-52 w-44 md:h-52 sm:h-44 h-36 cursor-pointer rounded-lg overflow-hidden shadow-md md:m-4 hover:scale-105 duration-200"
       onClick={handleClick}
     >
       {photoUrls.length > 0 ? (

@@ -20,22 +20,37 @@ import CoinCount from './ui/Navbar/_components/coin-count';
 
 export function UserProfile({
   user,
-  coinCount
+  coinCount,
+  mobile
 }: {
   user: UserProfileType;
   coinCount: number;
+  mobile?: boolean;
 }) {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="border border-gray-300 py-2 px-4 rounded-full flex flex-row items-center align-middle gap-4 hover:drop-shadow-lg bg-background">
-        <MenuIcon className="w-5 h-5 text-gray-400 hover:drop-shadow-lg" />
-        <Avatar className="w-[2.25rem] h-[2.25rem]">
+      <DropdownMenuTrigger
+        className={`${
+          mobile
+            ? 'flex flex-col items-center justify-center'
+            : 'border border-gray-300 py-2 px-4 rounded-full flex flex-row items-center align-middle gap-4 hover:drop-shadow-lg bg-background'
+        }`}
+      >
+        {!mobile && (
+          <MenuIcon className="w-5 h-5 text-slate-500 hover:drop-shadow-lg" />
+        )}
+        <Avatar className={`${mobile ? 'w-6 h-6' : 'w-[2.25rem] h-[2.25rem]'}`}>
           <AvatarImage
             src={user?.avatar_url || '/images/logo.png'}
             alt="User Profile"
           />
           <AvatarFallback></AvatarFallback>
         </Avatar>
+        {mobile && (
+          <span className="text-xs font-medium text-secondary-foreground">
+            {user?.username}
+          </span>
+        )}
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
         <DropdownMenuLabel>

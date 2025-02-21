@@ -5,6 +5,7 @@ const FullLogo = (props: { width: number; height: number }) => (
     alt="aireio Full Logo"
     width={props.width}
     height={props.height}
+    className="object-contain rounded-full"
   />
 );
 

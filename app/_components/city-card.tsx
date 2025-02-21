@@ -19,7 +19,7 @@ const CityCard: React.FC<CityCardProps> = ({ city }) => {
 
   return (
     <Link href={`/cities/${city.country_code}/${city.state}/${city.name}`}>
-      <div className="relative md:w-72 sm:w-64 w-52 md:h-52 sm:h-44 h-36 cursor-pointer rounded-lg overflow-hidden shadow-md md:m-4 hover:scale-105 duration-200">
+      <div className="relative md:w-72 sm:w-64 xs:w-52 w-44 md:h-52 sm:h-44 h-36 cursor-pointer rounded-lg overflow-hidden shadow-md md:m-4 hover:scale-105 duration-200">
         {imageUrl ? (
           <Image
             src={imageUrl || '/images/logo.png'}

@@ -82,7 +82,7 @@ export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
               autoCapitalize="none"
               autoComplete="email"
               autoCorrect="off"
-              className="w-full p-3 rounded-md bg-background border-2 border-muted-foreground"
+              className="w-full p-3 rounded-md bg-background border-2 border-secondary"
             />
             <label htmlFor="password">Password</label>
             <input
@@ -91,7 +91,7 @@ export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
               type="password"
               name="password"
               autoComplete="current-password"
-              className="w-full p-3 rounded-md bg-background border-2 border-muted-foreground"
+              className="w-full p-3 rounded-md bg-background border-2 border-secondary"
             />
           </div>
           <Button

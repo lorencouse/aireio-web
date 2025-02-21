@@ -28,15 +28,15 @@ const PlaceHero: React.FC<PlaceHeroProps> = ({ place, photoUrl }) => {
           loading="lazy"
           placeholder="blur"
           blurDataURL="/images/logo.png"
-          className="rounded-t-2xl"
+          className="md:rounded-t-2xl"
         />
       ) : (
-        <Avatar className="w-24 h-24 rounded-t-2xl">
+        <Avatar className="w-24 h-24 md:rounded-t-2xl">
           <AvatarFallback>{place?.name[0] ?? '?'}</AvatarFallback>
         </Avatar>
       )}
 
-      <div className="absolute inset-0 bg-black bg-opacity-40 flex flex-col items-center justify-center gap-6 rounded-t-2xl">
+      <div className="absolute inset-0 bg-black bg-opacity-40 flex flex-col items-center justify-center gap-6 md:rounded-t-2xl">
         <h1 className="text-white text-2xl md:text-5xl font-bold text-center px-4 text-shadow-lg select-none">
           {place.name}
         </h1>

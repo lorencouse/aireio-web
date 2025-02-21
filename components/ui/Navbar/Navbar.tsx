@@ -43,19 +43,22 @@ export default async function Navbar() {
       {/* Mobile Navbar */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 bg-background border-t z-10 ">
         <div className="flex justify-around items-center p-2 ">
-          <Link href="/" className="flex flex-col items-center">
-            <Home className="h-6 w-6" />
-            <span className="text-sm">Home</span>
+          <Link
+            href="/"
+            className="flex flex-col items-center text-secondary-foreground"
+          >
+            <Home className="h-5 w-5" />
+            <span className="text-xs">Home</span>
           </Link>
 
           <Drawer>
             <DrawerTrigger asChild>
-              <div className="flex flex-col items-center">
-                <Menu className="h-6 w-6" />
-                <span className="text-sm">Menu</span>
+              <div className="flex flex-col items-center text-secondary-foreground">
+                <Menu className="h-5 w-5" />
+                <span className="text-xs">Menu</span>
               </div>
             </DrawerTrigger>
-            <DrawerContent className="bg-background text-foreground">
+            <DrawerContent className="bg-background text-secondary-foreground">
               <DrawerHeader className="w-full justify-center">
                 <FullLogo width={100} height={50} />
               </DrawerHeader>
@@ -82,7 +85,7 @@ export default async function Navbar() {
                 ) : (
                   <DrawerClose asChild>
                     <Link href="/signin" className="w-full">
-                      <Button variant="ghost" className="w-full justify-start">
+                      <Button variant="ghost" className="w-full justify-start ">
                         <LogIn className="mr-2 h-4 w-4" />
                         Sign In
                       </Button>
@@ -95,11 +98,14 @@ export default async function Navbar() {
           </Drawer>
 
           {user ? (
-            <UserProfile user={user} coinCount={coinCount} />
+            <UserProfile user={user} coinCount={coinCount} mobile={true} />
           ) : (
-            <Link href="/signin" className="flex flex-col items-center">
-              <LogIn className="h-6 w-6" />
-              <span className="text-sm">Sign In</span>
+            <Link
+              href="/signin"
+              className="flex flex-col items-center text-secondary-foreground"
+            >
+              <LogIn className="h-5 w-5" />
+              <span className="text-xs">Sign In</span>
             </Link>
           )}
         </div>
@@ -110,13 +116,14 @@ export default async function Navbar() {
         <NavigationMenu>
           <NavigationMenuList className="flex gap-3 w-full justify-between items-center">
             <Link href="/" className="pl-2 flex items-center" aria-label="Home">
-              <Image
+              <FullLogo width={100} height={30} />
+              {/* <Image
                 src="/images/aireio-logo-full.jpg"
                 alt="Aireio logo"
                 width={100}
                 height={30}
                 className="rounded-sm"
-              />
+              /> */}
               <span className="sr-only text-md">Home</span>
             </Link>
             {menuItems.map((item) => (
@@ -131,7 +138,7 @@ export default async function Navbar() {
 
         <div className="flex items-center gap-2">
           {user ? (
-            <UserProfile user={user} coinCount={coinCount} />
+            <UserProfile user={user} coinCount={coinCount} mobile={false} />
           ) : (
             <Link href="/signin" className="text-foreground hover:underline">
               Sign In

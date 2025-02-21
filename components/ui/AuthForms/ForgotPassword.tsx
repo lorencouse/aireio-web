@@ -47,7 +47,7 @@ export default function ForgotPassword({
               autoCapitalize="none"
               autoComplete="email"
               autoCorrect="off"
-              className="w-full p-3 rounded-md bg-background border-2 border-muted-foreground"
+              className="w-full p-3 rounded-md bg-background border-2 border-secondary"
             />
           </div>
           <Button
